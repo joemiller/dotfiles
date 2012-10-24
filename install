@@ -1,0 +1,32 @@
+#!/bin/sh
+# Based on https://github.com/sontek/dotfiles/
+
+set -e
+
+GIT_URL="git@github.com:joemiller/dotfiles"
+INSTALL_DIR="$HOME/.dotfiles"
+
+# does ~/.dotfiles exist? If not, this must be a first install.
+if [ ! -e "$HOME/.dotfiles" ]; then
+    git clone $GIT_URL $INSTALL_DIR
+    cd $INSTALL_DIR
+else
+    cd $INSTALL_DIR
+    git fetch
+    git pull
+fi
+
+# symlink any files matching ~/.dotfiles/_<NAME> to ~/.<NAME>
+for i in _*; do 
+    source="${PWD}/$i"
+    target="${HOME}/${i/_/.}"
+    if [ -e "${target}" -a ! -h ${target} ]; then
+        backup="${HOME}/.save.${i}"
+        echo "${target} already exists. Moving to ${backup}"
+        mv ${target} ${backup}
+    fi
+    ln -snf ${source} ${target}
+done
+
+# TODO - optional erb templates for sensitive info?
+
