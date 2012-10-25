@@ -12,6 +12,9 @@ if [ ! -e "$HOME/.dotfiles" ]; then
     cd $INSTALL_DIR
 else
     cd $INSTALL_DIR
+    if ! git diff-index --quiet HEAD --; then
+        echo 'WARNING: There are uncommitted local changes'
+    fi
     git fetch
     git pull
 fi
