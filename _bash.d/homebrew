@@ -1,7 +1,6 @@
-################################################################################
-### This file installed by bootstrap. If you run bootstrap again, you'll lose
-### any changes made here.
-################################################################################
+if [ "$(uname)" != "Darwin" ]; then
+    return
+fi
 
 ### steal the `have` function from the bash-completion package, as some
 ### completion scripts expect it to exist.
