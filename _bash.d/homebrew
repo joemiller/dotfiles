@@ -1,0 +1,24 @@
+################################################################################
+### This file installed by bootstrap. If you run bootstrap again, you'll lose
+### any changes made here.
+################################################################################
+
+### steal the `have` function from the bash-completion package, as some
+### completion scripts expect it to exist.
+#
+# This function checks whether we have a given program on the system.
+# No need for bulky functions in memory if we don't.
+#
+have()
+{
+    unset -v have
+    # Completions for system administrator commands are installed as well in
+    # case completion is attempted via `sudo command ...'.
+    PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin type $1 &>/dev/null &&
+    have="yes"
+}
+
+### homebrew completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi

@@ -25,6 +25,7 @@ for i in _*; do
         echo "${target} already exists. Moving to ${backup}"
         mv ${target} ${backup}
     fi
+    echo "symlinking ${source} to ${target}"
     ln -snf ${source} ${target}
 done
 

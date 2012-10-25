@@ -1,0 +1,8 @@
+[user]
+        name = joe miller
+        email = joeym@joeym.net
+[color]
+        diff = auto
+        status = auto
+        branch = auto
+        ui = auto
