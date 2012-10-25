@@ -2,7 +2,13 @@
         name = joe miller
         email = joeym@joeym.net
 [color]
-        diff = auto
-        status = auto
-        branch = auto
-        ui = auto
+    # Use colors in Git commands that are capable of colored output when outputting to the terminal
+    ui = auto
+[color "branch"]
+    current = red reverse
+    local = red
+    remote = green
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
