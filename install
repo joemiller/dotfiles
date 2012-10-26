@@ -6,17 +6,37 @@ set -e
 GIT_URL="git@github.com:joemiller/dotfiles"
 INSTALL_DIR="$HOME/.dotfiles"
 
+while getopts "nh" opt; do
+    case $opt in
+        n) RUN_GIT='no';;
+        h) usage;;
+    esac
+done
+
+function usage() {
+    echo "$0 [options]"
+    echo
+    echo " -n       Do not run any git actions"
+    echo " -h       This help message"
+    exit 0
+}
+
 # does ~/.dotfiles exist? If not, this must be a first install.
-if [ ! -e "$HOME/.dotfiles" ]; then
-    git clone $GIT_URL $INSTALL_DIR
-    cd $INSTALL_DIR
-else
-    cd $INSTALL_DIR
-    if ! git diff-index --quiet HEAD --; then
-        echo 'WARNING: There are uncommitted local changes'
+# skip all git actions if '-n' argument is specified
+if [ "$RUN_GIT" != 'no' ]; then
+    if [ ! -e "$HOME/.dotfiles" ]; then
+        git clone $GIT_URL $INSTALL_DIR
+        cd $INSTALL_DIR
+    else
+        cd $INSTALL_DIR
+        if ! git diff-index --quiet HEAD --; then
+            echo 'WARNING: There are uncommitted local changes'
+        fi
+        git fetch
+        git pull
     fi
-    git fetch
-    git pull
+else
+    echo "Skipping git actions"
 fi
 
 # symlink any files matching ~/.dotfiles/_<NAME> to ~/.<NAME>
