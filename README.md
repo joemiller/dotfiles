@@ -12,9 +12,18 @@ clones this repo ~/.dotfiles and sets up symlinks.
 ### Update
 Pulls down any changes from github then sets up symlinks.
 
-    ~/.dotfiles/install
+    cd ~/.dotfiles
+    ./install
 
-### Commit new changes and push them live
+Skip all git actions with `-n` flag:
+
+    ./install -n
+
+This is useful when used with something like my `dotfiles` chef recipe
+which handles sync'ing with git already:
+https://github.com/joemiller/workstation-bootstrap/blob/master/cookbooks/dotfiles/recipes/default.rb
+
+### Commit new changes and push them to github
 
 The standard git dance:
 
