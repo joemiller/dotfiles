@@ -27,6 +27,6 @@ https://github.com/joemiller/workstation-bootstrap/blob/master/cookbooks/dotfile
 
 The standard git dance:
 
-   git add .
-   git commit -a -m'new stuff'
-   git push 
+    git add .
+    git commit -a -m'new stuff'
+    git push 
