@@ -14,7 +14,7 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 # Source bashmarks
-if [ -f /usr/local/bin/bashmarks.sh ]; then
+if [ -r /usr/local/bin/bashmarks.sh ]; then
     . /usr/local/bin/bashmarks.sh
 fi
 
