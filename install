@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # Based on https://github.com/sontek/dotfiles/
 
 set -e

@@ -1,5 +1,5 @@
 case "$(uname)" in
-    "Darwin")
+    "Darwin"|"OpenBSD")
         alias l.='ls -d .*'
         alias ll='ls -l'
         alias lla='ls -la'

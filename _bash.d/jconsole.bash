@@ -42,7 +42,7 @@ function jcon {
     ssh_pid=$(ps ax | grep "jconsole-proxy-${local_proxy_port}" | grep -v grep | awk '{print $1}')
     echo "ssh pid: $ssh_pid"
     jconsole -J-DsocksProxyHost=localhost -J-DsocksProxyPort=${local_proxy_port} \
-        ${host}:7199
+        ${host}:${jmx_port}
     # kill the ssh tunnel after jconsole exits
     kill $ssh_pid
 }
