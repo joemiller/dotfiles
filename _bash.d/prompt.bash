@@ -21,7 +21,7 @@ function _prompt_command() {
     PS1='[\u@\h \W]'
     # PS1='\h:\W \u'
     PS1="$PS1\[$(echo -e '\033];$(hostname -s):$(basename $PWD)\007')\]"
-    PS1="$PS1$(_git_prompt)\$ "
+    PS1="$PS1$(_git_prompt)\\$ "
 }
 
 PROMPT_COMMAND=_prompt_command
