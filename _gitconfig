@@ -1,6 +1,6 @@
 [user]
-        name = joe miller
-        email = joeym@joeym.net
+    name = joe miller
+    email = joeym@joeym.net
 [color]
     # Use colors in Git commands that are capable of colored output when outputting to the terminal
     ui = auto
@@ -12,3 +12,5 @@
     added = yellow
     changed = green
     untracked = cyan
+[github]
+    user = joemiller
