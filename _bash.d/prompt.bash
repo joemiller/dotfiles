@@ -1,3 +1,4 @@
+
 function _git_prompt() {
     # bail if __git_ps1 function is not defined, such as if git completion is not installed
     if ! type __git_ps1 2>&1 | grep -q 'is a function'; then
