@@ -43,6 +43,13 @@ fi
 for i in _*; do 
     source="${PWD}/$i"
     target="${HOME}/${i/_/.}"
+
+    # special case for .bashrc: if already exists, don't overwrite
+    if [ "$i" = "_bashrc" ] && [ -f "$target" ]; then
+        echo "special case file $target already exists, skipping symlink"
+        continue
+    fi
+
     if [ -e "${target}" -a ! -h ${target} ]; then
         backup="${HOME}/.save.${i}"
         echo "${target} already exists. Moving to ${backup}"
