@@ -10,5 +10,6 @@ case "$(uname)" in
         alias ll='ls -l --color=auto'
         alias lla='ls -la --color=auto'
         alias la='ls -a --color=auto'
+        alias joe_dstat='dstat -lpcgyrdnm'
 esac
 
