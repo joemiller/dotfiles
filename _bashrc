@@ -23,3 +23,6 @@ for rc in `ls ~/.bash.d`; do
     source ~/.bash.d/$rc
 done
 
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"

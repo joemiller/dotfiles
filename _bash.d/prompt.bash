@@ -1,4 +1,3 @@
-
 function _git_prompt() {
     # bail if __git_ps1 function is not defined, such as if git completion is not installed
     if ! type __git_ps1 2>&1 | grep -q 'is a function'; then
@@ -21,7 +20,7 @@ function _prompt_command() {
   # PS1="[\[\033[32m\]\w\[\033[0m\]]\[\033[0m\]\n\[\033[1;36m\]\u@\[\033[0;37m\]\h] `_git_prompt` \[\033[1;33m\]-> \[\033[0m\]"
     PS1='\u@\h \W'
     # PS1='\h:\W \u'
-    PS1="$PS1\[$(echo -e '\033];$(hostname -s):$(basename $PWD)\007')\]"
+    PS1="$PS1\[$(echo -e '\033];$(hostname -s):$(basename "$PWD")\007')\]"
     PS1="$PS1$(_git_prompt)\\$ "
 }
 
