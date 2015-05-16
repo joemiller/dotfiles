@@ -1,5 +1,6 @@
 "
 "  Jesse Nelson <spheromak@gmail.com>
+"  joe miller <joeym@joeym.net>
 " ab  
 "-------------------------------------------------------------------------------
 " 
@@ -63,6 +64,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
+Plugin 'christoomey/vim-tmux-navigator'
 
 " Gist
 Bundle 'mattn/webapi-vim'
@@ -209,8 +211,13 @@ map <Leader>p :lprev<CR>
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-nmap <F8> :TagbarToggle<CR>
-nmap <F1> :NERDTreeToggle<CR>
+"nmap <F8> :TagbarToggle<CR>
+nmap <C-m> :TagbarToggle<CR>
+
+"NERDTree settings
+"nmap <F1> :NERDTreeToggle<CR>
+nmap <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeShowHidden=1
 
 let g:gofmt_command = "goimports"
 "let g:godef_split=3
