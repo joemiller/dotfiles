@@ -1,9 +1,9 @@
 case "$(uname)" in
     "Darwin"|"OpenBSD")
-        alias l.='ls -d .*'
-        alias ll='ls -l'
-        alias lla='ls -la'
-        alias la='ls -a'
+        alias l.='ls -G -d .*'
+        alias ll='ls -G -l'
+        alias lla='ls -G -la'
+        alias la='ls -G -a'
         ;;
     "Linux")
         alias l.='ls -d .* --color=auto'
