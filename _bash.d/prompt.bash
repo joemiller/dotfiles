@@ -23,8 +23,7 @@ function _prompt_command() {
     PS1="$PS1\[$(echo -e '\033];$(hostname -s):$(basename "$PWD")\007')\]"
     PS1="$PS1$(_git_prompt)\\$ "
     # set tmux pane title
-    printf "\033k[%s/%s::%s]\033\\" "${USER}" "${HOSTNAME%%.*}" "$(basename ${PWD/#$HOME/~})"
-
+    printf "\033k[%s/%s::%s]\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD##*/}"
 }
 
 PROMPT_COMMAND=_prompt_command
