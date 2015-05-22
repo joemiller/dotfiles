@@ -65,7 +65,7 @@ Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'Valloric/YouCompleteMe'
+"Plugin 'Valloric/YouCompleteMe'
 
 " Gist
 Bundle 'mattn/webapi-vim'
@@ -162,7 +162,8 @@ filetype plugin on
 highlight Pmenu ctermbg=238 gui=bold
 
 "set guifont=Source\ Code\ Pro:h16 " Set default font
-let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 
 au FileType go map <leader>r :!go run %<CR>
 
