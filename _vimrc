@@ -285,9 +285,9 @@ set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 noremap <F3> :Autoformat<CR><CR>
 
 " Set some nice character listings, then activate list
-execute 'set listchars+=tab:\ ' . nr2char(187)
-execute 'set listchars+=eol:' . nr2char(183)
-set list
+"execute 'set listchars+=tab:\ ' . nr2char(187)
+"execute 'set listchars+=eol:' . nr2char(183)
+"set list
 
 let g:go_auto_type_info = 1
 
