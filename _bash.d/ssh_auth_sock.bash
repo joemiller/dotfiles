@@ -8,3 +8,4 @@ _ssh_auth_save() {
 #alias tmux='_ssh_auth_save ; export HOSTNAME=$(hostname) ; tmux'
 alias screen='_ssh_auth_save ; screen'
 alias tmux='_ssh_auth_save ; tmux'
+alias tmate='_ssh_auth_save ; tmate'
