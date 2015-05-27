@@ -1,5 +1,5 @@
 alias vi=vim
-export EDITOR=vi
+export EDITOR=vim
 
 function setup_vim {
   if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ] ; then
