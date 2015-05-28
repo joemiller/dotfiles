@@ -15,7 +15,10 @@
 [github]
     user = joemiller
 [alias]
-    prettylog = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	up = "!git remote update -p; git merge --ff-only @{u}"
-    co = checkout
-    ci = commit
+  co = checkout
+  ci = commit
+  s = status
+  ss = status -sb
+  p = push
