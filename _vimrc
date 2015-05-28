@@ -103,6 +103,9 @@ ab seperate separate
 ab srting string
 ab balacner balancer
 
+" relative line numbers are so awesome for someone not good with markers like me
+set relativenumber
+
 " lines of visible b4 scroll
 set scrolloff=10
 
