@@ -4,6 +4,8 @@ source ~/.dotfiles/antigen.zsh
 antigen use oh-my-zsh
 antigen bundle git
 
+antigen bundle zsh-users/zsh-syntax-highlighting
+
 if [ "$OSTYPE"="darwin11.0" ]; then
   antigen bundle osx
 fi
@@ -12,3 +14,5 @@ fi
 for rc in `ls ~/.zsh.d`; do
     source ~/.zsh.d/$rc
 done
+
+antigen apply
