@@ -16,3 +16,9 @@ function git_prompt_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
+
+# set hostname:PWD in iterm2 title bar
+export DISABLE_AUTO_TITLE="true"
+precmd() {
+  printf "\033];$(hostname -s):$(basename "$PWD")\007\n"
+}
