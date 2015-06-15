@@ -20,5 +20,5 @@ function git_prompt_info() {
 # set hostname:PWD in iterm2 title bar
 export DISABLE_AUTO_TITLE="true"
 precmd() {
-  printf "\033];$(hostname -s):$(basename "$PWD")\007\n"
+  printf "\033];$(hostname -s):$(basename "$PWD")\007"
 }
