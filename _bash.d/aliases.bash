@@ -26,3 +26,4 @@ case "$(uname)" in
         alias joe_dstat='dstat -lpcgyrdnm'
 esac
 
+alias g=git
