@@ -1,10 +1,11 @@
 # run `spectrumls` to get a quick glance at the 256 color pallette
 
-if [ $UID -eq 0 ]; then CARETCOLOR="red"; else CARETCOLOR="blue"; fi
+if [ $UID -eq 0 ]; then CARETCOLOR="red"; else CARETCOLOR="green"; fi
+if [ $UID -eq 0 ]; then USERPROMPT="%{$FG[179]%}root@%{$reset_color%}"; else USER=""; fi
 
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-PROMPT='%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(git_prompt_info)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
+PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(git_prompt_info)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 
 RPS1="${return_code}"
 
