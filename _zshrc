@@ -15,5 +15,7 @@ fi
 for rc in `ls ~/.zsh.d`; do
     source ~/.zsh.d/$rc
 done
+#antigen theme afowler
+
 
 antigen apply

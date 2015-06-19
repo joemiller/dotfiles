@@ -8,19 +8,21 @@ PROMPT='%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(g
 
 RPS1="${return_code}"
 
+DISABLE_UNTRACKED_FILES_DIRTY=true
 ZSH_THEME_GIT_PROMPT_PREFIX="‹"
 ZSH_THEME_GIT_PROMPT_SUFFIX="› %{$reset_color%}"
-
-ZSH_THEME_GIT_PROMPT_DIRTY="$fg[yellow]"
-ZSH_THEME_GIT_PROMPT_CLEAN="$fg[blue]"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%}"
 
 function git_prompt_info() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
+  ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
+  #echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
 # set hostname:PWD in iterm2 title bar
-export DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 precmd() {
   printf "\033];$(hostname -s):$(basename "$PWD")\007"
 }
