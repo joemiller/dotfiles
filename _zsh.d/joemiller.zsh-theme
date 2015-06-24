@@ -22,8 +22,11 @@ function git_prompt_info() {
   echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
-# set hostname:PWD in iterm2 title bar
 DISABLE_AUTO_TITLE="true"
 precmd() {
-  printf "\033];$(hostname -s):$(basename "$PWD")\007"
+  # set hostname:PWD in iterm2 title bar
+  #printf "\033];$(hostname -s):$(basename "$PWD")\007"
+  printf "\033];%s:%s\007" "${HOST%%.*}" "${PWD##*/}"
+  # set tmux title
+  printf "\033k[%s/%s::%s]\033\\" "${USERNAME}" "${HOST%%.*}" "${PWD##*/}"
 }
