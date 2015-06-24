@@ -26,7 +26,7 @@ DISABLE_AUTO_TITLE="true"
 precmd() {
   # set hostname:PWD in iterm2 title bar
   #printf "\033];$(hostname -s):$(basename "$PWD")\007"
-  printf "\033];%s:%s\007" "${HOST%%.*}" "${PWD##*/}"
+  #printf "\033]1;%s\007" "${HOST%%.*}"
   # set tmux title
-  printf "\033k[%s/%s::%s]\033\\" "${USERNAME}" "${HOST%%.*}" "${PWD##*/}"
+  printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"
 }
