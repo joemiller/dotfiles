@@ -22,3 +22,5 @@
   s = status
   ss = status -sb
   p = push
+[push]
+	default = matching
