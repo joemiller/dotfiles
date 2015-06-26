@@ -7,7 +7,7 @@ Usage
 ### Install
 clones this repo ~/.dotfiles and sets up symlinks.
 
-    curl https://raw.github.com/joemiller/dotfiles/master/install | bash
+    curl -L https://raw.github.com/joemiller/dotfiles/master/install | bash
 
 ### Update
 Pulls down any changes from github then sets up symlinks.
