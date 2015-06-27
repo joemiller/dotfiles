@@ -7,6 +7,8 @@ antigen bundle git
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-completions src
 
+antigen bundle djui/alias-tips
+
 if [ "$OSTYPE"="darwin11.0" ]; then
   antigen bundle osx
 fi
