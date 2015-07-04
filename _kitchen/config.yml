@@ -1,0 +1,56 @@
+<%
+require 'socket'
+
+# @return [String] public IP address of workstation used for egress traffic
+def local_ip
+  @local_ip ||= begin
+    # turn off reverse DNS resolution temporarily
+    orig, Socket.do_not_reverse_lookup = Socket.do_not_reverse_lookup, true
+
+    UDPSocket.open do |s|
+      s.connect '64.233.187.99', 1 # a google IP, does not hit network
+      s.addr.last
+    end
+  ensure
+    Socket.do_not_reverse_lookup = orig
+  end
+end
+
+# @return [Integer] default polipo listening port
+def local_port ; 8123 ; end
+
+# @return [String] the polipo proxy URL
+def http_proxy_url ; "http://#{local_ip}:#{local_port}" ; end
+
+# @return [TrueClass,FalseClass] whether or not the polipo port is listening
+def proxy_running?
+  socket = TCPSocket.new(local_ip, local_port)
+  true
+rescue SocketError, Errno::ECONNREFUSED,
+  Errno::EHOSTUNREACH, Errno::ENETUNREACH, IOError
+  false
+rescue Errno::EPERM, Errno::ETIMEDOUT
+  false
+ensure
+  socket && socket.close
+end
+%>
+---
+<% if proxy_running? && ! ENV['NO_POLIPO'] %>
+driver:
+  http_proxy: <%= http_proxy_url %>
+  https_proxy: <%= http_proxy_url %>
+  # used in kitchen-docker to pre-install/cache a Chef Ommnibus package in a
+  # layer before booting containers
+  provision_command: "env http_proxy=<%= http_proxy_url %> bash -c 'curl -L http://www.chef.io/chef/install.sh | bash'"
+
+provisioner:
+  # installs from an http:// source to enable better caching through
+  # http_proxy, and yes, this is a bit evil
+  chef_omnibus_url: http://www.chef.io/chef/install.sh
+  # set proxy attrs in solo.rb so chef remote_file calls use the proxy too
+  solo_rb:
+    http_proxy: <%= http_proxy_url %>
+    https_proxy: <%= http_proxy_url %>
+    no_proxy: '127.0.0.1,localhost,::1'
+<% end %>
