@@ -28,5 +28,9 @@ precmd() {
   #printf "\033];$(hostname -s):$(basename "$PWD")\007"
   #printf "\033]1;%s\007" "${HOST%%.*}"
   # set tmux title
-  printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"
+  if [ "$TMUX" ]; then
+    printf "\033k%s\033\\" "${PWD##*/}"
+  else
+    printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"
+  fi
 }
