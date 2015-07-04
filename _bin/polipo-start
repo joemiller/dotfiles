@@ -18,9 +18,9 @@ exec polipo \
   disableIndexing='false' \
   disableServersList='false' \
   allowedClients='0.0.0.0/0' \
-  diskCacheRoot='~/.polipo-cache' \
+  diskCacheRoot="$HOME/.polipo-cache" \
   chunkHighMark='201326592' \
   dnsNegativeTtl='10' \
   daemonise='true' \
-  logFile='' \
+  logFile="$HOME/.polipo.log" \
   pidFile="$HOME/.polipo.pid"
