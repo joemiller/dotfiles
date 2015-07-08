@@ -21,3 +21,5 @@ done
 unsetopt share_history
 
 antigen apply
+
+export PATH=$PATH:/usr/local/sbin
