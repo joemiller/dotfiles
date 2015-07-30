@@ -65,6 +65,7 @@ Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'
 
 " Gist
