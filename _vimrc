@@ -19,6 +19,12 @@ autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
 " buffer pos memory
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
+" improve window split resizing: http://flaviusim.com/blog/resizing-vim-window-splits-like-a-boss/
+set winheight=30
+set winminheight=5
+nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
 function! ResCur()
   if line("'\"") <= line("$")
     normal! g`"
