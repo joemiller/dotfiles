@@ -1,9 +1,8 @@
 "
 "  Jesse Nelson <spheromak@gmail.com>
 "  joe miller <joeym@joeym.net>
-" ab  
 "-------------------------------------------------------------------------------
-" 
+"
 "
 set nocompatible               " be iMproved
 
@@ -43,7 +42,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " let Vundle manage Vundle
-" required! 
+" required!
 Plugin 'gmarik/Vundle.vim'
 
 " My Bundles here:
@@ -55,7 +54,7 @@ Plugin 'rizzatti/dash.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Townk/vim-autoclose'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'Lokaltog/vim-powerline' 
+Plugin 'Lokaltog/vim-powerline'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 't9md/vim-chef'
 Plugin 'JSON.vim'
@@ -73,6 +72,7 @@ Plugin 'tpope/vim-abolish'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'
+Bundle 'ntpeters/vim-better-whitespace'
 
 " Gist
 Bundle 'mattn/webapi-vim'
@@ -97,13 +97,13 @@ let g:UltiSnipsEditSplit="vertical"
 
 call vundle#end()            " required
 let g:Powerline_symbols = 'unicode'
-filetype plugin indent on     " required! 
+filetype plugin indent on     " required!
 
 " Common typos fixed.
 ab teh the
 ab fro for
-ab nad and 
-ab adn and 
+ab nad and
+ab adn and
 ab recipie recipe
 ab tempalte template
 ab seperate separate
@@ -292,7 +292,7 @@ nmap <silent> <F3> <Plug>DashSearch
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 "autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
 
-" AutoFormat on write 
+" AutoFormat on write
 noremap <F3> :Autoformat<CR><CR>
 
 " Set some nice character listings, then activate list
