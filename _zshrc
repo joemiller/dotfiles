@@ -23,3 +23,6 @@ unsetopt share_history
 antigen apply
 
 export PATH=$PATH:/usr/local/sbin
+
+# path to completions
+fpath=(/usr/local/share/zsh/site-functions $fpath)
