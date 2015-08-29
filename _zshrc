@@ -26,3 +26,6 @@ export PATH=$PATH:/usr/local/sbin
 
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)
+
+# aws uses a bash style completer
+[ -f "/usr/local/share/zsh/site-functions/_aws" ] && source /usr/local/share/zsh/site-functions/_aws
