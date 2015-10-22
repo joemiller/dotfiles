@@ -17,3 +17,5 @@ case "$OSTYPE" in
 esac
 
 export PATH="$circleci_path:$PATH"
+
+alias c=circleci
