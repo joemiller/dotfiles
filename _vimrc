@@ -73,6 +73,7 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'
 Bundle 'ntpeters/vim-better-whitespace'
+Bundle 'roman/golden-ratio'
 
 " Gist
 Bundle 'mattn/webapi-vim'
