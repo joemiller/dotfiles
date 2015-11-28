@@ -3,3 +3,8 @@ export GEM_HOME="$HOME/.gem"
 
 alias be='bundle exec'
 alias bi='bundle install'
+
+# jruby
+alias jrs='jruby -S'
+alias jbe='jruby -S bundle exec'
+alias jbi='jruby -S bundle install'
