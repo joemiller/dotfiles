@@ -7,6 +7,11 @@ function setup_vim {
     # install the plugins
     vim +PluginInstall +qall
   else
-    echo "vim is already setup. 'rm -rf ~/.vim' and re-run setup_vim if something is wrong"
+    echo "vim is already setup. 'rm -rf ~/.vim' and re-run setup_vim if something is wrong, or run update_vim"
   fi
+}
+
+function update_vim {
+  #vim '+PluginInstall!' +qall
+  vim +PluginUpdate +qall
 }
