@@ -31,4 +31,4 @@ fpath=(/usr/local/share/zsh/site-functions $fpath)
 [ -f "/usr/local/share/zsh/site-functions/_aws" ] && source /usr/local/share/zsh/site-functions/_aws
 
 # the `git verify tag` alias would interfere with golang gvt util
-unset gvt
+unalias gvt
