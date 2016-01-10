@@ -6,6 +6,11 @@ case "$(uname)" in
         alias la='ls -G -a'
         ;;
     "OpenBSD")
+        # OpenBSD 5.8+ replaces sudo with doas in the base system. sudo can optionally be installed from ports.
+        # If doas is available and sudo is not, alias sudo to doas
+        if [ -e "/usr/bin/doas" ] && [ ! -e "/usr/local/bin/sudo" ]; then
+          alias sudo='doas'
+        fi
         if [ -e "/usr/local/bin/colorls" ]; then
           alias l.='/usr/local/bin/colorls -G -d .*'
           alias ll='/usr/local/bin/colorls -G -l'
