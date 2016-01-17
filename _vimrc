@@ -74,6 +74,7 @@ Plugin 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'
 Bundle 'ntpeters/vim-better-whitespace'
 "Bundle 'zhaocai/GoldenView.Vim'
+Plugin 'Matt-Deacalion/vim-systemd-syntax'
 
 " Gist
 Bundle 'mattn/webapi-vim'
