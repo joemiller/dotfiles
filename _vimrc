@@ -65,6 +65,7 @@ Plugin 'https://github.com/kien/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
 Plugin 'craigemery/vim-autotag'
+" must install shellcheck. brew info shellcheck
 Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
