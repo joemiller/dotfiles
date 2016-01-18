@@ -55,7 +55,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'Townk/vim-autoclose'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'Lokaltog/vim-powerline'
-Plugin 'Lokaltog/vim-easymotion'
+" Plugin 'Lokaltog/vim-easymotion'
 Plugin 't9md/vim-chef'
 Plugin 'JSON.vim'
 Plugin 'ervandew/supertab'
@@ -76,6 +76,13 @@ Plugin 'smerrill/vcl-vim-plugin'
 Bundle 'ntpeters/vim-better-whitespace'
 "Bundle 'zhaocai/GoldenView.Vim'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
+
+" use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
+Bundle 'chase/vim-ansible-yaml'
+" set yaml files to be type ansible
+au BufRead,BufNewFile *.yaml set filetype=ansible
+au BufRead,BufNewFile *.yml set filetype=ansible
+
 
 " Gist
 Bundle 'mattn/webapi-vim'
@@ -146,7 +153,7 @@ set statusline+=0x%-8B                       " character value
 set statusline+=%-14(%l,%c%V%)               " line, character
 set statusline+=%<%P                         " file position
 
-"set grepprg=ack
+set grepprg=pt
 "set grepformat=%f:%l:%m
 
 
