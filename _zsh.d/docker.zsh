@@ -6,3 +6,5 @@ function docker-env() {
 
 alias docker-cleanup-images='docker images -q --filter "dangling=true" | xargs -P8 docker rmi'
 alias docker-cleanup-containers='docker rm $(docker ps -a -q)'
+
+alias dm='docker-machine'
