@@ -1,6 +1,8 @@
-# XXX: sort of a hack... We only want to run gpg-agent on local workstation. For now, we can probably
-#      do this by only running the agent on mac osx, though this is not perfect.
-if [[ "$OSTYPE" =~ darwin ]]; then
+# We only want to run gpg-agent on our local workstation. We accomplish that by trying to
+# detect if this shell was spawned from ssh or not. If the SSH_CLIENT env var is set, then
+# this is probably a remote login and we don't want to run gpg-agent.
+
+if [ ! -n "$SSH_CLIENT" ]; then
 	[ -e "${HOME}/.gpg-agent-info" ] && source "${HOME}/.gpg-agent-info"
 	gpg-connect-agent /bye &>/dev/null || gpg-agent --daemon &>/dev/null
 	source "${HOME}/.gpg-agent-info"
