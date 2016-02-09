@@ -9,7 +9,7 @@ antigen bundle zsh-users/zsh-completions src
 
 antigen bundle djui/alias-tips
 
-if [ "$OSTYPE"="darwin11.0" ]; then
+if [[ "$OSTYPE" =~ darwin ]]; then
   antigen bundle osx
 fi
 
