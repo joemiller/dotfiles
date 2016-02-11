@@ -352,7 +352,6 @@ nmap <silent> <leader>l :call ToggleList("Location List", 'l')<CR>
 nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 " ---------------- end list toggle code ----------------------
 
-" set a vertical marker at the 80th column on text files
-"autocmd FileType markdown let &textwidth=80
-autocmd FileType markdown let &colorcolumn="80"
-autocmd FileType text let &colorcolumn="80"
+" set a vertical marker at the 80th and 120th columns on text files
+autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
+autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
