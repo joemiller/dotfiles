@@ -14,4 +14,7 @@ if [ ! -n "$SSH_CLIENT" ]; then
 
 	GPG_TTY=$(tty)
 	export GPG_TTY
+
+  alias restart_gpg_agent='gpgconf --kill gpg-agent; gpgconf --launch gpg-agent'
 fi
+
