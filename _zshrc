@@ -1,4 +1,7 @@
+#
 # reminder: to update antigen: run `antigen selfupdate` and commit any changes
+# to update plugins run `antigen update`
+#
 source ~/.dotfiles/antigen.zsh
 
 antigen use oh-my-zsh
