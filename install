@@ -13,7 +13,7 @@ while getopts "nh" opt; do
     esac
 done
 
-function usage() {
+usage() {
     echo "$0 [options]"
     echo
     echo " -n       Do not run any git actions"
@@ -21,14 +21,22 @@ function usage() {
     exit 0
 }
 
+symlink() {
+  local source="$1"
+  local target="$2"
+  echo "symlinking: $source -> $target"
+  ln -nsf "$source" "$target"
+}
+
+
 # does ~/.dotfiles exist? If not, this must be a first install.
 # skip all git actions if '-n' argument is specified
 if [ "$RUN_GIT" != 'no' ]; then
     if [ ! -e "$HOME/.dotfiles" ]; then
-        git clone $GIT_URL $INSTALL_DIR
-        cd $INSTALL_DIR
+        git clone "$GIT_URL" "$INSTALL_DIR"
+        cd "$INSTALL_DIR"
     else
-        cd $INSTALL_DIR
+        cd "$INSTALL_DIR"
         if ! git diff-index --quiet HEAD --; then
             echo 'WARNING: There are uncommitted local changes'
         fi
@@ -52,14 +60,21 @@ for i in _*; do
         fi
     fi
 
-    if [ -e "${target}" -a ! -h ${target} ]; then
+    # special case for .gnupg. Instead of symlinking the whole home dir, we only symlink specific files
+    if [ "$i" = "_gnupg" ]; then
+      [ ! -e "${HOME}/.gnupg" ] && mkdir -p "${HOME}/.gnupg"
+      for f in "$source"/*; do
+        symlink "$f" "$HOME/.gnupg/$(basename "$f")"
+      done
+
+      continue
+    fi
+
+    # everything else gets symlinked according to the standard pattern
+    if [ -e "${target}" ] && [ ! -h "${target}" ]; then
         backup="${HOME}/.save.${i}"
         echo "${target} already exists. Moving to ${backup}"
-        mv ${target} ${backup}
+        mv "${target}" "${backup}"
     fi
-    echo "symlinking ${source} to ${target}"
-    ln -snf ${source} ${target}
+    symlink "$source" "$target"
 done
-
-# TODO - optional erb templates for sensitive info?
-
