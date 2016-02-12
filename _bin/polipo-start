@@ -2,14 +2,14 @@
 set -e
 [ -n "$DEBUG" ] && set -x
 
-if ! command -v polipo >/dev/null ; then
-  echo "$(basename $0) - polipo command not found, please install and retry"
+if ! type -P polipo >/dev/null ; then
+  echo "$(basename "$0") - polipo command not found, please install and retry"
   exit 10
 fi
 
 mkdir -p "$HOME/.polipo-cache"
 
-if which iptables; then
+if type -P iptables; then
   sudo iptables -I INPUT -s 172.17.0.0/16 -j ACCEPT
 fi
 
