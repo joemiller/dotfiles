@@ -1,1 +1,0 @@
-../_bash.d/vim.bash

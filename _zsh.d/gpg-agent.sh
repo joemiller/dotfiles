@@ -1,1 +1,0 @@
-../_bash.d/gpg-agent.sh

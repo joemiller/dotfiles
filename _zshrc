@@ -16,9 +16,12 @@ if [[ "$OSTYPE" =~ darwin ]]; then
   antigen bundle osx
 fi
 
-# load any other scriptlets dropped into .zsh.d
-for rc in `ls ~/.zsh.d`; do
-    source ~/.zsh.d/$rc
+for rc in "$HOME/.common.sh.d"/*; do
+    source "$rc"
+done
+
+for rc in "$HOME/.zsh.d"/*; do
+    source "$rc"
 done
 
 unsetopt share_history

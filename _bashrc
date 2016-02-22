@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 ### source the system profile
 if [ -e "/etc/profile" ]; then
     source /etc/profile
@@ -19,10 +21,10 @@ if [ -r /usr/local/bin/bashmarks.sh ]; then
 fi
 
 ### source all the various stuff others have dropped in
-for rc in `ls ~/.bash.d`; do
-    source ~/.bash.d/$rc
+for rc in "$HOME/.bash.d/"*; do
+    source "$rc"
 done
 
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+for rc in "$HOME/.common.sh.d"/*; do
+    source "$rc"
+done

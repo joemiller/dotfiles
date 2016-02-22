@@ -1,1 +1,0 @@
-../_bash.d/golang.bash

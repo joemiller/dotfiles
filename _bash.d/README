@@ -3,3 +3,7 @@
 # you'd like to make. Just create a file in this directory and it'll be sourced
 # by ~/.bashrc.
 #
+# Only put bash-specific customizations here. Most things can probably be
+# re-used between zsh and bash and those should be placed in the ../_common.sh
+# dir instead.
+#
