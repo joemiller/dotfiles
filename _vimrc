@@ -291,8 +291,8 @@ autocmd BufRead,BufNewFile */cookbooks/*/recipes/*.rb setlocal path+=recipes;/co
 syntax enable
 set background=dark
 let g:solarized_termcolors=256
-"let g:solarized_visibility = "high"
-"let g:solarized_contrast = "high"
+let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
 colorscheme solarized
 
 nmap <silent> <F2> <Plug>DashSearch
