@@ -24,3 +24,7 @@
   p = push
 [push]
 	default = matching
+[gpg]
+	program = gpg2
+[commit]
+	gpgSign = true
