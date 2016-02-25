@@ -18,3 +18,6 @@ if [ ! -n "$SSH_CLIENT" ]; then
   alias restart_gpg_agent='gpgconf --kill gpg-agent; gpgconf --launch gpg-agent'
 fi
 
+if [[ "$OSTYPE" =~ darwin ]] && type gpg2 >/dev/null 2>&1; then
+  alias gpg=gpg2
+fi
