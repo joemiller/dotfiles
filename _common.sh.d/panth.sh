@@ -16,3 +16,5 @@ psh() {
   fi
   ssh "$host.panth.io"
 }
+
+alias kube-panth-internal='kubectl config use-context gke_pantheon-internal_us-central1-b_us-central1-b-cluster-1'
