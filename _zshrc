@@ -35,3 +35,6 @@ fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 # aws uses a bash style completer
 [ -f "/usr/local/share/zsh/site-functions/_aws" ] && source /usr/local/share/zsh/site-functions/_aws
+
+# disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
