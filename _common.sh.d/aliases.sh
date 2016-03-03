@@ -30,5 +30,3 @@ case "$(uname)" in
         alias la='ls -a --color=auto'
         alias joe_dstat='dstat -lpcgyrdnm'
 esac
-
-alias g=git
