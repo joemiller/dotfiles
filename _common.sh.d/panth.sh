@@ -18,3 +18,5 @@ psh() {
 }
 
 alias kube-panth-internal='kubectl config use-context gke_pantheon-internal_us-central1-b_us-central1-b-cluster-1'
+
+alias tail_val='tail -q -f /var/log/valhalla/*.log | grep -v /healthcheck'
