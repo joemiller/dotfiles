@@ -76,6 +76,8 @@ Plugin 'smerrill/vcl-vim-plugin'
 Bundle 'ntpeters/vim-better-whitespace'
 "Bundle 'zhaocai/GoldenView.Vim'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
+Plugin 'ekalinin/Dockerfile.vim'
+
 
 " use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
 Bundle 'chase/vim-ansible-yaml'
