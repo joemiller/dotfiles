@@ -78,13 +78,17 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'smerrill/vcl-vim-plugin'
-"Plugin 'Valloric/YouCompleteMe'
+"don't forget to install YouCompleteMe compiled bits, likely:
+"  cd ~/.vim/bundle/YouCompleteMe
+"  ./install.py --clang-completer --gocode-completer
+Plugin 'Valloric/YouCompleteMe'
 Bundle 'ntpeters/vim-better-whitespace'
 "Bundle 'zhaocai/GoldenView.Vim'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-commentary'
+Plugin 'nazo/pt.vim'
 
 " use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
 Bundle 'chase/vim-ansible-yaml'
@@ -96,25 +100,12 @@ au BufRead,BufNewFile *.yml set filetype=ansible
 " Gist
 Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
-" Track the engine.
-Plugin 'SirVer/ultisnips'
 Plugin 'tpope/vim-surround'
 "
 Plugin 'dgryski/vim-godef'
-" Snippets are separated from the engine. Add this if you want them:
-Plugin 'honza/vim-snippets'
 "
-" Trigger configuration. Do not use <tab> if you use
-" https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
-
-
 call vundle#end()            " required
+
 let g:Powerline_symbols = 'unicode'
 filetype plugin indent on     " required!
 
