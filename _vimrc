@@ -15,11 +15,17 @@ set sw=2
 set expandtab
 autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
 
+" Send more characters for redraws
+set ttyfast
+
+" enable mouse
+set mouse=a
+
 " buffer pos memory
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " improve window split resizing: http://flaviusim.com/blog/resizing-vim-window-splits-like-a-boss/
-set winheight=30
+set winheight=20
 set winminheight=5
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
@@ -77,7 +83,8 @@ Bundle 'ntpeters/vim-better-whitespace'
 "Bundle 'zhaocai/GoldenView.Vim'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'ekalinin/Dockerfile.vim'
-
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'tpope/vim-commentary'
 
 " use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
 Bundle 'chase/vim-ansible-yaml'
