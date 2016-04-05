@@ -67,7 +67,7 @@ Plugin 'JSON.vim'
 Plugin 'ervandew/supertab'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Plugin 'fatih/vim-go'
-Plugin 'https://github.com/kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
 Plugin 'craigemery/vim-autotag'
