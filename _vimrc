@@ -10,10 +10,12 @@ set t_Co=256
 
 "set clipboard=unnamed
 
-set ts=2
-set sw=2
+set ts=4
+set sw=4
 set expandtab
 autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab
 
 " Send more characters for redraws
 set ttyfast
