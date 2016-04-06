@@ -14,6 +14,7 @@ function setup_vim {
 function update_vim {
   #vim '+PluginInstall!' +qall
   vim +PluginUpdate +qall
+  vim +PluginClean +qall
 }
 
 function update_ycm {
