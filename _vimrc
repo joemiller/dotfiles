@@ -58,13 +58,14 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'oplatek/Conque-Shell'
 Plugin 'rizzatti/dash.vim'
 Plugin 'scrooloose/nerdtree'
-Plugin 'Townk/vim-autoclose'
+"Plugin 'Townk/vim-autoclose'
+Plugin 'jiangmiao/auto-pairs'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'Lokaltog/vim-powerline'
 " Plugin 'Lokaltog/vim-easymotion'
 Plugin 't9md/vim-chef'
 Plugin 'JSON.vim'
-Plugin 'ervandew/supertab'
+"Plugin 'ervandew/supertab'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
 Plugin 'fatih/vim-go'
 Plugin 'ctrlpvim/ctrlp.vim'
@@ -355,3 +356,6 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 " set a vertical marker at the 80th and 120th columns on text files
 autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
 autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
+
+" map ctrl-I to tabnext
+nmap <C-I> :tabnext<CR>

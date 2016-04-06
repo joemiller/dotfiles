@@ -15,3 +15,9 @@ function update_vim {
   #vim '+PluginInstall!' +qall
   vim +PluginUpdate +qall
 }
+
+function update_ycm {
+  cd ~/.vim/bundle/YouCompleteMe
+  ./install.py --clang-completer --gocode-completer
+  cd -
+}
