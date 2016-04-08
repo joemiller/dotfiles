@@ -24,7 +24,7 @@ set ttyfast
 set mouse=a
 
 " buffer pos memory
-set viminfo='10,\"100,:20,%,n~/.viminfo
+"set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " improve window split resizing: http://flaviusim.com/blog/resizing-vim-window-splits-like-a-boss/
 set winheight=20
@@ -174,11 +174,7 @@ set nobackup       "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
 set noswapfile     "no swap files
 
-"set paste
 set number
-"set mouse=a
-set background=dark
-let g:solarized_visibility =  "low"
 
 filetype plugin on
 
@@ -291,9 +287,11 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 " Add all cookbooks/*/recipe dirs to Vim's path variable
 autocmd BufRead,BufNewFile */cookbooks/*/recipes/*.rb setlocal path+=recipes;/cookbooks/**1
 
+set term=xterm-256color
 syntax enable
 set background=dark
-let g:solarized_termcolors=256
+let g:solarized_termcolors=16
+"let g:solarized_visibility =  "low"
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 colorscheme solarized
