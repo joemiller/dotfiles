@@ -10,6 +10,10 @@ set t_Co=256
 
 "set clipboard=unnamed
 
+if has('nvim')
+  runtime! plugin/python_setup.vim
+endif
+
 set ts=4
 set sw=4
 set expandtab
@@ -27,8 +31,8 @@ set mouse=a
 "set viminfo='10,\"100,:20,%,n~/.viminfo
 
 " improve window split resizing: http://flaviusim.com/blog/resizing-vim-window-splits-like-a-boss/
-set winheight=20
-set winminheight=5
+"set winheight=20
+"set winminheight=5
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
@@ -92,6 +96,7 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-commentary'
 Plugin 'nazo/pt.vim'
+Plugin 'vim-ruby/vim-ruby'
 
 " use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
 Bundle 'chase/vim-ansible-yaml'
@@ -222,8 +227,11 @@ autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 " syntastic should populate the loclist
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 2
 let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+
+let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 
 " jump loclist
 map <Leader>n :lnext<CR>
@@ -287,7 +295,6 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 " Add all cookbooks/*/recipe dirs to Vim's path variable
 autocmd BufRead,BufNewFile */cookbooks/*/recipes/*.rb setlocal path+=recipes;/cookbooks/**1
 
-set term=xterm-256color
 syntax enable
 set background=dark
 let g:solarized_termcolors=16
