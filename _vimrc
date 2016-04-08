@@ -173,7 +173,12 @@ map Q gq
 filetype plugin indent on
 syntax on
 
-let mapleader=','
+"let mapleader=','
+" #gamechanger:
+let mapleader = "\<Space>"
+
+" fast visual mode with <space><space>
+nmap <Leader><Leader> V
 
 set nobackup       "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
