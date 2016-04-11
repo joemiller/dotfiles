@@ -371,11 +371,12 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
 autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
 
-" map ctrl-I to tabnext
+" map gt/gp to next/prev tab
 noremap <silent> <leader>gt :tabnext<CR>
 noremap <silent> <leader>gp :tabprev<CR>
-noremap <silent> <leader>nn :wincmd l<CR>
-noremap <silent> <leader>pp :wincmd h<CR>
+
+" map tab to scroll thru splits
+nnoremap <Tab> <c-w>w
 
 " make vert split bar less prominent
 hi VertSplit ctermbg=bg ctermfg=bg
@@ -385,3 +386,11 @@ nnoremap <Leader>w :w<CR>
 " fast opening cltrp with SPC-o
 nnoremap <Leader>o :CtrlP<CR>
 
+" use go-metalinter to run all the things (https://github.com/alecthomas/gometalinter)
+" install:
+"   go get -u github.com/alecthomas/gometalinter
+"   gometalinter --install --update
+" NOTE: too slow to run all the linters on most projects. disabled
+"let g:syntastic_go_checkers = ['gometalinter']
+
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
