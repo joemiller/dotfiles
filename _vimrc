@@ -36,6 +36,7 @@ set mouse=a
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
+
 function! ResCur()
   if line("'\"") <= line("$")
     normal! g`"
@@ -97,6 +98,7 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'tpope/vim-commentary'
 Plugin 'nazo/pt.vim'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'ConradIrwin/vim-bracketed-paste'
 
 " use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
 Bundle 'chase/vim-ansible-yaml'
@@ -370,4 +372,11 @@ autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
 autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
 
 " map ctrl-I to tabnext
-nmap <C-I> :tabnext<CR>
+noremap <silent> <leader>gt :tabnext<CR>
+noremap <silent> <leader>gp :tabprev<CR>
+noremap <silent> <leader>nn :wincmd l<CR>
+noremap <silent> <leader>pp :wincmd h<CR>
+
+" make vert split bar less prominent
+hi VertSplit ctermbg=bg ctermfg=bg
+
