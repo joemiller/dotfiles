@@ -380,3 +380,8 @@ noremap <silent> <leader>pp :wincmd h<CR>
 " make vert split bar less prominent
 hi VertSplit ctermbg=bg ctermfg=bg
 
+" fast save with SPC-w
+nnoremap <Leader>w :w<CR>
+" fast opening cltrp with SPC-o
+nnoremap <Leader>o :CtrlP<CR>
+
