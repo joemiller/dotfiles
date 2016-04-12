@@ -21,21 +21,14 @@ autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab
 
-" Send more characters for redraws
-set ttyfast
-
-" enable mouse
-set mouse=a
+set ttyfast    " Send more characters for redraws
+set mouse=a    " enable mouse
 
 " buffer pos memory
 "set viminfo='10,\"100,:20,%,n~/.viminfo
 
-" improve window split resizing: http://flaviusim.com/blog/resizing-vim-window-splits-like-a-boss/
-"set winheight=20
-"set winminheight=5
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
-
 
 function! ResCur()
   if line("'\"") <= line("$")
@@ -59,7 +52,6 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 " My Bundles here:
-
 Plugin 'Chiel92/vim-autoformat'
 Plugin 'tpope/vim-fugitive'
 Plugin 'oplatek/Conque-Shell'
@@ -79,8 +71,8 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
 Plugin 'craigemery/vim-autotag'
-" must install shellcheck. brew info shellcheck
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
+Plugin 'benekastah/neomake'
 Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
@@ -99,21 +91,11 @@ Plugin 'tpope/vim-commentary'
 Plugin 'nazo/pt.vim'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'ConradIrwin/vim-bracketed-paste'
-
-" use the vim-ansible-yaml plugin for yaml files cuz the builtin formatter sucks for yaml
-Bundle 'chase/vim-ansible-yaml'
-" set yaml files to be type ansible
-au BufRead,BufNewFile *.yaml set filetype=ansible
-au BufRead,BufNewFile *.yml set filetype=ansible
-
-
-" Gist
+Plugin 'tpope/vim-surround'
+Plugin 'dgryski/vim-godef'
 Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
-Plugin 'tpope/vim-surround'
-"
-Plugin 'dgryski/vim-godef'
-"
+
 call vundle#end()            " required
 
 let g:Powerline_symbols = 'unicode'
@@ -136,16 +118,6 @@ ab balacner balancer
 " lines of visible b4 scroll
 set scrolloff=8
 
-" Date/Time stamps
-" %a - Day of the week
-" %b - Month
-" %d - Day of the month
-" %Y - Year
-" %H - Hour
-" %M - Minute
-" %S - Seconds
-" %Z - Time Zone
-
 hi clear
 
 set laststatus=2
@@ -163,9 +135,9 @@ set statusline+=0x%-8B                       " character value
 set statusline+=%-14(%l,%c%V%)               " line, character
 set statusline+=%<%P                         " file position
 
-set grepprg=pt
-"set grepformat=%f:%l:%m
-
+if executable('pt')
+  set grepprg=pt
+endif
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -175,12 +147,7 @@ map Q gq
 filetype plugin indent on
 syntax on
 
-"let mapleader=','
-" #gamechanger:
 let mapleader = "\<Space>"
-
-" fast visual mode with <space><space>
-nmap <Leader><Leader> V
 
 set nobackup       "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
@@ -191,10 +158,6 @@ set number
 filetype plugin on
 
 highlight Pmenu ctermbg=238 gui=bold
-
-"set guifont=Source\ Code\ Pro:h16 " Set default font
-"let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
 
 au FileType go map <leader>r :!go run %<CR>
 
@@ -232,33 +195,18 @@ let g:tagbar_type_go = {
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-" syntastic should populate the loclist
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-
-let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-
-" jump loclist
-map <Leader>n :lnext<CR>
-map <Leader>p :lprev<CR>
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
-"nmap <F8> :TagbarToggle<CR>
 nmap <C-m> :TagbarToggle<CR>
 
 "NERDTree settings
-"nmap <F1> :NERDTreeToggle<CR>
 nmap <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeShowHidden=1
 
-let g:gofmt_command = "goimports"
-"let g:godef_split=3
-"
 "faith-go
+let g:go_auto_type_info = 1
 let g:go_fmt_command = "goimports"
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -295,7 +243,6 @@ au FileType go nmap <Leader>i <Plug>(go-info)
 
 "Rename the identifier under the cursor to a new name
 au FileType go nmap <Leader>e <Plug>(go-rename)
-
 "More <Plug> mappings can be seen with :he go-mappings. Also these are just recommendations, you are free to create more advanced mappings or functions based on :he go-commands.
 
 " Make gf work on Chef include_recipe lines
@@ -315,17 +262,9 @@ nmap <silent> <F3> <Plug>DashSearch
 
 " golint https://github.com/golang/lint
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
-"autocmd BufWritePost,FileWritePost *.go execute 'Lint' | cwindow
 
 " AutoFormat on write
 noremap <F3> :Autoformat<CR><CR>
-
-" Set some nice character listings, then activate list
-"execute 'set listchars+=tab:\ ' . nr2char(187)
-"execute 'set listchars+=eol:' . nr2char(183)
-"set list
-
-let g:go_auto_type_info = 1
 
 setlocal spell spelllang=en_us
 set spell
@@ -371,26 +310,36 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
 autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
 
-" map gt/gp to next/prev tab
+nmap <Leader><Leader> V              " fast visual mode with <space><space>
+
 noremap <silent> <leader>gt :tabnext<CR>
 noremap <silent> <leader>gp :tabprev<CR>
 
-" map tab to scroll thru splits
-nnoremap <Tab> <c-w>w
+nnoremap <Tab> <c-w>w                " map tab to scroll thru splits
 
-" make vert split bar less prominent
-hi VertSplit ctermbg=bg ctermfg=bg
+hi VertSplit ctermbg=bg ctermfg=bg   " make vert split bar less prominent
 
-" fast save with SPC-w
-nnoremap <Leader>w :w<CR>
-" fast opening cltrp with SPC-o
-nnoremap <Leader>o :CtrlP<CR>
+nnoremap <Leader>w :w<CR>            " fast save with SPC-w
+nnoremap <Leader>o :CtrlP<CR>        " fast opening cltrp with SPC-o
 
-" use go-metalinter to run all the things (https://github.com/alecthomas/gometalinter)
-" install:
-"   go get -u github.com/alecthomas/gometalinter
-"   gometalinter --install --update
-" NOTE: too slow to run all the linters on most projects. disabled
+map <Leader>n :lnext<CR>             " jump loclist
+map <Leader>p :lprev<CR>             " jump loclist
+
+" linters to install:
+"  - shellcheck (brew install shellcheck)
+"  - go-metalinter (go get -u github.com/alecthomas/gometalinter ;  gometalinter --install --update)
+"  - yamllint (pip install yamllint)
+
+" syntastic (uncomment Plugin to enable)
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+" NOTE: too slow to run all the linters on most projects. disabled for now.
 "let g:syntastic_go_checkers = ['gometalinter']
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
 
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+" neomake settings (uncomment Plugin to enable)
+let g:neomake_open_list=1
+autocmd! BufWritePost * Neomake
