@@ -343,3 +343,8 @@ let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
 " neomake settings (uncomment Plugin to enable)
 let g:neomake_open_list=1
 autocmd! BufWritePost * Neomake
+
+" gist config
+let g:gist_post_private = 1         " private gists by default
+let g:gist_show_privates = 1        " show private gists with :Gist -l
+
