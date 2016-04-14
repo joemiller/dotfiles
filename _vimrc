@@ -20,6 +20,7 @@ set expandtab
 autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab
+autocmd FileType yaml set tabstop=2|set shiftwidth=2|set expandtab
 
 set ttyfast    " Send more characters for redraws
 set mouse=a    " enable mouse
@@ -60,7 +61,9 @@ Plugin 'scrooloose/nerdtree'
 "Plugin 'Townk/vim-autoclose'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'Lokaltog/vim-powerline'
+"Plugin 'Lokaltog/vim-powerline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 " Plugin 'Lokaltog/vim-easymotion'
 Plugin 't9md/vim-chef'
 Plugin 'JSON.vim'
@@ -120,21 +123,13 @@ set scrolloff=8
 
 hi clear
 
+" configure statusline (currently using vim-airline)
 set laststatus=2
-set statusline=
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-set statusline+=%-3.3n\                      " buffer number
-set statusline+=%f\                          " filename
-set statusline+=%h%m%r%w                     " status flags
-set statusline+=\[%{strlen(&ft)?&ft:'none'}] " file type
-set statusline+=\ %{fugitive#statusline()}     " fugitive
-set statusline+=%=                           " right align remainder
-set statusline+=0x%-8B                       " character value
-set statusline+=%-14(%l,%c%V%)               " line, character
-set statusline+=%<%P                         " file position
+let g:airline_theme="luna"         " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+let g:airline_powerline_fonts = 1  " hot fonts! https://github.com/powerline/fonts
+let g:airline_detect_spell=0       " disable the pointless SPELL> marker in the statusline
 
+" configure greppers/searchers
 if executable('pt')
   set grepprg=pt
 endif
