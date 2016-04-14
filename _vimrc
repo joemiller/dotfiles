@@ -125,7 +125,7 @@ hi clear
 
 " configure statusline (currently using vim-airline)
 set laststatus=2
-let g:airline_theme="luna"         " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+let g:airline_theme="bubblegum"    " https://github.com/vim-airline/vim-airline/wiki/Screenshots
 let g:airline_powerline_fonts = 1  " hot fonts! https://github.com/powerline/fonts
 let g:airline_detect_spell=0       " disable the pointless SPELL> marker in the statusline
 
