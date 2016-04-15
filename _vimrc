@@ -66,6 +66,7 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 " Plugin 'Lokaltog/vim-easymotion'
 Plugin 't9md/vim-chef'
+Plugin 'rodjek/vim-puppet'
 Plugin 'JSON.vim'
 "Plugin 'ervandew/supertab'
 Plugin 'nsf/gocode', {'rtp': 'vim/'}
@@ -98,6 +99,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'dgryski/vim-godef'
 Bundle 'mattn/webapi-vim'
 Bundle 'mattn/gist-vim'
+Plugin 'flazz/vim-colorschemes'
 
 call vundle#end()            " required
 
@@ -250,7 +252,7 @@ let g:solarized_termcolors=16
 "let g:solarized_visibility =  "low"
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
-colorscheme solarized
+colorscheme bubblegum
 
 nmap <silent> <F2> <Plug>DashSearch
 nmap <silent> <F3> <Plug>DashSearch
