@@ -91,6 +91,7 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
+Plugin 'mkitt/tabline.vim'
 
 call vundle#end()            " required
 
@@ -300,8 +301,16 @@ autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
 
 nmap <Leader><Leader> V              " fast visual mode with <space><space>
 
-noremap <silent> <leader>gt :tabnext<CR>
-noremap <silent> <leader>gp :tabprev<CR>
+" map space-{n} to quickly change tabs
+noremap <silent> <leader>1 1gt
+noremap <silent> <leader>2 2gt
+noremap <silent> <leader>3 3gt
+noremap <silent> <leader>4 4gt
+noremap <silent> <leader>5 5gt
+noremap <silent> <leader>6 6gt
+noremap <silent> <leader>7 7gt
+noremap <silent> <leader>8 8gt
+noremap <silent> <leader>9 9gt
 
 nnoremap <Tab> <c-w>w                " map tab to scroll thru splits
 
