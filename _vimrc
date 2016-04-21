@@ -70,7 +70,8 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
 Plugin 'craigemery/vim-autotag'
-Plugin 'benekastah/neomake'
+"Plugin 'benekastah/neomake'
+Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-abolish'
@@ -92,6 +93,7 @@ Plugin 'mattn/gist-vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
 Plugin 'mkitt/tabline.vim'
+Plugin 'editorconfig/editorconfig-vim'
 
 call vundle#end()            " required
 
@@ -337,9 +339,9 @@ let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 "let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
 
-" neomake settings (uncomment Plugin to enable)
-let g:neomake_open_list=1
-autocmd! BufWritePost * Neomake
+" neomake settings
+"let g:neomake_open_list=1
+"autocmd! BufWritePost * Neomake
 
 " gist config
 let g:gist_post_private = 1         " private gists by default
