@@ -74,7 +74,6 @@ Plugin 'craigemery/vim-autotag'
 Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-abolish'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'smerrill/vcl-vim-plugin'
 Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
@@ -121,9 +120,18 @@ hi clear
 
 " configure statusline (currently using vim-airline)
 set laststatus=2
-let g:airline_theme="bubblegum"    " https://github.com/vim-airline/vim-airline/wiki/Screenshots
-let g:airline_powerline_fonts = 1  " hot fonts! https://github.com/powerline/fonts
-let g:airline_detect_spell=0       " disable the pointless SPELL> marker in the statusline
+let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+let g:airline_powerline_fonts = 1             " hot fonts! https://github.com/powerline/fonts
+let g:airline_detect_spell=0                  " disable the pointless SPELL> marker in the statusline
+let g:airline#extensions#syntastic#enabled=1
+let g:airline#extensions#default#section_truncate_width = {
+    \ 'b': 110,
+    \ 'x': 100,
+    \ 'y': 110,
+    \ 'z': 50,
+    \ 'warning': 90,
+    \ 'error': 90,
+    \ }
 
 " configure greppers/searchers
 if executable('pt')
@@ -143,8 +151,7 @@ let mapleader = "\<Space>"
 set nobackup       "no backup files
 set nowritebackup  "only in case you don't want a backup file while editing
 set noswapfile     "no swap files
-
-set number
+set number         "enable line number
 
 filetype plugin on
 
