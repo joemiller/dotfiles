@@ -344,7 +344,7 @@ let g:syntastic_check_on_wq = 1
 let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 " NOTE: too slow to run all the linters on most projects. disabled for now.
 "let g:syntastic_go_checkers = ['gometalinter']
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
 
 " neomake settings
 "let g:neomake_open_list=1
