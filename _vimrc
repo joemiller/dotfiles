@@ -346,6 +346,15 @@ let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 "let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
 let g:syntastic_yaml_checkers = ['yamllint']
+let g:syntastic_error_symbol         = '❌'
+let g:syntastic_warning_symbol       = '⚠️'
+let g:syntastic_style_error_symbol   = '⁉️'
+let g:syntastic_style_warning_symbol = '💩'
+highlight link SyntasticErrorSign SignColumn
+highlight link SyntasticWarningSign SignColumn
+highlight link SyntasticStyleErrorSign SignColumn
+highlight link SyntasticStyleWarningSign SignColumn
+let g:syntastic_stl_format = "[%E{❌ %fe #%e}%B{|}%W{⚠️ %fw #%w}]"
 
 " neomake settings
 "let g:neomake_open_list=1
