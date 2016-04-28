@@ -8,3 +8,16 @@ alias kube-cluster01='kubectl config use-context gke_pantheon-internal_us-centra
 alias kube-panth-old_cluster='kubectl config use-context gke_pantheon-internal_us-central1-b_us-central1-b-cluster-1'
 
 alias kube-whereami='kubectl config current-context'
+
+# set default namespace
+function kube-setns {
+  if [ -z "$1" ] ; then
+    echo "provide the namespace name you want to switch to default"
+    return
+  fi
+  set -e
+  local CONTEXT=$(kubectl config current-context)
+  kubectl config set-context "$CONTEXT" --namespace="$1"
+  set +e
+}
+

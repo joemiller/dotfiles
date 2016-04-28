@@ -22,17 +22,33 @@ function git_prompt_info() {
   echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 
+# add current kubernetes cluster and namespace (if set) to the prompt.
+# Prefix with `gke:` if this is a google container engine cluser.
+#
+#   ‹cluster-01›
+#   ‹gke:cluster-01›
+#   ‹gke:cluster-01/production›
+#
 function kube_info() {
-  cluster=$(kubectl config current-context 2>/dev/null)
+  local PREFIX="‹"
+  local SUFFIX="›"
+  local COLOR="%{${FG[031]}%}"
+
+  local cluster=$(kubectl config current-context 2>/dev/null)
   if [[ -z "$cluster" ]]; then
     return
   fi
+  local cluster_shortname=$(awk -F_ '{print $NF}' <<< "$cluster")
+  local namespace=$(kubectl config view -o jsonpath --template "{.contexts[?(@.name==\"$cluster\")].context.namespace}" 2>/dev/null)
 
-  short_cluster_name=$(awk -F_ '{print $NF}' <<< "$cluster")
   if [[ "$cluster" == gke* ]]; then
-    short_cluster_name="gke:$short_cluster_name"
+    local cluster_shortname="gke:$cluster_shortname"
   fi
-  echo "%{${FG[031]}%}‹$short_cluster_name›%{${reset_color}%} "
+
+  if [[ ! -z "$namespace" ]]; then
+    namespace="/$namespace"
+  fi
+  echo "$COLOR$PREFIX$cluster_shortname$namespace$SUFFIX%{${reset_color}%} "
 }
 
 DISABLE_AUTO_TITLE="true"
