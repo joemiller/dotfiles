@@ -5,7 +5,7 @@ if [ $UID -eq 0 ]; then USERPROMPT="%{$FG[179]%}root@%{$reset_color%}"; else USE
 
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
-PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(git_prompt_info)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
+PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 
 RPS1="${return_code}"
 
@@ -20,6 +20,19 @@ function git_prompt_info() {
   ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
   #echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX$(current_branch)$ZSH_THEME_GIT_PROMPT_SUFFIX"
   echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+}
+
+function kube_info() {
+  cluster=$(kubectl config current-context 2>/dev/null)
+  if [[ -z "$cluster" ]]; then
+    return
+  fi
+
+  short_cluster_name=$(awk -F_ '{print $NF}' <<< "$cluster")
+  if [[ "$cluster" == gke* ]]; then
+    short_cluster_name="gke:$short_cluster_name"
+  fi
+  echo "%{${FG[031]}%}‹$short_cluster_name›%{${reset_color}%} "
 }
 
 DISABLE_AUTO_TITLE="true"
