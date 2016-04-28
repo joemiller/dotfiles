@@ -32,7 +32,7 @@ function git_prompt_info() {
 function kube_info() {
   local PREFIX="‹"
   local SUFFIX="›"
-  local COLOR="%{${FG[031]}%}"
+  local COLOR="%{${FG[140]}%}"
 
   local cluster=$(kubectl config current-context 2>/dev/null)
   if [[ -z "$cluster" ]]; then
