@@ -32,7 +32,7 @@ jump to or open Chrome. See the `app_jump_menu.lua` for details.
 
 - When joining a "foreign" network (ie: not home network) auto mute sound output
 - When joining specific networks, auto-connect a Tunnelblick VPN (OpenVPN). This
-  is nice to auto-joining a VPN when connecting to public (coffeeshop!) networks.
+  is nice for auto-joining a VPN when connecting to public (coffeeshop!) networks.
 
 References / Resources
 ----------------------
