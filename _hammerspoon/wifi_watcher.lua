@@ -30,8 +30,6 @@ function wifi.onJoinForeignNetwork(newSSID)
     if vpn then
         utils.connectTunnelblickVPN(vpn)
     end
-
-    hs.notify.new({ title="Connected to WiFi", informativeText="Good bye!" }):send()
 end
 
 -- helpers
