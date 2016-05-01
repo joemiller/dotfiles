@@ -32,9 +32,6 @@ function wifi.onJoinForeignNetwork(newSSID)
     end
 end
 
--- helpers
---
-
 -- wifi event dispatcher
 --
 function wifi.dispatch()
