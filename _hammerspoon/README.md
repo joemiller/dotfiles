@@ -33,6 +33,18 @@ jump to or open Chrome. See the `app_jump_menu.lua` for details.
 - When joining a "foreign" network (ie: not home network) auto mute sound output
 - When joining specific networks, auto-connect a Tunnelblick VPN (OpenVPN).
 
+References / Resources
+----------------------
+
+- Hammerspoon Getting Started: http://www.hammerspoon.org/go/
+- Hammerspoon API Docs: http://www.hammerspoon.org/docs/index.html
+- Sample confiurations: https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations
+- Random blog with examples: http://bezhermoso.github.io/2016/01/20/making-perfect-ramen-lua-os-x-automation-with-hammerspoon/
+- Another random blog: https://tomdebruijn.com/posts/super-fast-application-switching/
+- https://github.com/tombruijn/dotfiles/tree/master/hammerspoon
+- https://github.com/cmsj/hammerspoon-config/blob/master/init.lua
+- Some applescript examples: https://github.com/Hammerspoon/hammerspoon/wiki/Krillere's-init.lua-(Window-resizing-and-Safari-tab-hotkeys)
+
 Author
 ------
 
