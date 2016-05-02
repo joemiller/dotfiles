@@ -91,6 +91,7 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'            " this must come after godlygeek/tabular
 Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
 
@@ -369,3 +370,6 @@ let g:ctrlp_open_new_file = 'v'   " open new files in a vertical split
 
 " tabline config
 hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the bubblegum dark theme
+
+" plasticboy/vim-markdown config
+let g:vim_markdown_folding_disabled = 1

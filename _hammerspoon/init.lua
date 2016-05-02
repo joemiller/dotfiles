@@ -14,6 +14,10 @@ wifi.homeSSIDs = {"reddragon-5G", "reddragon-2G"}
 wifi.autoConnectVPNs = {
     ["BREW BROS"] = "home-joeym-net (all traffic)",
     ["the brew"] = "home-joeym-net (all traffic)",
+    ["Pantheon"] = "home-joeym-net",
+    ["Pantheon-5G"] = "home-joeym-net",
+    ["Pantheon-5G"] = "home-joeym-net",
+    ["Pantheon-5G-802.11r"] = "home-joeym-net",
 }
 
 -- ready!
