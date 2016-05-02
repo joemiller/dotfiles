@@ -12,6 +12,10 @@ gives Hammerspoon its power is a set of extensions that expose specific pieces
 of system functionality, to the user.
 ```
 
+Hammerspoon loads `$HOME/.hammerspoon/init.lua` at startup. Start reading this
+configuration from there. The `init.lua` will include and configure the other
+modules.
+
 Features of my hammerspoon config
 ---------------------------------
 
