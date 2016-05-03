@@ -28,7 +28,8 @@ function wifi.onJoinForeignNetwork(newSSID)
     -- if we have defined an auto-connect VPN for this network, tell tunnelblick to connect
     local vpn = wifi.autoConnectVPNs[newSSID]
     if vpn then
-        utils.connectTunnelblickVPN(vpn)
+        -- wait a few seconds before connecting. Otherwise this always seems to do weird things, IME.
+        hs.timer.doAfter(5, function() utils.connectTunnelblickVPN(vpn) end )
     end
 end
 
