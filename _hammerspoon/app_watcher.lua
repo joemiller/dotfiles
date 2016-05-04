@@ -1,6 +1,8 @@
 -- Callback function for application events
 --
 
+local laptopScreen = "Color LCD"
+
 function apps(appName, eventType, appObject)
     if (eventType == hs.application.watcher.activated) then
         if (appName == "Finder") then
@@ -14,7 +16,14 @@ function apps(appName, eventType, appObject)
             -- always move Spotify to the laptop screen (Color LCD) and make it fullscreen, since Spotify
             -- still hasn't figured out how to remember the fullscreen setting
             local win = appObject:mainWindow()
-            win:moveToScreen("Color LCD")
+            win:moveToScreen(laptopScreen)
+            win:setFullScreen(true)
+        end
+
+        if (appName == "Slack") then
+            -- always move Slack to the laptop screen (Color LCD) and make it fullscreen
+            local win = appObject:mainWindow()
+            win:moveToScreen(laptopScreen)
             win:setFullScreen(true)
         end
     end
