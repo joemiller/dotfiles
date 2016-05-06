@@ -5,11 +5,13 @@
 --
 
 local utils = require "utils"
+local nc = require "notification_center"
 
 modal = hs.hotkey.modal.new({"cmd","shift"},'j')
 
 function modal:entered()
     hs.alert.show(
+string.format(
 "hot keys active: (exit: enter esc j) \
   c - chrome \
   e - evernote \
@@ -18,7 +20,14 @@ function modal:entered()
   l - slack \
   s - spotify \
   m - mute microphone \
+  n - Notification Center \
+  . - Do not disturb (toggle) \
+  / - hammerspoon console \
+\
+%s \
 ",
+    utils.osxVersionString()
+),
     999999
     )
 end
@@ -37,3 +46,6 @@ modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ;
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
 modal:bind('','m', function() utils.toggleMicrophoneMute()                     ; modal:exit() end )
+modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
+modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
+modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )
