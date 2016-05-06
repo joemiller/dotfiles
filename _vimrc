@@ -8,7 +8,7 @@ set nocompatible               " be iMproved
 
 set t_Co=256
 
-set clipboard=unnamed          " enable clipboard sharing with mac or x11
+"set clipboard=unnamed          " enable clipboard sharing with mac or x11
 
 if has('nvim')
   runtime! plugin/python_setup.vim
