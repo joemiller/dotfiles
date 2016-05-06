@@ -14,7 +14,7 @@ function utils.muteOutput()
     hs.notify.new( {title="Hammerspoon", subTitle="Sound Muted"} ):send()
 end
 
--- utils.toggleMicrophoneMute() - toggle mute on the default "Input Device" (probably the 
+-- utils.toggleMicrophoneMute() - toggle mute on the default "Input Device" (probably the
 -- microphone).
 --
 function utils.toggleMicrophoneMute()
@@ -38,6 +38,13 @@ function utils.connectTunnelblickVPN(vpnName)
                         connect "%s" \
                       end tell', vpnName)
     )
+end
+
+-- utils.osxVersionString()
+--
+function utils.osxVersionString()
+    v = hs.host.operatingSystemVersion()
+    return string.format("OSX %d.%d.%d", v['major'], v['minor'], v['patch'])
 end
 
 return utils
