@@ -3,6 +3,7 @@ require "app_watcher"
 require "app_jump_menu"
 local wifi = require "wifi_watcher"
 require "auto_reloader"
+local winmod = require "window_controls"
 
 -- settings
 hs.window.animationDuration = 0
@@ -19,6 +20,11 @@ wifi.autoConnectVPNs = {
     ["Pantheon-5G"] = "home-joeym-net",
     ["Pantheon-5G-802.11r"] = "home-joeym-net",
 }
+
+-- global key binds
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F", winmod.toggleMaximized)
+
+-- @TODO: move the top level modal activation keybind from app_jump_menu into here
 
 -- ready!
 hs.notify.new( {title='Hammerspoon', subTitle='Configuration loaded successfully'} ):send()
