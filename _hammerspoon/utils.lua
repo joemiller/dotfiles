@@ -47,4 +47,12 @@ function utils.osxVersionString()
     return string.format("OSX %d.%d.%d", v['major'], v['minor'], v['patch'])
 end
 
+-- utils.chromeQuickTabs()
+--
+function utils.chromeQuickTabs()
+    local chrome = hs.appfinder.appFromName("Google Chrome")
+    chrome:_bringtofront()
+    hs.eventtap.keyStroke({"cmd"}, "e")
+end
+
 return utils

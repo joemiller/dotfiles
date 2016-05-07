@@ -14,6 +14,7 @@ function modal:entered()
 string.format(
 "hot keys active: (exit: enter esc j) \
   c - chrome \
+  t - chrome quick tabs \
   e - evernote \
   f - finder \
   i - iterm \
@@ -40,6 +41,7 @@ modal:bind('','return', function() modal:exit() end)
 
 -- hotkeys while modal is active
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
+modal:bind('','t', function() utils.chromeQuickTabs()                          ; modal:exit() end )
 modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
 modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
