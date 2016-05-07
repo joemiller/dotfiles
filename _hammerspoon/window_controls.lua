@@ -18,10 +18,30 @@ function winmod.toggleMaximized()
     end
 end
 
--- function winmod.bindKeys()
---     hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F", winmod.toggleMaximized)
--- end
+function winmod.currentWindowToLeftHalf()
+	local win = hs.window.focusedWindow()
+	local f = win:frame()
+	local screen = win:screen()
+	local max = screen:frame()
 
--- winmod.bindKeys()
+	f.x = max.x
+	f.y = max.y
+	f.w = max.w / 2
+	f.h = max.h
+	win:setFrame(f)
+end
+
+function winmod.currentWindowToRightHalf()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local max = screen:frame()
+
+  f.x = max.x + (max.w / 2)
+  f.y = max.y
+  f.w = max.w / 2
+  f.h = max.h
+  win:setFrame(f)
+end
 
 return winmod
