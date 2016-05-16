@@ -95,6 +95,7 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'            " this must come after godlygeek/tabular
 Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
+Plugin 'polm/github-tasks.vim'
 
 call vundle#end()            " required
 
