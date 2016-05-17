@@ -19,6 +19,7 @@ end
 
 function wifi.onJoinHomeNetwork(newSSID)
     hs.notify.new({ title="Connected to WiFi", informativeText="Welcome home!" }):send()
+    utils.disconnectTunnelblickVPNs()
 end
 
 function wifi.onJoinForeignNetwork(newSSID)

@@ -40,6 +40,16 @@ function utils.connectTunnelblickVPN(vpnName)
     )
 end
 
+-- utils.disconnectTunnelblickVPNs - disconnect all connected tunnelblick VPNs
+--
+function utils.disconnectTunnelblickVPNs()
+    return hs.osascript.applescript(
+        'tell application "Tunnelblick" \
+           disconnect all \
+         end tell'
+    )
+end
+
 -- utils.osxVersionString()
 --
 function utils.osxVersionString()
