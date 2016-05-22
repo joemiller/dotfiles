@@ -20,7 +20,6 @@ string.format(
   i - iterm \
   l - slack \
   s - spotify \
-  m - mute microphone \
   n - Notification Center \
   . - Do not disturb (toggle) \
   / - hammerspoon console \
@@ -47,7 +46,6 @@ modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ;
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
-modal:bind('','m', function() utils.toggleMicrophoneMute()                     ; modal:exit() end )
 modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
 modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )

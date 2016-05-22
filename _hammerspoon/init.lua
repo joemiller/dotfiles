@@ -4,6 +4,7 @@ require "app_jump_menu"
 local wifi = require "wifi_watcher"
 require "auto_reloader"
 local winmod = require "window_controls"
+local utils = require "utils"
 
 -- settings
 hs.window.animationDuration = 0
@@ -25,6 +26,7 @@ wifi.autoConnectVPNs = {
 
 -- global key binds
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F",     winmod.toggleMaximized)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 
