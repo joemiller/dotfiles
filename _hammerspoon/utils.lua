@@ -23,7 +23,7 @@ function utils.toggleMicrophoneMute()
 
     local message = newState == true and "Muted microphone" or "Un-muted microphone"
     --hs.notify.new( {title="Hammerspoon", subTitle=message} ):send()
-    hs.alert.show(message, 1)
+    hs.alert.show(message, 0.5)
 
     device:setMuted(newState) -- true/false toggles muted state
 end
