@@ -13,16 +13,17 @@ function modal:entered()
     hs.alert.show(
 string.format(
 "hot keys active: (exit: enter esc j) \
-  c - chrome \
-  t - chrome quick tabs \
-  e - evernote \
-  f - finder \
-  i - iterm \
-  l - slack \
-  s - spotify \
-  n - Notification Center \
-  . - Do not disturb (toggle) \
-  / - hammerspoon console \
+    c - chrome \
+    t - chrome quick tabs \
+    e - evernote \
+    f - finder \
+    i - iterm \
+    l - slack \
+    s - spotify \
+    m - iMessage \
+    n - Notification Center \
+    . - Do not disturb (toggle) \
+    / - hammerspoon console \
 \
 %s \
 ",
@@ -46,6 +47,7 @@ modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ;
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
+modal:bind('','m', function() hs.application.launchOrFocus( "Messages.app" )   ; modal:exit() end )
 modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
 modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )
