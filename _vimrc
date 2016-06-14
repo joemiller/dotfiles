@@ -96,6 +96,7 @@ Plugin 'plasticboy/vim-markdown'            " this must come after godlygeek/tab
 Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'polm/github-tasks.vim'
+Plugin 'jez/vim-github-hub'
 
 call vundle#end()            " required
 
@@ -117,7 +118,7 @@ ab balacner balancer
 "set relativenumber
 
 " lines of visible b4 scroll
-set scrolloff=8
+set scrolloff=6
 
 hi clear
 
