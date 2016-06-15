@@ -97,6 +97,7 @@ Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'polm/github-tasks.vim'
 Plugin 'jez/vim-github-hub'
+Plugin 'wakatime/vim-wakatime'
 
 call vundle#end()            " required
 
