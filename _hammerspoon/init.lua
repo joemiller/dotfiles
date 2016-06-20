@@ -26,6 +26,7 @@ wifi.autoConnectVPNs = {
 
 -- global key binds
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F",     winmod.toggleMaximized)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "H",     winmod.currentWindowToSpecificSize)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)

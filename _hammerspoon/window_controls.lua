@@ -44,4 +44,18 @@ function winmod.currentWindowToRightHalf()
   win:setFrame(f)
 end
 
+function winmod.currentWindowToSpecificSize()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen():frame()
+  local builtInScreen = hs.screen('Color LCD')
+  local max = builtInScreen:frame()
+
+  f.x = screen.x
+  f.y = screen.y
+  f.w = max.w
+  f.h = max.h
+  win:setFrame(f)
+end
+
 return winmod
