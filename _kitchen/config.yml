@@ -43,6 +43,7 @@ driver:
   # used in kitchen-docker to pre-install/cache a Chef Ommnibus package in a
   # layer before booting containers
   provision_command: "env http_proxy=<%= http_proxy_url %> bash -c 'curl -L http://www.chef.io/chef/install.sh | bash'"
+  use_sudo: false
 
 provisioner:
   # installs from an http:// source to enable better caching through
@@ -53,4 +54,7 @@ provisioner:
     http_proxy: <%= http_proxy_url %>
     https_proxy: <%= http_proxy_url %>
     no_proxy: '127.0.0.1,localhost,::1'
+<% else %>
+driver:
+  use_sudo: false
 <% end %>
