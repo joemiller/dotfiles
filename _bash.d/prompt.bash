@@ -1,3 +1,28 @@
+
+function _kube_info() {
+  local PREFIX="‹"
+  local SUFFIX="›"
+  #local COLOR="%{${FG[140]}%}"
+  local COLOR="\[\033[38;5;140m\]"
+  local NO_COLOR="\[\033[0m\]"
+
+  local cluster=$(kubectl config current-context 2>/dev/null)
+  if [[ -z "$cluster" ]]; then
+    return
+  fi
+  local cluster_shortname=$(awk -F_ '{print $NF}' <<< "$cluster")
+  local namespace=$(kubectl config view -o jsonpath --template "{.contexts[?(@.name==\"$cluster\")].context.namespace}" 2>/dev/null)
+
+  if [[ "$cluster" == gke* ]]; then
+    local cluster_shortname="gke:$cluster_shortname"
+  fi
+
+  if [[ ! -z "$namespace" ]]; then
+    namespace="/$namespace"
+  fi
+ echo -n "$COLOR$PREFIX$cluster_shortname$namespace$SUFFIX$NO_COLOR"
+}
+
 function _git_prompt() {
     # bail if __git_ps1 function is not defined, such as if git completion is not installed
     if ! type __git_ps1 2>&1 | grep -q 'is a function'; then
@@ -21,6 +46,7 @@ function _prompt_command() {
     PS1='\u@\h \W'
     # PS1='\h:\W \u'
     PS1="$PS1\[$(echo -e '\033];$(hostname -s):$(basename "$PWD")\007')\]"
+    PS1="$PS1 $(_kube_info)"
     PS1="$PS1$(_git_prompt)\\$ "
     # set tmux pane title
     printf "\033k[%s/%s::%s]\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD##*/}"
