@@ -328,7 +328,7 @@ noremap <silent> <leader>9 9gt
 
 nnoremap <Tab> <c-w>w                " map tab to scroll thru splits
 
-hi VertSplit ctermbg=bg ctermfg=bg   " make vert split bar less prominent
+"hi VertSplit ctermbg=bg ctermfg=bg   " make vert split bar less prominent (NOTE: disabled because this makes resizing with the mouse difficult since the bar is invisible)
 
 nnoremap <Leader>w :w<CR>            " fast save with SPC-w
 nnoremap <Leader>o :CtrlP<CR>        " fast opening cltrp with SPC-o
