@@ -32,7 +32,8 @@ function git_prompt_info() {
 function kube_info() {
   local PREFIX="‹"
   local SUFFIX="›"
-  local COLOR="%{${FG[140]}%}"
+  local CLUSTER_COLOR="%{${FG[140]}%}"
+  local NS_COLOR="%{${FG[036]}%}"
 
   local cluster=$(kubectl config current-context 2>/dev/null)
   if [[ -z "$cluster" ]]; then
@@ -48,7 +49,7 @@ function kube_info() {
   if [[ ! -z "$namespace" ]]; then
     namespace="/$namespace"
   fi
-  echo "$COLOR$PREFIX$cluster_shortname$namespace$SUFFIX%{${reset_color}%} "
+  echo "${CLUSTER_COLOR}${PREFIX}${cluster_shortname}${NS_COLOR}${namespace}${SUFFIX}%{${reset_color}%} "
 }
 
 DISABLE_AUTO_TITLE="true"
