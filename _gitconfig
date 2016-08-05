@@ -28,5 +28,5 @@
 	program = gpg2
 [commit]
 	gpgSign = true
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+#[url "git@github.com:"]
+#	insteadOf = https://github.com/
