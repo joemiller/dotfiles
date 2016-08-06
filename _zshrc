@@ -6,12 +6,12 @@ source ~/.dotfiles/antigen.zsh
 
 antigen use oh-my-zsh
 antigen bundle git
-antigen bundle chruby
+# antigen bundle chruby      # DISABLED: slows startup down. disabled. https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#chruby
 antigen bundle web-search  # adds commands google|bing|ddg https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#web-search
-antigen bundle vagrant
+# antigen bundle vagrant     # DISABLED: slows startup down.
 antigen bundle systemd     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#systemd
-antigen bundle bundler     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#bundler
-antigen bundle composer    # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#composer
+# antigen bundle bundler     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#bundler
+# antigen bundle composer    # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#composer
 antigen bundle docker      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#docker
 antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#fabric
 antigen bundle encode64    # adds commands encode64|decode64 (https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#encode64)
