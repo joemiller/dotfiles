@@ -77,7 +77,7 @@ Plugin 'vim-scripts/vim-json-bundle'
 Plugin 'tpope/vim-repeat'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'smerrill/vcl-vim-plugin'
-"Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
+Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
 Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'ekalinin/Dockerfile.vim'
