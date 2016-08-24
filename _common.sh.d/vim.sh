@@ -1,7 +1,12 @@
-alias vi=vim
-export EDITOR=vim
+if command -v nvim >/dev/null; then
+    alias vi=nvim
+    export EDITOR=nvim
+else
+    alias vi=vim
+    export EDITOR=vim
+fi
 
-function setup_vim {
+setup_vim() {
   if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ] ; then
     git clone "https://github.com/gmarik/Vundle.vim.git" "$HOME/.vim/bundle/Vundle.vim"
     # install the plugins
@@ -11,13 +16,13 @@ function setup_vim {
   fi
 }
 
-function update_vim {
+update_vim() {
   #vim '+PluginInstall!' +qall
   vim +PluginUpdate +qall
   vim +PluginClean +qall
 }
 
-function update_ycm {
+update_ycm() {
   cd ~/.vim/bundle/YouCompleteMe
   ./install.py --clang-completer --gocode-completer
   cd -
