@@ -1,3 +1,5 @@
+# download: https://github.com/kubernetes/helm/releases
+
 case "$OSTYPE" in
   darwin*)
     if [ -d "$HOME/Dropbox/helm-osx" ]; then
