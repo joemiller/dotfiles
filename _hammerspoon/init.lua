@@ -15,6 +15,7 @@ wifi.homeSSIDs = {"reddragon-5G", "reddragon-2G"}
 -- auto-connect to Tunnelblick VPNs when connected to these networks
 wifi.autoConnectVPNs = {
     ["BREW BROS"] = "home-joeym-net (all traffic)",
+    ["AnotherGuest"] = "home-joeym-net (all traffic)",
     ["#SFWiFi"] = "home-joeym-net (all traffic)",
     ["the brew"] = "home-joeym-net (all traffic)",
     ["LIQUIDGOLD_PUBLIC"] = "home-joeym-net (all traffic)",
