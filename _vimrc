@@ -98,6 +98,7 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'polm/github-tasks.vim'
 Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
+Plugin 'junegunn/vim-emoji'
 
 call vundle#end()            " required
 
@@ -349,17 +350,33 @@ let g:syntastic_check_on_wq = 1
 let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
 let g:syntastic_python_checkers = ['python', 'pylint']
 autocmd BufRead,BufNewFile */titan/* let g:syntastic_python_checkers=['python']  " disable pylint when working in the titan project
-" NOTE: too slow to run all the linters on most projects. disabled for now.
+" NOTE: gometalinter is too slow to run all the linters on most projects. disabled for now.
 "let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
 let g:syntastic_yaml_checkers = ['yamllint']
-let g:syntastic_error_symbol         = '❌'
-let g:syntastic_warning_symbol       = '⚠️'
-let g:syntastic_style_error_symbol   = '⁉️'
-let g:syntastic_style_warning_symbol = '💩'
-highlight link SyntasticErrorSign SignColumn
-highlight link SyntasticWarningSign SignColumn
-highlight link SyntasticStyleErrorSign SignColumn
+let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
+
+" NOTE: there are issues with multi-byte emojis in at least Neovim currently (9/2016): https://github.com/neovim/neovim/issues/5149
+if emoji#available()
+	let g:syntastic_error_symbol         = emoji#for('x')
+	let g:syntastic_warning_symbol       = emoji#for('warning')
+	let g:syntastic_style_error_symbol   = emoji#for('interrobang')
+	let g:syntastic_style_warning_symbol = emoji#for('poop')
+elseif has('multi_byte') && &encoding ==# 'utf-8'
+	let g:syntastic_error_symbol         = '✗'
+	let g:syntastic_warning_symbol       = '⚠'
+	let g:syntastic_style_error_symbol   = '»»'
+	let g:syntastic_style_warning_symbol = '»'
+else
+	let g:syntastic_error_symbol         = 'E'
+	let g:syntastic_warning_symbol       = 'W'
+	let g:syntastic_style_error_symbol   = 'S'
+	let g:syntastic_style_warning_symbol = 's'
+endif
+
+highlight link SyntasticErrorSign        SignColumn
+highlight link SyntasticWarningSign      SignColumn
+highlight link SyntasticStyleErrorSign   SignColumn
 highlight link SyntasticStyleWarningSign SignColumn
 let g:syntastic_stl_format = "[%E{❌ %fe #%e}%B{|}%W{⚠️ %fw #%w}]"
 
@@ -379,3 +396,11 @@ hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the b
 
 " plasticboy/vim-markdown config
 let g:vim_markdown_folding_disabled = 1
+
+" gitgutter config
+if emoji#available()
+    let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+    let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+    let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+    let g:gitgutter_sign_modified_removed = emoji#for('collision')
+endif
