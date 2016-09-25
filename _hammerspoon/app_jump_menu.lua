@@ -13,6 +13,7 @@ function modal:entered()
     hs.alert.show(
 string.format(
 "hot keys active: (exit: enter esc j) \
+    v - vivaldi (browser) \
     c - chrome \
     t - chrome quick tabs \
     e - evernote \
@@ -40,6 +41,7 @@ modal:bind('','escape', function() modal:exit() end)
 modal:bind('','return', function() modal:exit() end)
 
 -- hotkeys while modal is active
+modal:bind('','v', function() hs.application.launchOrFocus( "Vivaldi" )        ; modal:exit() end )
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
 modal:bind('','t', function() utils.chromeQuickTabs()                          ; modal:exit() end )
 modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
