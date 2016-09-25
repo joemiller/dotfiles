@@ -15,7 +15,7 @@ if [ ! -n "$SSH_CLIENT" ]; then
 	GPG_TTY=$(tty)
 	export GPG_TTY
 
-  alias restart_gpg_agent='gpgconf --kill gpg-agent; gpgconf --launch gpg-agent'
+    alias restart_gpg_agent="gpgconf --kill gpg-agent; killall -9 gpg-agent ; gpgconf --launch gpg-agent"
 fi
 
 if [[ "$OSTYPE" =~ darwin ]] && type gpg2 >/dev/null 2>&1; then
