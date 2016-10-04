@@ -4,6 +4,7 @@
 #
 source ~/.dotfiles/antigen.zsh
 
+# load modules supplied by oh-my-zsh project
 antigen use oh-my-zsh
 antigen bundle git
 # antigen bundle chruby      # DISABLED: slows startup down. disabled. https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#chruby
@@ -18,10 +19,11 @@ antigen bundle encode64    # adds commands encode64|decode64 (https://github.com
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 antigen bundle urltools    # adds commands urlencode | urldecode
+antigen bundle kubectl     # kubectl completions
 
+# load non-omz modules
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-completions src
-
 antigen bundle djui/alias-tips
 
 if [[ "$OSTYPE" =~ darwin ]]; then
