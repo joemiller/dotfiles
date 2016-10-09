@@ -404,3 +404,9 @@ if emoji#available()
     let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
     let g:gitgutter_sign_modified_removed = emoji#for('collision')
 endif
+
+" autoreload files that are changed externally whenever a tab/buffer regains focus.
+" This is particularly useful with the `make readme-toc` command which updates
+" the TOC in a readme: https://github.com/pantheon-systems/markdown-toc-docker#makefile-usage
+" From the 'alternative section' of this answer: http://vim.wikia.com/wiki/Have_Vim_check_automatically_if_the_file_has_changed_externally
+au FocusGained,BufEnter * :silent! !
