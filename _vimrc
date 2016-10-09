@@ -409,4 +409,5 @@ endif
 " This is particularly useful with the `make readme-toc` command which updates
 " the TOC in a readme: https://github.com/pantheon-systems/markdown-toc-docker#makefile-usage
 " From the 'alternative section' of this answer: http://vim.wikia.com/wiki/Have_Vim_check_automatically_if_the_file_has_changed_externally
+set autoread
 au FocusGained,BufEnter * :silent! !
