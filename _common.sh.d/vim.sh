@@ -1,10 +1,11 @@
-if command -v nvim >/dev/null; then
-    alias vi=nvim
-    export EDITOR=nvim
-else
-    alias vi=vim
-    export EDITOR=vim
-fi
+# if command -v nvim >/dev/null; then
+#     alias vi=nvim
+#     export EDITOR=nvim
+# else
+#     alias vi=vim
+#     export EDITOR=vim
+# fi
+export EDITOR=vim
 
 setup_vim() {
   if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ] ; then

@@ -24,6 +24,7 @@ autocmd FileType yaml set tabstop=2|set shiftwidth=2|set expandtab
 
 set ttyfast    " Send more characters for redraws
 set mouse=a    " enable mouse
+set ttymouse=xterm2  " xterm2 to make split resizing with the mouse work. doesn't work with 'xterm' *shrug*. http://superuser.com/questions/549930/cant-resize-vim-splits-inside-tmux
 
 " buffer pos memory
 "set viminfo='10,\"100,:20,%,n~/.viminfo

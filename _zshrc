@@ -19,7 +19,7 @@ antigen bundle encode64    # adds commands encode64|decode64 (https://github.com
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 antigen bundle urltools    # adds commands urlencode | urldecode
-antigen bundle kubectl     # kubectl completions
+#antigen bundle kubectl     # kubectl completions
 
 # load non-omz modules
 antigen bundle zsh-users/zsh-syntax-highlighting
