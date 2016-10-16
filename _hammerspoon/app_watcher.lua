@@ -1,6 +1,8 @@
 -- Callback function for application events
 --
 
+local log = hs.logger.new('app_watcher','debug')
+
 local laptopScreen = "Color LCD"
 
 function apps(appName, eventType, appObject)
@@ -22,6 +24,10 @@ function apps(appName, eventType, appObject)
 
         if (appName == "Slack") then
             -- always move Slack to the laptop screen (Color LCD) and make it fullscreen
+            -- TODO: at some point the behavior changed and the return from mainWindow() becomes nil unless
+            --       we briefly wait for slack to start. Instead of shelling out to sleep we should come up
+            --       with a better solution here.
+            os.execute("sleep 2")
             local win = appObject:mainWindow()
             win:moveToScreen(laptopScreen)
             win:setFullScreen(true)
