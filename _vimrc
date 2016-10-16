@@ -58,6 +58,7 @@ Plugin 'Chiel92/vim-autoformat'
 Plugin 'tpope/vim-fugitive'
 Plugin 'oplatek/Conque-Shell'
 Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'airblade/vim-gitgutter'
@@ -206,9 +207,6 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 nmap <C-m> :TagbarToggle<CR>
 
-"NERDTree settings
-nmap <C-n> :NERDTreeToggle<CR>
-let g:NERDTreeShowHidden=1
 
 "faith-go
 let g:go_auto_type_info = 1
@@ -412,3 +410,12 @@ endif
 " From the 'alternative section' of this answer: http://vim.wikia.com/wiki/Have_Vim_check_automatically_if_the_file_has_changed_externally
 set autoread
 au FocusGained,BufEnter * :silent! !
+
+" NERDTree settings
+"nmap <C-n> :NERDTreeToggle<CR>
+nmap <C-n> :NERDTreeTabsToggle<CR>
+let g:NERDTreeShowHidden=1
+
+" vim-nerdtree-tabs configuration - https://github.com/jistr/vim-nerdtree-tabs#configuration
+let g:nerdtree_tabs_open_on_console_startup = 2
+let g:nerdtree_tabs_focus_on_files = 1
