@@ -6,7 +6,7 @@
 "
 set nocompatible               " be iMproved
 
-"set t_Co=256
+set t_Co=256
 if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -281,7 +281,9 @@ set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 noremap <F3> :Autoformat<CR><CR>
 
 setlocal spell spelllang=en_us
-set spell
+set nospell                      " disable spelling in general, enable only for specific file types because it gets really annoying in source code
+autocmd FileType markdown set spell
+autocmd FileType text set spell
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 
@@ -402,7 +404,10 @@ let g:gist_show_privates = 1        " show private gists with :Gist -l
 let g:ctrlp_open_new_file = 'v'   " open new files in a vertical split
 
 " tabline config
-hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the bubblegum dark theme
+"hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the bubblegum dark theme
+hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
+hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " plasticboy/vim-markdown config
 let g:vim_markdown_folding_disabled = 1
