@@ -6,7 +6,17 @@
 "
 set nocompatible               " be iMproved
 
-set t_Co=256
+"set t_Co=256
+if (has("nvim"))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+"For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+"Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+" < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+if (has("termguicolors"))
+  set termguicolors
+endif
 
 "set clipboard=unnamed          " enable clipboard sharing with mac or x11
 
@@ -101,6 +111,7 @@ Plugin 'polm/github-tasks.vim'
 Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
+Plugin 'joshdick/onedark.vim'
 
 call vundle#end()            " required
 
@@ -128,7 +139,8 @@ hi clear
 
 " configure statusline (currently using vim-airline)
 set laststatus=2
-let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+"let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+let g:airline_theme="onedark"                 " https://github.com/vim-airline/vim-airline/wiki/Screenshots
 let g:airline_powerline_fonts = 1             " hot fonts! https://github.com/powerline/fonts
 let g:airline_detect_spell=0                  " disable the pointless SPELL> marker in the statusline
 let g:airline#extensions#syntastic#enabled=1
@@ -153,6 +165,7 @@ map Q gq
 
 filetype plugin indent on
 syntax on
+set cursorline " show highlight on line with active cursor
 
 let mapleader = "\<Space>"
 
@@ -201,12 +214,9 @@ let g:tagbar_type_go = {
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 nmap <C-m> :TagbarToggle<CR>
-
 
 "faith-go
 let g:go_auto_type_info = 1
@@ -258,7 +268,8 @@ let g:solarized_termcolors=16
 "let g:solarized_visibility =  "low"
 let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
-colorscheme bubblegum
+"colorscheme bubblegum
+colorscheme onedark
 
 nmap <silent> <F2> <Plug>DashSearch
 nmap <silent> <F3> <Plug>DashSearch
@@ -415,7 +426,13 @@ au FocusGained,BufEnter * :silent! !
 "nmap <C-n> :NERDTreeToggle<CR>
 nmap <C-n> :NERDTreeTabsToggle<CR>
 let g:NERDTreeShowHidden=1
+let g:NERDTreeWinSize= 22 " smaller than default 31
 
 " vim-nerdtree-tabs configuration - https://github.com/jistr/vim-nerdtree-tabs#configuration
 let g:nerdtree_tabs_open_on_console_startup = 2
 let g:nerdtree_tabs_focus_on_files = 1
+
+" crazy shit needed for 24-bit truecolor mode inside tmux 2.3+
+" https://github.com/lifepillar/vim-solarized8/issues/1#issuecomment-226959344
+set t_8f=[38;2;%lu;%lu;%lum  " Needed in tmux
+set t_8b=[48;2;%lu;%lu;%lum  " Ditto
