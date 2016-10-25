@@ -111,7 +111,7 @@ Plugin 'polm/github-tasks.vim'
 Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
-Plugin 'joshdick/onedark.vim'
+Plugin 'rakr/vim-one'                       " another clone of atom's One theme
 
 call vundle#end()            " required
 
@@ -140,7 +140,7 @@ hi clear
 " configure statusline (currently using vim-airline)
 set laststatus=2
 "let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
-let g:airline_theme="onedark"                 " https://github.com/vim-airline/vim-airline/wiki/Screenshots
+let g:airline_theme="one"                     " rakr/vim-one
 let g:airline_powerline_fonts = 1             " hot fonts! https://github.com/powerline/fonts
 let g:airline_detect_spell=0                  " disable the pointless SPELL> marker in the statusline
 let g:airline#extensions#syntastic#enabled=1
@@ -165,7 +165,7 @@ map Q gq
 
 filetype plugin indent on
 syntax on
-set cursorline " show highlight on line with active cursor
+"set cursorline " show highlight on line with active cursor
 
 let mapleader = "\<Space>"
 
@@ -262,14 +262,16 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 " Add all cookbooks/*/recipe dirs to Vim's path variable
 autocmd BufRead,BufNewFile */cookbooks/*/recipes/*.rb setlocal path+=recipes;/cookbooks/**1
 
+" colorscheme config
 syntax enable
 set background=dark
-let g:solarized_termcolors=16
+"let g:solarized_termcolors=16
 "let g:solarized_visibility =  "low"
-let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
+"let g:solarized_visibility = "high"
+"let g:solarized_contrast = "high"
+"colorscheme solarized
 "colorscheme bubblegum
-colorscheme onedark
+colorscheme one  " rakr/vim-one
 
 nmap <silent> <F2> <Plug>DashSearch
 nmap <silent> <F3> <Plug>DashSearch
@@ -435,6 +437,7 @@ let g:NERDTreeWinSize= 22 " smaller than default 31
 
 " vim-nerdtree-tabs configuration - https://github.com/jistr/vim-nerdtree-tabs#configuration
 let g:nerdtree_tabs_open_on_console_startup = 2
+let g:nerdtree_tabs_focus_on_files = 1
 let g:nerdtree_tabs_focus_on_files = 1
 
 " crazy shit needed for 24-bit truecolor mode inside tmux 2.3+
