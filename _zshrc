@@ -27,7 +27,11 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions src
 antigen bundle djui/alias-tips
 
+# configure zsh-autosuggestions
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+# allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
+bindkey '^ ' autosuggest-accept
+
 
 if [[ "$OSTYPE" =~ darwin ]]; then
   antigen bundle osx
