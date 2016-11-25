@@ -112,6 +112,7 @@ Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
 Plugin 'rakr/vim-one'                       " another clone of atom's One theme
+Plugin 'tpope/vim-endwise'
 
 call vundle#end()            " required
 
