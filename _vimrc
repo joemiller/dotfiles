@@ -65,7 +65,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " My Bundles here:
 Plugin 'Chiel92/vim-autoformat'
-Plugin 'tpope/vim-fugitive'
+" Plugin 'tpope/vim-fugitive'
 Plugin 'oplatek/Conque-Shell'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -341,15 +341,19 @@ noremap <silent> <leader>7 7gt
 noremap <silent> <leader>8 8gt
 noremap <silent> <leader>9 9gt
 
-nnoremap <Tab> <c-w>w                " map tab to scroll thru splits
+" map tab to scroll thru splits
+nnoremap <Tab> <c-w>w
 
 "hi VertSplit ctermbg=bg ctermfg=bg   " make vert split bar less prominent (NOTE: disabled because this makes resizing with the mouse difficult since the bar is invisible)
 
-nnoremap <Leader>w :w<CR>            " fast save with SPC-w
-nnoremap <Leader>o :CtrlP<CR>        " fast opening cltrp with SPC-o
+" fast save with SPC-w
+nnoremap <Leader>w :w<CR>
+" fast opening cltrp with SPC-o
+nnoremap <Leader>o :CtrlP<CR>
 
-map <Leader>n :lnext<CR>             " jump loclist
-map <Leader>p :lprev<CR>             " jump loclist
+" jump loclist
+map <Leader>n :lnext<CR>
+map <Leader>p :lprev<CR>
 
 " linters to install:
 "  - shellcheck (brew install shellcheck)
