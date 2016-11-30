@@ -6,6 +6,9 @@ require "auto_reloader"
 local winmod = require "window_controls"
 local utils = require "utils"
 
+-- anycomplete from: https://github.com/nathancahill/anycomplete
+require "anycomplete"
+
 -- settings
 hs.window.animationDuration = 0
 
