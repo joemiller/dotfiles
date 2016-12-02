@@ -2,7 +2,7 @@
 
 _ssh_auth_save() {
     #ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh-auth-sock.$HOSTNAME"
-    if [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh-auth-sock" ]; then
+    if [[ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh-auth-sock" ]]; then
       rm -rf "$HOME/.ssh/ssh-auth-sock"
       ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh-auth-sock"
     fi

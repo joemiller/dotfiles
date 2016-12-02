@@ -10,7 +10,7 @@
 ## don't use system ruby, but if you do, you probably want to set GEM_HOME
 ##
 
-[ -f "/usr/local/opt/chruby/share/chruby/chruby.sh" ] && source "/usr/local/opt/chruby/share/chruby/chruby.sh"
+[[ -f "/usr/local/opt/chruby/share/chruby/chruby.sh" ]] && source "/usr/local/opt/chruby/share/chruby/chruby.sh"
 
 alias be='bundle exec'
 alias bi='bundle install'

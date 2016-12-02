@@ -8,7 +8,7 @@
 export EDITOR=vim
 
 setup_vim() {
-  if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ] ; then
+  if [[ ! -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
     git clone "https://github.com/gmarik/Vundle.vim.git" "$HOME/.vim/bundle/Vundle.vim"
     # install the plugins
     vim +PluginInstall +qall

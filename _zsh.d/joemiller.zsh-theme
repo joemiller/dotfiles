@@ -1,7 +1,7 @@
 # run `spectrumls` to get a quick glance at the 256 color pallette
 
-if [ $UID -eq 0 ]; then CARETCOLOR="red"; else CARETCOLOR="green"; fi
-if [ $UID -eq 0 ]; then USERPROMPT="%{$FG[179]%}root@%{$reset_color%}"; else USER=""; fi
+if [[ $UID -eq 0 ]]; then CARETCOLOR="red"; else CARETCOLOR="green"; fi
+if [[ $UID -eq 0 ]]; then USERPROMPT="%{$FG[179]%}root@%{$reset_color%}"; else USER=""; fi
 
 local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
@@ -58,7 +58,7 @@ precmd() {
   #printf "\033];$(hostname -s):$(basename "$PWD")\007"
   #printf "\033]1;%s\007" "${HOST%%.*}"
   # set tmux title
-  if [ "$TMUX" ]; then
+  if [[ "$TMUX" ]]; then
     printf "\033k%s\033\\" "${PWD##*/}"
   else
     printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"

@@ -15,11 +15,11 @@ antigen bundle systemd     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 # antigen bundle composer    # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#composer
 antigen bundle docker      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#docker
 antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#fabric
-antigen bundle encode64    # adds commands encode64|decode64 (https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#encode64)
+# antigen bundle encode64    # adds commands encode64|decode64 (https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#encode64)
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 antigen bundle urltools    # adds commands urlencode | urldecode
-#antigen bundle kubectl     # kubectl completions
+antigen bundle kubectl     # kubectl completions
 
 # load non-omz modules
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -31,7 +31,6 @@ antigen bundle djui/alias-tips
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
 # allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
 bindkey '^ ' autosuggest-accept
-
 
 if [[ "$OSTYPE" =~ darwin ]]; then
   antigen bundle osx
