@@ -62,4 +62,8 @@ fpath=(/usr/local/share/zsh/site-functions $fpath)
 # vi mode settings
 bindkey -v
 bindkey '^r' history-incremental-search-backward
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^r' history-incremental-search-backward
+bindkey '^w' backward-kill-word
 export KEYTIMEOUT=1
