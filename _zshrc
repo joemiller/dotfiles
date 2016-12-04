@@ -58,3 +58,8 @@ fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 # disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# vi mode settings
+bindkey -v
+bindkey '^r' history-incremental-search-backward
+export KEYTIMEOUT=1
