@@ -113,6 +113,7 @@ Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
 Plugin 'rakr/vim-one'                       " another clone of atom's One theme
 Plugin 'tpope/vim-endwise'
+Plugin 'sjl/vitality.vim'                   " nice tweaks for making iterm2 + vim + tmux play together, including cursor shape toggling
 
 call vundle#end()            " required
 
@@ -449,14 +450,6 @@ let g:nerdtree_tabs_focus_on_files = 1
 " https://github.com/lifepillar/vim-solarized8/issues/1#issuecomment-226959344
 set t_8f=[38;2;%lu;%lu;%lum  " Needed in tmux
 set t_8b=[48;2;%lu;%lu;%lum  " Ditto
-
-" Change cursor shape between insert and normal mode in iTerm2.app
-" from: https://hamberg.no/erlend/posts/2014-03-09-change-vim-cursor-in-iterm.html
-" for neovim, also set env var NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-if $TERM_PROGRAM =~ "iTerm"
-    let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
-    let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
-endif
 
 " lower timeouts for moving between modes
 set timeoutlen=1000 ttimeoutlen=0
