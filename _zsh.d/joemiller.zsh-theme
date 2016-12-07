@@ -59,16 +59,30 @@ function kube_info() {
 # NOTE: the cursor-shape modifier is iterm specific for macOS. other os's and terminals might be able to use $terminfo[...],
 #       see this link for more info: http://unix.stackexchange.com/a/1120
 # Thanks to https://hamberg.no/erlend/posts/2014-03-09-change-vim-cursor-in-iterm.html for iTerm cursor trick
+function line_cursor() {
+  if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    if [[ "$TMUXdisabled" ]]; then  # TODO: not working in tmux.. fix it.
+      printf "\033Ptmux;\033\033]50;CursorShape=1\x7\033]\\"
+    else
+      printf "\033]50;CursorShape=1\x7"
+    fi
+  fi
+}
+function block_cursor() {
+  if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
+    if [[ "$TMUXdisabled" ]]; then  # TODO: not working in tmux.. fix it.
+      printf "\033Ptmux;\033\033]50;CursorShape=0\x7\033]\\"
+    else
+      printf "\033]50;CursorShape=0\x7"
+    fi
+  fi
+}
 function vi_mode() {
   case $KEYMAP in
     vicmd)
-        [[ "$TERM_PROGRAM" == "iTerm.app" ]] && printf "\033]50;CursorShape=0\x7"
-        echo "%{$fg_bold[yellow]%}[n]%{$reset_color%}"
-        ;;
+        block_cursor; echo "%{$fg_bold[yellow]%}n%{$reset_color%}" ;;
     viins|main|*)
-        [[ "$TERM_PROGRAM" == "iTerm.app" ]] && printf "\033]50;CursorShape=1\x7"
-        echo "%{$fg_bold[blue]%}[i]%{$reset_color%}"
-        ;;
+        line_cursor; echo "%{$fg_bold[blue]%}i%{$reset_color%}" ;;
   esac
 }
 
