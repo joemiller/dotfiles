@@ -26,6 +26,8 @@ wifi.autoConnectVPNs = {
     ["Pantheon-5G"] = "home-joeym-net",
     ["Pantheon-5G"] = "home-joeym-net",
     ["Pantheon-5G-802.11r"] = "home-joeym-net",
+    ["jwm"] = "home-joeym-net",
+    ["jwm-n"] = "home-joeym-net",
 }
 
 -- global key binds
@@ -34,6 +36,7 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "H",     winmod.currentWindowToSpecificSi
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N",     winmod.currentWindowToNextScreen)
 
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 

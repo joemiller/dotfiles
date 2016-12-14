@@ -58,4 +58,10 @@ function winmod.currentWindowToSpecificSize()
   win:setFrame(f)
 end
 
+function winmod.currentWindowToNextScreen()
+    local win = hs.window.focusedWindow()
+    local curScreen = win:screen()
+    win:moveToScreen(curScreen:next(), true, true)
+end
+
 return winmod
