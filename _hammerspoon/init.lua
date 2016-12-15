@@ -37,6 +37,7 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N",     winmod.currentWindowToNextScreen)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     winmod.currentAppWindowsToNextScreen)
 
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 

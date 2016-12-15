@@ -64,4 +64,9 @@ function winmod.currentWindowToNextScreen()
     win:moveToScreen(curScreen:next(), true, true)
 end
 
+function winmod.currentAppWindowsToNextScreen()
+    local app = hs.application.frontmostApplication()
+    hs.fnutils.each(app:allWindows(), function(win) win:moveToScreen(win:screen():next(), true, true) end)
+end
+
 return winmod
