@@ -7,7 +7,8 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 # wrap this in a func so we can call it from zle-keymap-select() when toggling vi modes to redraw
 function set_prompt() {
-    PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info)$(vi_mode) %{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
+    PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info) %{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
+    #PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info)$(vi_mode) %{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 }
 
 RPS1="${return_code}"
@@ -61,8 +62,9 @@ function kube_info() {
 # Thanks to https://hamberg.no/erlend/posts/2014-03-09-change-vim-cursor-in-iterm.html for iTerm cursor trick
 function line_cursor() {
   if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-    if [[ "$TMUXdisabled" ]]; then  # TODO: not working in tmux.. fix it.
-      printf "\033Ptmux;\033\033]50;CursorShape=1\x7\033]\\"
+    if [[ "$TMUX" ]]; then  # TODO: not working in tmux.. fix it.
+      #printf "\033Ptmux;\033\033]50;CursorShape=1\x7\033]\\"
+      printf "\033Ptmux;\033\033]50;CursorShape=1\x7"
     else
       printf "\033]50;CursorShape=1\x7"
     fi
@@ -70,14 +72,16 @@ function line_cursor() {
 }
 function block_cursor() {
   if [[ "$TERM_PROGRAM" == "iTerm.app" ]]; then
-    if [[ "$TMUXdisabled" ]]; then  # TODO: not working in tmux.. fix it.
-      printf "\033Ptmux;\033\033]50;CursorShape=0\x7\033]\\"
+    if [[ "$TMUX" ]]; then  # TODO: not working in tmux.. fix it.
+      #printf "\033Ptmux;\033\033]50;CursorShape=0\x7\033]\\"
+      printf "\033Ptmux;\033\033]50;CursorShape=0\x7"
     else
       printf "\033]50;CursorShape=0\x7"
     fi
   fi
 }
 function vi_mode() {
+return
   case $KEYMAP in
     vicmd)
         block_cursor; echo "%{$fg_bold[yellow]%}n%{$reset_color%}" ;;
@@ -90,8 +94,9 @@ function zle-line-init zle-keymap-select {
   zle reset-prompt
 }
 
-zle -N zle-line-init
-zle -N zle-keymap-select
+# vi-mode status toggle disabled because it messes up tmux
+# zle -N zle-line-init
+# zle -N zle-keymap-select
 
 # magic for tmux title bars
 DISABLE_AUTO_TITLE="true"
