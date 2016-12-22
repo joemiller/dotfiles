@@ -327,10 +327,18 @@ nmap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
 " ---------------- end list toggle code ----------------------
 
 " set a vertical marker at the 80th and 120th columns on text files
-autocmd FileType markdown let &colorcolumn="80,".join(range(120,999),",")
-autocmd FileType text let &colorcolumn="80,".join(range(120,999),",")
+fun! EnableColorColumn()
+    if exists('b:ShowColorColumn')
+        let &colorcolumn="80,".join(range(120,999),",")
+    else
+        let &colorcolumn=''
+    endif
+endfun
+autocmd FileType markdown,text let b:ShowColorColumn = 1
+autocmd FileType * call EnableColorColumn()
 
-nmap <Leader><Leader> V              " fast visual mode with <space><space>
+" fast visual mode with <space><space>
+nmap <Leader><Leader> V
 
 " map space-{n} to quickly change tabs
 noremap <silent> <leader>1 1gt
