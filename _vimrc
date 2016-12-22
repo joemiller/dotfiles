@@ -104,7 +104,7 @@ Plugin 'mattn/webapi-vim'
 Plugin 'mattn/gist-vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'            " this must come after godlygeek/tabular
+Plugin 'gabrielelana/vim-markdown'
 Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'polm/github-tasks.vim'
@@ -416,9 +416,6 @@ let g:ctrlp_open_new_file = 'v'   " open new files in a vertical split
 hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
-
-" plasticboy/vim-markdown config
-let g:vim_markdown_folding_disabled = 1
 
 " gitgutter config
 if emoji#available()
