@@ -7,8 +7,7 @@ local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
 
 # wrap this in a func so we can call it from zle-keymap-select() when toggling vi modes to redraw
 function set_prompt() {
-    PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info) %{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
-    #PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info)$(vi_mode) %{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
+    PROMPT='$USERPROMPT%{$FG[074]%}%m %{${fg_bold[blue]}%}%{$reset_color%}%{${FG[035]}%}%3~ $(kube_info)$(git_prompt_info)$(vi_mode)%{${fg_bold[$CARETCOLOR]}%}»%{${reset_color}%} '
 }
 
 RPS1="${return_code}"
