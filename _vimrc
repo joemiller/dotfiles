@@ -337,6 +337,10 @@ endfun
 autocmd FileType markdown,text let b:ShowColorColumn = 1
 autocmd FileType * call EnableColorColumn()
 
+" disable auto-pairs plugin for [] on markdown, it drives me crazy with the auto-spacing
+"au Filetype markdown let b:AutoPairs = {'(':')', '{':'}',"'":"'",'"':'"', '`':'`'}
+let g:AutoPairsMapSpace=0
+
 " fast visual mode with <space><space>
 nmap <Leader><Leader> V
 
@@ -458,3 +462,7 @@ set t_8b=[48;2;%lu;%lu;%lum  " Ditto
 
 " lower timeouts for moving between modes
 set timeoutlen=1000 ttimeoutlen=0
+
+" gabrielelana/vim-markdown settings
+" - leader + t will toggle a checkbox on a list item, see: https://github.com/gabrielelana/vim-markdown#default-mappings-normal-and-visual-mode
+let g:markdown_mapping_switch_status = '<Leader>t'
