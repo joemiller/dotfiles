@@ -31,13 +31,19 @@ wifi.autoConnectVPNs = {
 }
 
 -- global key binds
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F",     winmod.toggleMaximized)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "H",     winmod.currentWindowToSpecificSize)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
+hs.hotkey.bind({"ctrl",        "alt"}, "F",     winmod.toggleMaximized)
+hs.hotkey.bind({"ctrl",        "alt"}, "H",     winmod.currentWindowToSizeOfLaptopScreen)
+hs.hotkey.bind({"ctrl",        "alt"}, "C",     winmod.center)
+hs.hotkey.bind({"ctrl",        "alt"}, "Left",  winmod.currentWindowToLeft)
+hs.hotkey.bind({"ctrl",        "alt"}, "Right", winmod.currentWindowToRight)
+hs.hotkey.bind({"ctrl",        "alt"}, "Up",    winmod.currentWindowToTop)
+hs.hotkey.bind({"ctrl",        "alt"}, "Down",  winmod.currentWindowToBottom)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N",     winmod.currentWindowToNextScreen)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     winmod.currentAppWindowsToNextScreen)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     winmod.currentAppAllWindowsToNextScreen)
+
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
 
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 

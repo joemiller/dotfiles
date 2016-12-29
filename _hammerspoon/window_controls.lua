@@ -1,5 +1,7 @@
 local winmod = {}
 
+local log = hs.logger.new('winmod','debug')
+
 -- Window cache for window maximize toggler
 local frameCache = {}
 
@@ -17,6 +19,10 @@ function winmod.toggleMaximized()
         win:maximize()
     end
 end
+
+-- TODO: function winmod.windowPreviousPosition()
+-- toggle window's previous position/current position (like the jump/last button on your TV remote)
+-- could probably re-use frameCache for this
 
 function winmod.currentWindowToLeftHalf()
 	local win = hs.window.focusedWindow()
@@ -44,15 +50,68 @@ function winmod.currentWindowToRightHalf()
   win:setFrame(f)
 end
 
-function winmod.currentWindowToSpecificSize()
+function winmod.currentWindowToLeft()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local screenFrame = screen:frame()
+
+  f.x = screenFrame.x
+  win:setFrame(f)
+end
+
+function winmod.currentWindowToRight()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local screenFrame = screen:frame()
+
+  log.df("f before: %s", f)
+  log.df("screenframe: %s", screenFrame)
+  f.x = ((screenFrame.x + screenFrame.w) - f.w)
+  log.df("f after: %s", f)
+  win:setFrame(f)
+end
+
+function winmod.currentWindowToTop()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local screenFrame = screen:frame()
+
+  f.y = screenFrame.y
+  win:setFrame(f)
+end
+
+function winmod.currentWindowToBottom()
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen()
+  local screenFrame = screen:frame()
+
+  f.y = ((screenFrame.y + screenFrame.h) - f.h)
+  win:setFrame(f)
+end
+
+-- This sets the current window to the max size of the built-in macbook laptop screen, no matter
+-- what display the current screen is on.
+--
+-- Use Case: I like my browser windows to be the same size for some reason. This size is usually
+-- maximum on the built-in screen. Even when I move the window to a larger monitor I like the size to
+-- be the same as when it was on the built-in screen.
+function winmod.currentWindowToSizeOfLaptopScreen()
   local win = hs.window.focusedWindow()
   local f = win:frame()
   local screen = win:screen():frame()
   local builtInScreen = hs.screen('Color LCD')
   local max = builtInScreen:frame()
 
-  f.x = screen.x
-  f.y = screen.y
+  -- if the window is already on the builtin laptop screen, set it's position to 0,0 on the screen
+  -- since it is the same size and would be out of view if placed anywhere else
+  if win:screen() == builtInScreen then
+      f.x = screen.x
+      f.y = screen.y
+  end
   f.w = max.w
   f.h = max.h
   win:setFrame(f)
@@ -64,9 +123,25 @@ function winmod.currentWindowToNextScreen()
     win:moveToScreen(curScreen:next(), true, true)
 end
 
-function winmod.currentAppWindowsToNextScreen()
+-- Push the window into the exact center of the screen
+function winmod.center()
+    local win = hs.window.focusedWindow()
+    local curScreen = win:screen()
+    win:centerOnScreen(curScreen)
+end
+
+-- move the current window to the next monitor including all windows belonging to the same app
+-- Use case: quickly move all Chrome windows to a specific screen
+function winmod.currentAppAllWindowsToNextScreen()
     local app = hs.application.frontmostApplication()
-    hs.fnutils.each(app:allWindows(), function(win) win:moveToScreen(win:screen():next(), true, true) end)
+    local curScreen = win:screen()
+    hs.fnutils.each(app:allWindows(),
+        function(win)
+            if curScreen ~= win:screen():next() then
+                win:moveToScreen(win:screen():next(), true, true)
+            end
+        end
+    )
 end
 
 return winmod
