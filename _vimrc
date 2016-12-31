@@ -421,7 +421,12 @@ let g:gist_post_private = 1         " private gists by default
 let g:gist_show_privates = 1        " show private gists with :Gist -l
 
 " ctrlp config
-let g:ctrlp_open_new_file = 'v'   " open new files in a vertical split
+let g:ctrlp_dont_split = 'nerdtree|NERD' " don't open files in the nerdtree pane. this can be a regex
+" open files from ctrlp in a new tab by default (https://github.com/kien/ctrlp.vim/issues/160)
+let g:ctrlp_prompt_mappings = {
+    \ 'AcceptSelection("e")': ['<c-t>'],
+    \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+    \ }
 
 " tabline config
 "hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the bubblegum dark theme
