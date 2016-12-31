@@ -362,8 +362,6 @@ nnoremap <Tab> <c-w>w
 
 " fast save with SPC-w
 nnoremap <Leader>w :w<CR>
-" fast opening cltrp with SPC-o
-nnoremap <Leader>o :CtrlP<CR>
 
 " jump loclist
 map <Leader>n :lnext<CR>
@@ -427,6 +425,8 @@ let g:ctrlp_prompt_mappings = {
     \ 'AcceptSelection("e")': ['<c-t>'],
     \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
     \ }
+" fast opening cltrp with SPC-o
+nnoremap <Leader>o :CtrlP<CR>
 
 " tabline config
 "hi TabLineSel   ctermfg=236    ctermbg=150  cterm=NONE   " roughly matches the bubblegum dark theme
