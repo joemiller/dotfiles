@@ -2,7 +2,27 @@
 # reminder: to update antigen: run `antigen selfupdate` and commit any changes
 # to update plugins run `antigen update`
 #
+
+unsetopt share_history
+export PATH=$PATH:/usr/local/sbin
+
+# path to completions
+fpath=(/usr/local/share/zsh/site-functions $fpath)
+
+# vi mode settings
+bindkey -v
+bindkey '^r' history-incremental-search-backward
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^r' history-incremental-search-backward
+bindkey '^w' backward-kill-word
+export KEYTIMEOUT=1
+
 source ~/.dotfiles/antigen.zsh
+
+if [[ "$OSTYPE" =~ darwin ]]; then
+  antigen bundle osx
+fi
 
 # load modules supplied by oh-my-zsh project
 antigen use oh-my-zsh
@@ -19,7 +39,6 @@ antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 antigen bundle urltools    # adds commands urlencode | urldecode
-antigen bundle kubectl     # kubectl completions
 
 # load non-omz modules
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -27,43 +46,28 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions src
 antigen bundle djui/alias-tips
 
-# configure zsh-autosuggestions
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
-# allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
-bindkey '^ ' autosuggest-accept
-
-if [[ "$OSTYPE" =~ darwin ]]; then
-  antigen bundle osx
-fi
-
-for rc in "$HOME/.common.sh.d"/*; do
-    source "$rc"
-done
-
-for rc in "$HOME/.zsh.d"/*; do
-    source "$rc"
-done
-
-unsetopt share_history
-
 antigen apply
 
-export PATH=$PATH:/usr/local/sbin
+# configure zsh-autosuggestions
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
 
-# path to completions
-fpath=(/usr/local/share/zsh/site-functions $fpath)
-
+# allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
+bindkey '^ ' autosuggest-accept
 # aws uses a bash style completer
 [ -f "/usr/local/share/zsh/site-functions/_aws" ] && source /usr/local/share/zsh/site-functions/_aws
 
 # disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# vi mode settings
-bindkey -v
-bindkey '^r' history-incremental-search-backward
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^r' history-incremental-search-backward
-bindkey '^w' backward-kill-word
-export KEYTIMEOUT=1
+# load commond bash/zsh compatible shell configs
+for rc in "$HOME/.common.sh.d"/*; do
+    source "$rc"
+done
+
+# load zsh configs
+for rc in "$HOME/.zsh.d"/*; do
+    source "$rc"
+done
+
+# I have no idea why this only works when placed at the bottom of .zshrc. TODO: figure out why
+antigen bundle kubectl     # kubectl completions
