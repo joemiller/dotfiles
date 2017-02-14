@@ -71,3 +71,8 @@ done
 
 # I have no idea why this only works when placed at the bottom of .zshrc. TODO: figure out why
 antigen bundle kubectl     # kubectl completions
+
+# Workaround for https://github.com/kubernetes/kubernetes/issues/27538
+complete -o nospace -o default -F _python_argcomplete "gcloud"
+complete -o default -F _bq_completer bq
+complete -o nospace -F _python_argcomplete gsutil
