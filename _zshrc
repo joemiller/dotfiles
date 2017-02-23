@@ -9,15 +9,6 @@ export PATH=$PATH:/usr/local/sbin
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)
 
-# vi mode settings
-bindkey -v
-bindkey '^r' history-incremental-search-backward
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^r' history-incremental-search-backward
-bindkey '^w' backward-kill-word
-export KEYTIMEOUT=1
-
 source ~/.dotfiles/antigen.zsh
 
 if [[ "$OSTYPE" =~ darwin ]]; then
@@ -58,6 +49,15 @@ bindkey '^ ' autosuggest-accept
 
 # disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# vi mode settings
+bindkey -v
+bindkey '^r' history-incremental-search-backward
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^r' history-incremental-search-backward
+bindkey '^w' backward-kill-word
+export KEYTIMEOUT=1
 
 # load commond bash/zsh compatible shell configs
 for rc in "$HOME/.common.sh.d"/*; do
