@@ -107,7 +107,6 @@ Plugin 'godlygeek/tabular'
 Plugin 'gabrielelana/vim-markdown'
 Plugin 'mkitt/tabline.vim'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'polm/github-tasks.vim'
 Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
@@ -473,3 +472,8 @@ set timeoutlen=1000 ttimeoutlen=0
 " gabrielelana/vim-markdown settings
 " - leader + t will toggle a checkbox on a list item, see: https://github.com/gabrielelana/vim-markdown#default-mappings-normal-and-visual-mode
 let g:markdown_mapping_switch_status = '<Leader>t'
+
+" YouCompleteMe (ycm) configuration
+" - Use relative path to python bin so that virtualenv python will be found and autocompletion for libs in the virtualenv will work - https://github.com/Valloric/YouCompleteMe#python-semantic-completion
+let g:ycm_python_binary_path = 'python'
+
