@@ -3,7 +3,6 @@
 # to update plugins run `antigen update`
 #
 
-unsetopt share_history
 export PATH=$PATH:/usr/local/sbin
 
 # path to completions
@@ -30,6 +29,7 @@ antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 antigen bundle urltools    # adds commands urlencode | urldecode
+antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
 
 # load non-omz modules
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -55,7 +55,6 @@ bindkey -v
 bindkey '^r' history-incremental-search-backward
 bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
-bindkey '^r' history-incremental-search-backward
 bindkey '^w' backward-kill-word
 export KEYTIMEOUT=1
 
@@ -76,3 +75,27 @@ antigen bundle kubectl     # kubectl completions
 complete -o nospace -o default -F _python_argcomplete "gcloud"
 complete -o default -F _bq_completer bq
 complete -o nospace -F _python_argcomplete gsutil
+
+# local history with up/down arrows, global history with ctrl-up/ctrl-down.
+# ctrl-R searches global history
+# from: https://superuser.com/a/1025836/268165
+setopt share_history
+
+up-line-or-local-history() {
+    zle set-local-history 1
+    zle up-line-or-history
+    zle set-local-history 0
+}
+zle -N up-line-or-local-history
+down-line-or-local-history() {
+    zle set-local-history 1
+    zle down-line-or-history
+    zle set-local-history 0
+}
+zle -N down-line-or-local-history
+
+bindkey '^[OA' up-line-or-history     # Cursor up (local history)
+bindkey '^[OB' down-line-or-history   # Cursor down (local history)
+bindkey '^[[1;9A' up-line-or-local-history    # [ALT] + Cursor up (global history)
+bindkey '^[[1;9B' down-line-or-local-history    # [ALT] + Cursor down (global history)
+
