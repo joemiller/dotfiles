@@ -111,10 +111,14 @@ Plugin 'jez/vim-github-hub'
 Plugin 'wakatime/vim-wakatime'
 Plugin 'junegunn/vim-emoji'
 Plugin 'rakr/vim-one'                       " another clone of atom's One theme
+Plugin 'liuchengxu/space-vim-dark'
 Plugin 'tpope/vim-endwise'
+"Plugin 'xolox/vim-session'
+"Plugin 'xolox/vim-misc'
 Plugin 'sjl/vitality.vim'                   " nice tweaks for making iterm2 + vim + tmux play together, including cursor shape toggling
 Plugin 'b4b4r07/vim-hcl'
 Plugin 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
+Plugin 'mhinz/vim-startify'
 
 call vundle#end()            " required
 
@@ -275,6 +279,7 @@ set background=dark
 "colorscheme solarized
 "colorscheme bubblegum
 colorscheme one  " rakr/vim-one
+"colorscheme space-vim-dark
 
 nmap <silent> <F2> <Plug>DashSearch
 nmap <silent> <F3> <Plug>DashSearch
@@ -342,10 +347,13 @@ autocmd FileType * call EnableColorColumn()
 "au Filetype markdown let b:AutoPairs = {'(':')', '{':'}',"'":"'",'"':'"', '`':'`'}
 let g:AutoPairsMapSpace=0
 
-" fast visual mode with <space><space>
+" map tab to scroll thru splits
+nnoremap <Tab> <c-w>w
+
+" SPC SPC - visual mode
 nmap <Leader><Leader> V
 
-" map space-{n} to quickly change tabs
+" SPC [1-9] - switch to tab 1 through 9
 noremap <silent> <leader>1 1gt
 noremap <silent> <leader>2 2gt
 noremap <silent> <leader>3 3gt
@@ -356,17 +364,23 @@ noremap <silent> <leader>7 7gt
 noremap <silent> <leader>8 8gt
 noremap <silent> <leader>9 9gt
 
-" map tab to scroll thru splits
-nnoremap <Tab> <c-w>w
-
-"hi VertSplit ctermbg=bg ctermfg=bg   " make vert split bar less prominent (NOTE: disabled because this makes resizing with the mouse difficult since the bar is invisible)
-
-" fast save with SPC-w
+" SPC w - fast save
 nnoremap <Leader>w :w<CR>
+" SPC q a - quit-all
+nnoremap <Leader>qa :qa<CR>
+" SPC q - quit
+nnoremap <Leader>q :q<CR>
 
-" jump loclist
+" SPC f r - Reload .vimrc (from space-vim: https://github.com/liuchengxu/space-vim/blob/master/layers/%2Bvim/better-defaults/README.md#others
+nnoremap <Leader>fR :source $MYVIMRC<CR>
+
+" jump loclist SPC n, SPC p
 map <Leader>n :lnext<CR>
 map <Leader>p :lprev<CR>
+
+" ALT tab - switch tabs
+map    <M-Tab>  :tabprev<CR>
+imap   <M-Tab>  <C-O>:tabprev<CR>
 
 " linters to install:
 "  - shellcheck (brew install shellcheck)
@@ -477,3 +491,17 @@ let g:markdown_mapping_switch_status = '<Leader>t'
 " - Use relative path to python bin so that virtualenv python will be found and autocompletion for libs in the virtualenv will work - https://github.com/Valloric/YouCompleteMe#python-semantic-completion
 let g:ycm_python_binary_path = 'python'
 
+" Startify configuration
+let g:startify_session_dir = '~/.vim/sessions'
+let g:startify_bookmarks = [ '~/.dotfiles', '~/.vimrc', '~/.zshrc' ]
+let g:startify_session_before_save = [ 'echo "Cleaning up before saving.."', 'silent! NERDTreeTabsClose', ]
+let g:startify_session_persistence = 1
+let g:startify_session_autoload = 1
+let g:startify_files_number = 6
+" make startify + nerdtree start together when vim is started with no args
+autocmd VimEnter *
+            \   if !argc()
+            \ |   Startify
+            \ |   NERDTree
+            \ |   wincmd w
+            \ | endif
