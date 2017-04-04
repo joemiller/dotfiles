@@ -5,6 +5,9 @@ local log = hs.logger.new('app_watcher','debug')
 
 local laptopScreen = "Color LCD"
 
+local prevBrightness = 0
+local prevApp = ''
+
 function apps(appName, eventType, appObject)
     if (eventType == hs.application.watcher.activated) then
         if (appName == "Finder") then
@@ -12,6 +15,25 @@ function apps(appName, eventType, appObject)
             appObject:selectMenuItem({"Window", "Bring All to Front"})
         end
     end
+
+    -- if (eventType == hs.application.watcher.activated) then
+    --     log.df("appname activated: %s", appName)
+    --     if (appName == "iTerm2") then
+    --         local new = 95
+    --         local current = hs.brightness.get()
+    --         if (prevBrightness == 0) then
+    --             prevBrightness = current
+    --         end
+    --         log.df("iterm activated, bumping brightness to %d", new)
+    --         hs.brightness.set(new)
+    --     else
+    --         if (hs.brightness.get() ~= prevBrightness) then
+    --             log.df("app other than iterm activated, resetting brightness to previous brightness value: %d", prevBrightness)
+    --             hs.brightness.set(prevBrightness)
+    --         end
+    --     end
+
+    -- end
 
     if (eventType == hs.application.watcher.launched) then
         log.df("appname: %s", appName)
