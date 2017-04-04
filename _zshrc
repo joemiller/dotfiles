@@ -76,26 +76,4 @@ complete -o nospace -o default -F _python_argcomplete "gcloud"
 complete -o default -F _bq_completer bq
 complete -o nospace -F _python_argcomplete gsutil
 
-# local history with up/down arrows, global history with ctrl-up/ctrl-down.
-# ctrl-R searches global history
-# from: https://superuser.com/a/1025836/268165
-setopt share_history
-
-up-line-or-local-history() {
-    zle set-local-history 1
-    zle up-line-or-history
-    zle set-local-history 0
-}
-zle -N up-line-or-local-history
-down-line-or-local-history() {
-    zle set-local-history 1
-    zle down-line-or-history
-    zle set-local-history 0
-}
-zle -N down-line-or-local-history
-
-bindkey '^[OA' up-line-or-history     # Cursor up (local history)
-bindkey '^[OB' down-line-or-history   # Cursor down (local history)
-bindkey '^[[1;9A' up-line-or-local-history    # [ALT] + Cursor up (global history)
-bindkey '^[[1;9B' down-line-or-local-history    # [ALT] + Cursor down (global history)
-
+unsetopt share_history
