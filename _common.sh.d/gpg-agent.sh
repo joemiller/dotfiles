@@ -10,7 +10,10 @@ if [[ ! -n "$SSH_CLIENT" ]]; then
 
   # gpg >= 2.1, use gpgconf
   gpgconf --launch gpg-agent
-  export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+#  export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
+  if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+      export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+  fi
 
   GPG_TTY=$(tty)
   export GPG_TTY
