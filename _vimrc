@@ -31,6 +31,7 @@ autocmd FileType go set tabstop=2|set shiftwidth=2|set noexpandtab
 autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab
 autocmd FileType yaml set tabstop=2|set shiftwidth=2|set expandtab
+autocmd FileType coffee set tabstop=2|set shiftwidth=2|set expandtab
 
 set ttyfast    " Send more characters for redraws
 set mouse=a    " enable mouse
@@ -94,6 +95,7 @@ Plugin 'ntpeters/vim-better-whitespace'
 Plugin 'Matt-Deacalion/vim-systemd-syntax'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'digitaltoad/vim-pug'                " pug, formerly Jade markup lang
 Plugin 'tpope/vim-commentary'
 Plugin 'nazo/pt.vim'
 Plugin 'vim-ruby/vim-ruby'
@@ -398,6 +400,7 @@ autocmd BufRead,BufNewFile */titan/* let g:syntastic_python_checkers=['python'] 
 " NOTE: gometalinter is too slow to run all the linters on most projects. disabled for now.
 "let g:syntastic_go_checkers = ['gometalinter']
 let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
+"let g:syntastic_go_checkers = ['go', 'govet']
 let g:syntastic_yaml_checkers = ['yamllint']
 let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
 
