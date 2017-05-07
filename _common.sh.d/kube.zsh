@@ -1,6 +1,7 @@
 alias ku='kubectl'
 alias kug='kubectl get'
 alias kud='kubectl describe'
+alias ktx='kubectx'
 
 alias kube-whereami='kubectl config current-context'
 
