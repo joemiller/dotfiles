@@ -121,6 +121,7 @@ Plugin 'sjl/vitality.vim'                   " nice tweaks for making iterm2 + vi
 Plugin 'b4b4r07/vim-hcl'
 Plugin 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
 Plugin 'mhinz/vim-startify'
+Plugin 'markcornick/vim-bats'
 
 call vundle#end()            " required
 
@@ -399,8 +400,8 @@ let g:syntastic_python_checkers = ['python', 'pylint']
 autocmd BufRead,BufNewFile */titan/* let g:syntastic_python_checkers=['python']  " disable pylint when working in the titan project
 " NOTE: gometalinter is too slow to run all the linters on most projects. disabled for now.
 "let g:syntastic_go_checkers = ['gometalinter']
-"let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
-let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
+"let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
 "let g:syntastic_go_checkers = ['go', 'govet']
 let g:syntastic_yaml_checkers = ['yamllint']
 let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
