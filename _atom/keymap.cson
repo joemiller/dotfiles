@@ -17,8 +17,11 @@
 #   'ctrl-p': 'core:move-down'
 #
 
-# my vim mappings mapped to atom. <leader> = space
+# note: to disable the macos character pop-up in atom when holding a motion key like h,j,k,l
+#   defaults write com.github.atom ApplePressAndHoldEnabled -bool false
+# https://gist.github.com/rastasheep/bfc8266eeb58b899054c
 
+# my vim mappings mapped to atom. <leader> = space
 'atom-text-editor.vim-mode.normal-mode':
   # <leader>w = :w
   'space w': 'core:save'
