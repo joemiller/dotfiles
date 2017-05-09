@@ -17,7 +17,14 @@
 #   'ctrl-p': 'core:move-down'
 #
 
-# map my important vim '<space> (leader) <key>' combos
+# my vim mappings mapped to atom. <leader> = space
+
 'atom-text-editor.vim-mode.normal-mode':
+  # <leader>w = :w
   'space w': 'core:save'
+  # nmap <Leader><Leader> V
   'space space': 'vim-mode:activate-blockwise-visual-mode'
+
+'atom-text-editor.vim-mode.visual-mode':
+  # <leader>gc = toggle comments from tpope/vim-commentary
+  'g c': 'editor:toggle-line-comments'
