@@ -66,7 +66,14 @@ for i in _*; do
       for f in "$source"/*; do
         symlink "$f" "$HOME/.gnupg/$(basename "$f")"
       done
-
+      continue
+    fi
+    # special case for .atom. Instead of symlinking the whole home dir, we only symlink specific files
+    if [ "$i" = "_atom" ]; then
+      [ ! -e "${HOME}/.atom" ] && mkdir -p "${HOME}/.atom"
+      for f in "$source"/*; do
+        symlink "$f" "$HOME/.atom/$(basename "$f")"
+      done
       continue
     fi
 
