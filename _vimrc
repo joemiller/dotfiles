@@ -389,6 +389,7 @@ imap   <M-Tab>  <C-O>:tabprev<CR>
 "  - shellcheck (brew install shellcheck)
 "  - go-metalinter (go get -u github.com/alecthomas/gometalinter ;  gometalinter --install --update)
 "  - yamllint (pip install yamllint)
+"  - jsonlint (brew install jsonlint)
 
 " syntastic (uncomment Plugin to enable)
 let g:syntastic_always_populate_loc_list = 1
@@ -405,6 +406,7 @@ let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
 "let g:syntastic_go_checkers = ['go', 'govet']
 let g:syntastic_yaml_checkers = ['yamllint']
 let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
+let g:syntastic_json_checkers = ['jsonlint']
 
 " NOTE: there are issues with multi-byte emojis in at least Neovim currently (9/2016): https://github.com/neovim/neovim/issues/5149
 if emoji#available()
