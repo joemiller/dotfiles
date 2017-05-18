@@ -27,7 +27,15 @@
   'space w': 'core:save'
   # nmap <Leader><Leader> V
   'space space': 'vim-mode:activate-blockwise-visual-mode'
+  'ctrl-m': 'symbols-tree-view:toggle'
 
 'atom-text-editor.vim-mode.visual-mode':
   # <leader>gc = toggle comments from tpope/vim-commentary
   'g c': 'editor:toggle-line-comments'
+
+# ctrl-{h,j,k,l} to move between panes
+'atom-text-editor.vim-mode:not(.insert-mode)':
+  'ctrl-h': 'window:focus-pane-on-left'
+  'ctrl-j': 'window:focus-pane-below'
+  'ctrl-k': 'window:focus-pane-above'
+  'ctrl-l': 'window:focus-pane-on-right'
