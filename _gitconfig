@@ -17,11 +17,14 @@
 [alias]
     ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	up = "!git remote update -p; git merge --ff-only @{u}"
-  co = checkout
-  ci = commit
-  s = status
-  ss = status -sb
-  p = push
+    co = checkout
+    ci = commit
+    s = status
+    ss = status -sb
+    p = push
+    # https://csswizardry.com/2017/05/little-things-i-like-to-do-with-git/
+    stats = shortlog -sn
+    overview = log --all --oneline --no-merges
 [push]
 	default = matching
 [gpg]
