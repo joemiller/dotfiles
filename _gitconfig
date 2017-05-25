@@ -25,6 +25,7 @@
     # https://csswizardry.com/2017/05/little-things-i-like-to-do-with-git/
     stats = shortlog -sn
     overview = log --all --oneline --no-merges
+    graph = log --graph --all --decorate --stat --date=iso
 [push]
 	default = matching
 [gpg]
