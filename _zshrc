@@ -39,6 +39,9 @@ antigen bundle djui/alias-tips
 
 antigen apply
 
+autoload bashcompinit
+bashcompinit
+
 # configure zsh-autosuggestions
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
 
