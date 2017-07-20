@@ -7,6 +7,7 @@
 # fi
 export EDITOR=vim
 
+## regular vim helpers
 setup_vim() {
   if [[ ! -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
     git clone "https://github.com/gmarik/Vundle.vim.git" "$HOME/.vim/bundle/Vundle.vim"
@@ -27,4 +28,33 @@ update_ycm() {
   cd ~/.vim/bundle/YouCompleteMe
   ./install.py --clang-completer --gocode-completer
   cd -
+}
+
+## neovim helpers
+setup_nvim() {
+  echo "==> Symlinking $HOME/.neovim.init.vim -> $HOME/.config/nvim/init.vim"
+  [[ ! -e "$HOME/.config/nvim" ]] && mkdir -p "$HOME/.config/nvim"
+  [[ ! -e "$HOME/.config/nvim/init.vim" ]] && ln -sf "$HOME/.neovim.init.vim" "$HOME/.config/nvim/init.vim"
+
+  if [[ ! -e "$HOME/.local/share/nvim/site/autoload/plug.vim" ]]; then
+    echo "==> Installing vim-plug"
+    # install vim-plug - https://github.com/junegunn/vim-plug
+    curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  fi
+  update_nvim
+}
+
+update_nvim() {
+  echo "==> Installing/upgrading neovim python modules"
+  if command -v pip3 > /dev/null; then
+    pip3 install --upgrade neovim
+  else
+    pip2 install --upgrade neovim
+  fi
+
+  echo "==> Updating nvim plugins"
+  nvim +PlugUpdate +qall
+  nvim +UpdateRemotePlugins +qall
+  nvim +PlugClean +qall
 }
