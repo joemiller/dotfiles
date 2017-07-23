@@ -92,6 +92,7 @@ Plug 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
 Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-go'
+Plug 'fszymanski/deoplete-emoji'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'ekalinin/Dockerfile.vim'
@@ -127,78 +128,6 @@ Plug 'markcornick/vim-bats'
 " Initialize plugin system
 call plug#end()
 
-
-" filetype off
-" set rtp+=~/.vim/bundle/Vundle.vim
-" call vundle#begin()
-
-" " let Vundle manage Vundle
-" " required!
-" Plugin 'gmarik/Vundle.vim'
-
-" " My Bundles here:
-" Plugin 'Chiel92/vim-autoformat'
-" " Plugin 'tpope/vim-fugitive'
-" Plugin 'oplatek/Conque-Shell'
-" Plugin 'scrooloose/nerdtree'
-" Plugin 'jistr/vim-nerdtree-tabs'
-" Plugin 'Xuyuanp/nerdtree-git-plugin'
-" Plugin 'jiangmiao/auto-pairs'
-" Plugin 'airblade/vim-gitgutter'
-" Plugin 'vim-airline/vim-airline'
-" Plugin 'vim-airline/vim-airline-themes'
-" Plugin 't9md/vim-chef'
-" Plugin 'rodjek/vim-puppet'
-" Plugin 'JSON.vim'
-" Plugin 'nsf/gocode', {'rtp': 'vim/'}
-" Plugin 'fatih/vim-go'
-" Plugin 'ctrlpvim/ctrlp.vim'
-" Plugin 'altercation/vim-colors-solarized'
-" Plugin 'majutsushi/tagbar'
-" Plugin 'craigemery/vim-autotag'
-" "Plugin 'benekastah/neomake'
-" Plugin 'scrooloose/syntastic'
-" Plugin 'vim-scripts/vim-json-bundle'
-" Plugin 'tpope/vim-repeat'
-" Plugin 'christoomey/vim-tmux-navigator'
-" Plugin 'smerrill/vcl-vim-plugin'
-"Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
-" Plugin 'Shougo/deoplete.nvim'
-" Plugin 'zchee/deoplete-go'
-" Plugin 'ntpeters/vim-better-whitespace'
-" Plugin 'Matt-Deacalion/vim-systemd-syntax'
-" Plugin 'ekalinin/Dockerfile.vim'
-" Plugin 'kchmck/vim-coffee-script'
-" Plugin 'digitaltoad/vim-pug'                " pug, formerly Jade markup lang
-" Plugin 'tpope/vim-commentary'
-" Plugin 'nazo/pt.vim'
-" Plugin 'vim-ruby/vim-ruby'
-" Plugin 'ConradIrwin/vim-bracketed-paste'
-" Plugin 'tpope/vim-surround'
-" Plugin 'dgryski/vim-godef'
-" Plugin 'mattn/webapi-vim'
-" Plugin 'mattn/gist-vim'
-" Plugin 'flazz/vim-colorschemes'
-" Plugin 'godlygeek/tabular'
-" Plugin 'gabrielelana/vim-markdown'
-" Plugin 'mkitt/tabline.vim'
-" Plugin 'editorconfig/editorconfig-vim'
-" Plugin 'jez/vim-github-hub'
-" Plugin 'wakatime/vim-wakatime'
-" Plugin 'junegunn/vim-emoji'
-" Plugin 'rakr/vim-one'                       " another clone of atom's One theme
-" Plugin 'liuchengxu/space-vim-dark'
-" Plugin 'tpope/vim-endwise'
-" "Plugin 'xolox/vim-session'
-" "Plugin 'xolox/vim-misc'
-" Plugin 'sjl/vitality.vim'                   " nice tweaks for making iterm2 + vim + tmux play together, including cursor shape toggling
-" Plugin 'b4b4r07/vim-hcl'
-" Plugin 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
-" Plugin 'mhinz/vim-startify'
-" Plugin 'markcornick/vim-bats'
-
-" call vundle#end()            " required
-
 let g:Powerline_symbols = 'unicode'
 filetype plugin indent on     " required!
 
@@ -212,6 +141,7 @@ ab tempalte template
 ab seperate separate
 ab srting string
 ab balacner balancer
+ab panthoen pantheon
 
 " relative line numbers are so awesome for someone not good with markers like me
 "set relativenumber
@@ -373,6 +303,9 @@ autocmd FileType markdown set spell
 autocmd FileType text set spell
 
 highlight ExtraWhitespace ctermbg=red guibg=red
+
+" ntpeters/vim-better-whitespace config:
+let g:better_whitespace_filetypes_blacklist=['diff', 'gitcommit', 'unite', 'qf', 'help']
 
 " ---------------- begin list toggle code ----------------------
 "  http://vim.wikia.com/wiki/Toggle_to_open_or_close_the_quickfix_window
@@ -588,6 +521,14 @@ autocmd VimEnter *
             \ | endif
 " deoplete config
 let g:deoplete#enable_at_startup = 1
+
+" Let <Tab> also do completion
+inoremap <silent><expr> <Tab>
+\ pumvisible() ? "\<C-n>" :
+\ deoplete#mappings#manual_complete()
+
+" Close the documentation window when completion is done
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " ale (async lint engine) config
 "let g:ale_linters = {'go': ['gometalinter']}
