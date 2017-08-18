@@ -52,6 +52,10 @@ function kube_info() {
   if [[ ! -z "$namespace" ]]; then
     namespace="/$namespace"
   fi
+  if [[ "$namespace" == "/production" ]]; then
+    # red color for prod ns
+    NS_COLOR="%{$fg[red]%}"
+  fi
   echo "${CLUSTER_COLOR}${PREFIX}⎈ ${cluster_shortname}${NS_COLOR}${namespace}${SUFFIX}%{${reset_color}%} "
 }
 
