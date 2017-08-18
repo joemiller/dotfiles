@@ -124,6 +124,7 @@ Plug 'b4b4r07/vim-hcl'
 Plug 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
 Plug 'mhinz/vim-startify'
 Plug 'markcornick/vim-bats'
+Plug 'robbles/logstash'
 
 " Initialize plugin system
 call plug#end()
@@ -302,7 +303,7 @@ set nospell                      " disable spelling in general, enable only for 
 autocmd FileType markdown set spell
 autocmd FileType text set spell
 
-highlight ExtraWhitespace ctermbg=red guibg=red
+"highlight ExtraWhitespace ctermbg=red guibg=red
 
 " ntpeters/vim-better-whitespace config:
 let g:better_whitespace_filetypes_blacklist=['diff', 'gitcommit', 'unite', 'qf', 'help']
