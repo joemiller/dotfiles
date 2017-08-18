@@ -32,7 +32,7 @@
 [push]
 	default = matching
 [gpg]
-	program = gpg2
+	program = gpg
 [commit]
 	gpgSign = true
 #[url "git@github.com:"]
