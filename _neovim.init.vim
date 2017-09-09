@@ -64,7 +64,7 @@ augroup END
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'Chiel92/vim-autoformat'
-" " Plugin 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive'
 Plug 'oplatek/Conque-Shell'
 Plug 'scrooloose/nerdtree',
 Plug 'jistr/vim-nerdtree-tabs',
@@ -91,7 +91,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
 Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-go'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fszymanski/deoplete-emoji'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
@@ -465,12 +465,12 @@ hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " gitgutter config
-"TODO if emoji#available()
-"     let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
-"     let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
-"     let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
-"     let g:gitgutter_sign_modified_removed = emoji#for('collision')
-" endif
+if emoji#available()
+    let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+    let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+    let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+    let g:gitgutter_sign_modified_removed = emoji#for('collision')
+endif
 
 " autoreload files that are changed externally whenever a tab/buffer regains focus.
 " This is particularly useful with the `make readme-toc` command which updates
