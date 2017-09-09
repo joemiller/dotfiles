@@ -5,6 +5,7 @@ case "$(uname)" in
         alias lla='ls -G -la'
         alias la='ls -G -a'
         alias top='top -o cpu' # because top should sort by cpu usage, by default, IMHO
+        alias pbcopy='/usr/local/bin/reattach-to-user-namespace pbcopy'
         ;;
     "OpenBSD")
         # OpenBSD 5.8+ replaces sudo with doas in the base system. sudo can optionally be installed from ports.
