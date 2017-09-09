@@ -80,3 +80,7 @@ complete -o default -F _bq_completer bq
 complete -o nospace -F _python_argcomplete gsutil
 
 unsetopt share_history
+
+# fish-like syntax highlighting. must be at end of zshrc
+# https://github.com/zsh-users/zsh-syntax-highlighting#why-must-zsh-syntax-highlightingzsh-be-sourced-at-the-end-of-the-zshrc-file
+[ -f "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
