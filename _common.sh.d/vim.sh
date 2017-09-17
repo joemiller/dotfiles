@@ -53,8 +53,10 @@ update_nvim() {
   echo "==> Installing/upgrading neovim python modules"
   if command -v pip3 > /dev/null; then
     pip3 install --upgrade neovim
-  else
+  elif command -v pip2 > /dev/null; then
     pip2 install --upgrade neovim
+  else
+    pip install --upgrade neovim
   fi
 
   echo "==> Updating nvim plugins"
