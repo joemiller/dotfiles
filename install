@@ -76,6 +76,14 @@ for i in _*; do
       done
       continue
     fi
+    # special case for .config. Instead of symlinking the whole home dir, we only symlink specific files
+    if [ "$i" = "_config" ]; then
+      [ ! -e "${HOME}/.config" ] && mkdir -p "${HOME}/.config"
+      for f in "$source"/*; do
+        symlink "$f" "$HOME/.config/$(basename "$f")"
+      done
+      continue
+    fi
 
     # everything else gets symlinked according to the standard pattern
     if [ -e "${target}" ] && [ ! -h "${target}" ]; then

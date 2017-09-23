@@ -1,0 +1,34 @@
+[global_config]
+  borderless = True
+  focus = system
+  tab_position = hidden
+  title_font = Source Code Pro for Powerline Medium 9
+  title_transmit_bg_color = "#be5046"
+  title_use_system_font = False
+  window_state = fullscreen
+[keybindings]
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = theone
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"
+    font = Source Code Pro for Powerline Medium 9
+    use_system_font = False
+  [[theone]]
+    audible_bell = True
+    background_color = "#272b33"
+    copy_on_selection = True
+    cursor_color = "#abb2c0"
+    font = Source Code Pro for Powerline 9
+    foreground_color = "#abb2c0"
+    palette = "#272b33:#e06c75:#98c379:#d19a66:#61afef:#c678dd:#56b6c2:#abb2c0:#272b33:#e5c07b:#5c6370:#828997:#abb2bf:#c678dd:#abb2bf:#abb2c0"
+    scrollback_lines = 5000
+    use_system_font = False
