@@ -533,7 +533,7 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " ale (async lint engine) config
 "let g:ale_linters = {'go': ['gometalinter']}
-let g:ale_linters = {'go': ['go build', 'gofmt', 'golint', 'gosimple', 'go vet', 'staticcheck']}
+let g:ale_linters = {'go': ['go build', 'gofmt', 'golint', 'errcheck', 'go vet']}
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
