@@ -18,7 +18,7 @@ fi
 antigen use oh-my-zsh
 antigen bundle git
 # antigen bundle chruby      # DISABLED: slows startup down. disabled. https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#chruby
-antigen bundle web-search  # adds commands google|bing|ddg https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#web-search
+#antigen bundle web-search  # adds commands google|bing|ddg https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#web-search
 # antigen bundle vagrant     # DISABLED: slows startup down.
 antigen bundle systemd     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#systemd
 # antigen bundle bundler     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#bundler
@@ -27,8 +27,8 @@ antigen bundle docker      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#fabric
 # antigen bundle encode64    # adds commands encode64|decode64 (https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#encode64)
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
-antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
-antigen bundle urltools    # adds commands urlencode | urldecode
+#antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
+#antigen bundle urltools    # adds commands urlencode | urldecode
 #antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
 
 # load non-omz modules
@@ -80,7 +80,3 @@ complete -o default -F _bq_completer bq
 complete -o nospace -F _python_argcomplete gsutil
 
 unsetopt share_history
-
-# fish-like syntax highlighting. must be at end of zshrc
-# https://github.com/zsh-users/zsh-syntax-highlighting#why-must-zsh-syntax-highlightingzsh-be-sourced-at-the-end-of-the-zshrc-file
-[ -f "/usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
