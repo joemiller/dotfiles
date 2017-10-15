@@ -30,7 +30,7 @@
     graph = log --graph --all --decorate --stat --date=iso
     delete-merged = "!git branch --merged | grep -v \"^\\s*master$\" | grep -v \"\\*\" | xargs -n 1 git branch -d"
 [push]
-	default = matching
+	default = current
 [gpg]
 	program = gpg
 [commit]
