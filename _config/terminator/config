@@ -5,7 +5,7 @@
   title_font = Source Code Pro for Powerline Medium 9
   title_transmit_bg_color = "#be5046"
   title_use_system_font = False
-  window_state = fullscreen
+  window_state = maximise
 [keybindings]
 [layouts]
   [[default]]
