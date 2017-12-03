@@ -34,6 +34,6 @@
 [gpg]
 	program = gpg
 [commit]
-	gpgSign = false
+	gpgSign = true
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
