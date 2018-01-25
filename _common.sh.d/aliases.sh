@@ -32,3 +32,6 @@ case "$(uname)" in
         alias la='ls -a --color=auto'
         alias joe_dstat='dstat -lpcgyrdnm'
 esac
+
+# ptgo - grep go repos while ignoring ./vendor directory
+alias ptgo='pt --ignore=vendor'
