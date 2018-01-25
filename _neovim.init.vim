@@ -393,46 +393,6 @@ map <Leader>p :lprev<CR>
 map    <M-Tab>  :tabprev<CR>
 imap   <M-Tab>  <C-O>:tabprev<CR>
 
-" linters to install:
-"  - shellcheck (brew install shellcheck)
-"  - go-metalinter (go get -u github.com/alecthomas/gometalinter ;  gometalinter --install --update)
-"  - yamllint (pip install yamllint)
-"  - jsonlint (brew install jsonlint)
-
-" syntastic (uncomment Plugin to enable)
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
-let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
-let g:syntastic_python_checkers = ['python', 'pylint']
-autocmd BufRead,BufNewFile */titan/* let g:syntastic_python_checkers=['python']  " disable pylint when working in the titan project
-" NOTE: gometalinter is too slow to run all the linters on most projects. disabled for now.
-"let g:syntastic_go_checkers = ['gometalinter']
-let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
-"let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
-"let g:syntastic_go_checkers = ['go', 'govet']
-let g:syntastic_yaml_checkers = ['yamllint']
-let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
-let g:syntastic_json_checkers = ['jsonlint']
-
-" NOTE: there are issues with multi-byte emojis in at least Neovim currently (9/2016): https://github.com/neovim/neovim/issues/5149
-"TODOif emoji#available()
-" 	let g:syntastic_error_symbol         = emoji#for('x')
-" 	let g:syntastic_warning_symbol       = emoji#for('warning')
-" 	let g:syntastic_style_error_symbol   = emoji#for('interrobang')
-" 	let g:syntastic_style_warning_symbol = emoji#for('poop')
-" elseif has('multi_byte') && &encoding ==# 'utf-8'
-" 	let g:syntastic_error_symbol         = '✗'
-" 	let g:syntastic_warning_symbol       = '⚠'
-" 	let g:syntastic_style_error_symbol   = '»»'
-" 	let g:syntastic_style_warning_symbol = '»'
-" else
-" 	let g:syntastic_error_symbol         = 'E'
-" 	let g:syntastic_warning_symbol       = 'W'
-" 	let g:syntastic_style_error_symbol   = 'S'
-" 	let g:syntastic_style_warning_symbol = 's'
-" endif
 
 highlight link SyntasticErrorSign        SignColumn
 highlight link SyntasticWarningSign      SignColumn
@@ -531,6 +491,11 @@ inoremap <silent><expr> <Tab>
 " Close the documentation window when completion is done
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
+" ------------------- begin linters config -----------------------
+" There is configuration for both ale and syntastic below, but only one is
+" active. Check the Plugin's list at the top for which is active. I tend to
+" switch back and forth
+" -----------------------------------------------------------------
 " ale (async lint engine) config
 "let g:ale_linters = {'go': ['gometalinter']}
 let g:ale_linters = {'go': ['go build', 'gofmt', 'golint', 'errcheck', 'go vet']}
@@ -541,3 +506,45 @@ let g:ale_sign_column_always = 1
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚠'
 let g:airline#extensions#ale#enabled = 1
+
+" linters to install:
+"  - shellcheck (brew install shellcheck)
+"  - go-metalinter (go get -u github.com/alecthomas/gometalinter ;  gometalinter --install --update)
+"  - yamllint (pip install yamllint)
+"  - jsonlint (brew install jsonlint)
+
+" syntastic (uncomment Plugin to enable)
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_ruby_checkers = ['mri', 'rubocop', 'rubylint']
+let g:syntastic_python_checkers = ['python', 'pylint']
+autocmd BufRead,BufNewFile */titan/* let g:syntastic_python_checkers=['python']  " disable pylint when working in the titan project
+" NOTE: gometalinter is too slow to run all the linters on most projects. disabled for now.
+"let g:syntastic_go_checkers = ['gometalinter']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet', 'errcheck', 'deadcode']
+"let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck', 'deadcode']
+"let g:syntastic_go_checkers = ['go', 'govet']
+let g:syntastic_yaml_checkers = ['yamllint']
+let g:syntastic_yaml_yamllint_args = '-c ' . shellescape($HOME . '/.yamllint')
+let g:syntastic_json_checkers = ['jsonlint']
+
+" NOTE: there are issues with multi-byte emojis in at least Neovim currently (9/2016): https://github.com/neovim/neovim/issues/5149
+"TODOif emoji#available()
+" 	let g:syntastic_error_symbol         = emoji#for('x')
+" 	let g:syntastic_warning_symbol       = emoji#for('warning')
+" 	let g:syntastic_style_error_symbol   = emoji#for('interrobang')
+" 	let g:syntastic_style_warning_symbol = emoji#for('poop')
+" elseif has('multi_byte') && &encoding ==# 'utf-8'
+" 	let g:syntastic_error_symbol         = '✗'
+" 	let g:syntastic_warning_symbol       = '⚠'
+" 	let g:syntastic_style_error_symbol   = '»»'
+" 	let g:syntastic_style_warning_symbol = '»'
+" else
+" 	let g:syntastic_error_symbol         = 'E'
+" 	let g:syntastic_warning_symbol       = 'W'
+" 	let g:syntastic_style_error_symbol   = 'S'
+" 	let g:syntastic_style_warning_symbol = 's'
+" endif
+" ------------------- end linters config -----------------------
