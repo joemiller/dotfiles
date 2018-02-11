@@ -44,6 +44,7 @@ bashcompinit
 
 # configure zsh-autosuggestions
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=242
 
 # allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
 bindkey '^ ' autosuggest-accept
