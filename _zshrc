@@ -10,12 +10,13 @@ fpath=(/usr/local/share/zsh/site-functions $fpath)
 
 source ~/.dotfiles/antigen.zsh
 
+# load modules supplied by oh-my-zsh project
+antigen use oh-my-zsh
+
 if [[ "$OSTYPE" =~ darwin ]]; then
   antigen bundle osx
 fi
 
-# load modules supplied by oh-my-zsh project
-antigen use oh-my-zsh
 antigen bundle git
 # antigen bundle chruby      # DISABLED: slows startup down. disabled. https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#chruby
 #antigen bundle web-search  # adds commands google|bing|ddg https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#web-search
