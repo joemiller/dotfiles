@@ -385,9 +385,9 @@ nnoremap <Leader>q :q<CR>
 " SPC f r - Reload .vimrc (from space-vim: https://github.com/liuchengxu/space-vim/blob/master/layers/%2Bvim/better-defaults/README.md#others
 nnoremap <Leader>fR :source $MYVIMRC<CR>
 
-" jump loclist SPC n, SPC p
-map <Leader>n :lnext<CR>
-map <Leader>p :lprev<CR>
+" SPC n / SPC p - next tab / prev tab
+map <Leader>n :tabnext<CR>
+map <Leader>p :tabprev<CR>
 
 " ALT tab - switch tabs
 map    <M-Tab>  :tabprev<CR>
