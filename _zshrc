@@ -33,8 +33,11 @@ antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 #antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
 
 # load non-omz modules
+if [[ "$(uname)" != "OpenBSD" ]]; then
+    # don't load this on openbsd. it slows down prompt re-draw significantly
+    antigen bundle zsh-users/zsh-autosuggestions
+fi
 antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions src
 antigen bundle djui/alias-tips
 
