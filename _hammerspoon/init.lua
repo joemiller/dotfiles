@@ -23,6 +23,7 @@ wifi.autoConnectVPNs = {
     ["the brew"] = "home-joeym-net (all traffic)",
     ["LIQUIDGOLD_PUBLIC"] = "home-joeym-net (all traffic)",
     ["Pantheon"] = "home-joeym-net",
+    ["Pantheon-Secure"] = "home-joeym-net",
     ["Pantheon-5G"] = "home-joeym-net",
     ["Pantheon-5G"] = "home-joeym-net",
     ["Pantheon-5G-802.11r"] = "home-joeym-net",
