@@ -64,7 +64,7 @@ augroup END
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'Chiel92/vim-autoformat'
-"Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 Plug 'oplatek/Conque-Shell'
 Plug 'scrooloose/nerdtree',
 Plug 'jistr/vim-nerdtree-tabs',
