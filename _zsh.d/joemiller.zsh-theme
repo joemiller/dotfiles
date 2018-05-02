@@ -14,12 +14,16 @@ precmd() {
   fi
 }
 
+install_powerline() {
+    go build -o $HOME/.bin/powerline-go.$OSTYPE-$MACHTYPE github.com/justjanne/powerline-go
+}
+
 ###
 ### WIP - use powerline-go for prompt if available
 ###
-if command -v "powerline-go" >/dev/null; then
+if command -v "powerline-go.$OSTYPE-$MACHTYPE" >/dev/null; then
     function powerline_precmd() {
-        PS1="$(powerline-go -error $? -shell zsh -modules host,cwd,aws,docker,kube,git,root -colorize-hostname -cwd-max-depth 4 -theme ~/.powerline-go/joe.json)"
+        PS1="$(powerline-go.$OSTYPE-$MACHTYPE -error $? -shell zsh -modules host,cwd,aws,docker,kube,git,root -colorize-hostname -cwd-max-depth 4 -theme ~/.powerline-go/joe.json)"
     }
 
     function install_powerline_precmd() {
