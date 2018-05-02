@@ -1,10 +1,15 @@
 my dotfiles
 ===========
 
+These are my dotfiles. I do not recommend installing this repo! Please
+clone them and modify or take bits and pieces. You may find the install
+script is helpful.
+
 Usage
 -----
 
-### Install
+### Install (you should not do this, see above)
+
 clones this repo ~/.dotfiles and sets up symlinks.
 
     curl -L https://raw.github.com/joemiller/dotfiles/master/install | bash
