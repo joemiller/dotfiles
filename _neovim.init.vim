@@ -1,7 +1,10 @@
 "
 "  Jesse Nelson <spheromak@gmail.com>
 "  joe miller <joeym@joeym.net>
+"
 "-------------------------------------------------------------------------------
+" heavily influenced by spacemacs. leader key is space. search for 'SPC' below
+" for specific hot key combos
 "
 " https://github.com/neovim/neovim/wiki/FAQ
 "
@@ -503,8 +506,11 @@ let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_sign_column_always = 1
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚠'
+" these emojis cause problems in tmate
+" let g:ale_sign_error = '✗'
+" let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = 'E'
+let g:ale_sign_warning = 'W'
 let g:airline#extensions#ale#enabled = 1
 
 " linters to install:
@@ -548,3 +554,8 @@ let g:syntastic_json_checkers = ['jsonlint']
 " 	let g:syntastic_style_warning_symbol = 's'
 " endif
 " ------------------- end linters config -----------------------
+" these emojis cause problems in tmate, so we use basic chars for now
+let g:syntastic_error_symbol         = 'E'
+let g:syntastic_warning_symbol       = 'W'
+let g:syntastic_style_error_symbol   = 'S'
+let g:syntastic_style_warning_symbol = 's'
