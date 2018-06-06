@@ -15,7 +15,8 @@
 [github]
     user = joemiller
 [alias]
-    ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    l = log --stat
+    ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --stat
 	up = "!git remote update -p; git merge --ff-only @{u}"
     co = checkout
     ci = commit
@@ -37,3 +38,6 @@
 	gpgSign = true
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
+[log]
+    showSignature = true
+
