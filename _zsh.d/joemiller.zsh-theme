@@ -15,6 +15,7 @@ precmd() {
 }
 
 install_powerline() {
+    go get -u github.com/justjanne/powerline-go
     go build -o $HOME/.bin/powerline-go.$OSTYPE-$MACHTYPE github.com/justjanne/powerline-go
 }
 
