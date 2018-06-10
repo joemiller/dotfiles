@@ -112,6 +112,7 @@ Plug 'mattn/gist-vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'godlygeek/tabular'
 Plug 'gabrielelana/vim-markdown'
+Plug 'junegunn/vim-easy-align'
 Plug 'mkitt/tabline.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jez/vim-github-hub'
@@ -559,3 +560,7 @@ let g:syntastic_error_symbol         = 'E'
 let g:syntastic_warning_symbol       = 'W'
 let g:syntastic_style_error_symbol   = 'S'
 let g:syntastic_style_warning_symbol = 's'
+
+" Align GitHub-flavored Markdown tables (Plug 'junegunn/vim-easy-align')
+" The <Bslash> key is also the | key, a mnemonic when looking at the |s of the table.
+au FileType markdown vmap <Leader><Bslash> :EasyAlign*<Bar><Enter>
