@@ -8,6 +8,43 @@ export PATH=$PATH:/usr/local/sbin
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)
 
+autoload -Uz compinit && compinit
+autoload -Uz bashcompinit
+bashcompinit -i
+
+# configure zsh-autosuggestions
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=242
+
+# allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
+bindkey '^ ' autosuggest-accept
+
+# disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# vi mode settings
+bindkey -v
+bindkey '^r' history-incremental-search-backward
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+export KEYTIMEOUT=1
+
+# load commond bash/zsh compatible shell configs
+for rc in "$HOME/.common.sh.d"/*; do
+    source "$rc"
+done
+
+# load zsh configs
+for rc in "$HOME/.zsh.d"/*; do
+    source "$rc"
+done
+
+unsetopt share_history
+
+###
+### begin antigen. KEEP ANTIGEN STUFF AT THE BOTTOM ELSE YOU WILL HAVE A BAD TIME (MOSTLY WITH COMPLETIONS NOT WORKING)
+###
 source ~/.dotfiles/antigen.zsh
 
 # load modules supplied by oh-my-zsh project
@@ -42,46 +79,3 @@ antigen bundle zsh-users/zsh-completions src
 antigen bundle djui/alias-tips
 
 antigen apply
-
-autoload bashcompinit
-bashcompinit
-
-# configure zsh-autosuggestions
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=242
-
-# allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
-bindkey '^ ' autosuggest-accept
-# aws uses a bash style completer
-[ -f "/usr/local/share/zsh/site-functions/_aws" ] && source /usr/local/share/zsh/site-functions/_aws
-
-# disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-# vi mode settings
-bindkey -v
-bindkey '^r' history-incremental-search-backward
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-export KEYTIMEOUT=1
-
-# load commond bash/zsh compatible shell configs
-for rc in "$HOME/.common.sh.d"/*; do
-    source "$rc"
-done
-
-# load zsh configs
-for rc in "$HOME/.zsh.d"/*; do
-    source "$rc"
-done
-
-# I have no idea why this only works when placed at the bottom of .zshrc. TODO: figure out why
-antigen bundle kubectl     # kubectl completions
-
-# Workaround for https://github.com/kubernetes/kubernetes/issues/27538
-complete -o nospace -o default -F _python_argcomplete "gcloud"
-complete -o default -F _bq_completer bq
-complete -o nospace -F _python_argcomplete gsutil
-
-unsetopt share_history
