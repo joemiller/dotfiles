@@ -22,13 +22,6 @@ bindkey '^ ' autosuggest-accept
 # disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# vi mode settings
-bindkey -v
-bindkey '^r' history-incremental-search-backward
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-export KEYTIMEOUT=1
 
 # load commond bash/zsh compatible shell configs
 for rc in "$HOME/.common.sh.d"/*; do
@@ -39,8 +32,6 @@ done
 for rc in "$HOME/.zsh.d"/*; do
     source "$rc"
 done
-
-unsetopt share_history
 
 ###
 ### begin antigen. KEEP ANTIGEN STUFF AT THE BOTTOM ELSE YOU WILL HAVE A BAD TIME (MOSTLY WITH COMPLETIONS NOT WORKING)
@@ -79,3 +70,13 @@ antigen bundle zsh-users/zsh-completions src
 antigen bundle djui/alias-tips
 
 antigen apply
+
+# vi mode settings (for some reason these have to be _after_ antigen)
+bindkey -v
+bindkey '^r' history-incremental-search-backward
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+export KEYTIMEOUT=1
+
+unsetopt share_history
