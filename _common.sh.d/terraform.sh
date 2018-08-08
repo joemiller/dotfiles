@@ -34,4 +34,4 @@ esac
 export PATH="$terraform_path:$PATH"
 
 alias tf=terraform
-aliaws tfw='terraform workspace'
+alias tfw='terraform workspace'
