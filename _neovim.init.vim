@@ -129,6 +129,8 @@ Plug 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fa
 Plug 'mhinz/vim-startify'
 Plug 'markcornick/vim-bats'
 Plug 'robbles/logstash'
+Plug 'hashivim/vim-terraform'
+Plug 'juliosueiras/vim-terraform-completion'
 
 " Initialize plugin system
 call plug#end()
@@ -486,6 +488,9 @@ autocmd VimEnter *
             \ | endif
 " deoplete config
 let g:deoplete#enable_at_startup = 1
+
+let g:deoplete#omni_patterns = {}
+let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
 
 " Let <Tab> also do completion
 inoremap <silent><expr> <Tab>

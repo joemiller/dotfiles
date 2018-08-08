@@ -59,6 +59,7 @@ antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 #antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
 #antigen bundle urltools    # adds commands urlencode | urldecode
 #antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
+antigen bundle terraform
 
 # load non-omz modules
 if [[ "$(uname)" != "OpenBSD" ]]; then

@@ -32,3 +32,6 @@ case "$OSTYPE" in
 esac
 
 export PATH="$terraform_path:$PATH"
+
+alias tf=terraform
+aliaws tfw='terraform workspace'
