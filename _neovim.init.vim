@@ -37,6 +37,7 @@ autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
 autocmd FileType ruby set tabstop=2|set shiftwidth=2|set expandtab
 autocmd FileType yaml set tabstop=2|set shiftwidth=2|set expandtab
 autocmd FileType coffee set tabstop=2|set shiftwidth=2|set expandtab
+autocmd FileType sh set tabstop=2|set shiftwidth=2|set expandtab
 
 set ttyfast    " Send more characters for redraws
 set mouse=a    " enable mouse
