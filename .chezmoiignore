@@ -1,0 +1,8 @@
+README.md
+.gitignore
+install
+Dockerfile.*
+hacking/
+Makefile
+install-chezmoi.sh
+TODO-chezmoi.md
