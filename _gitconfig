@@ -38,6 +38,6 @@
 	gpgSign = true
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
-[log]
-    showSignature = true
+#[log]
+#    showSignature = true
 
