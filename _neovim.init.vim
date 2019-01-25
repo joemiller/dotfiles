@@ -97,6 +97,7 @@ Plug 'smerrill/vcl-vim-plugin'
 Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fszymanski/deoplete-emoji'
+Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'ekalinin/Dockerfile.vim'
@@ -132,6 +133,7 @@ Plug 'markcornick/vim-bats'
 Plug 'robbles/logstash'
 Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
+Plug 'liuchengxu/vim-which-key'
 
 " Initialize plugin system
 call plug#end()
@@ -395,6 +397,9 @@ nnoremap <Leader>fR :source $MYVIMRC<CR>
 " SPC n / SPC p - next tab / prev tab
 map <Leader>n :tabnext<CR>
 map <Leader>p :tabprev<CR>
+
+" SPC with no action within timeoutlen brings up which-key list of available hotkeys
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 
 " ALT tab - switch tabs
 map    <M-Tab>  :tabprev<CR>
