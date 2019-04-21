@@ -2,6 +2,7 @@
 # reminder: to update antigen: run `antigen selfupdate` and commit any changes
 # to update plugins run `antigen update`
 #
+# test
 
 export PATH=$PATH:/usr/local/sbin
 
@@ -36,7 +37,7 @@ done
 ###
 ### begin antigen. KEEP ANTIGEN STUFF AT THE BOTTOM ELSE YOU WILL HAVE A BAD TIME (MOSTLY WITH COMPLETIONS NOT WORKING)
 ###
-source ~/.dotfiles/antigen.zsh
+source ~/.antigen.zsh
 
 # load modules supplied by oh-my-zsh project
 antigen use oh-my-zsh

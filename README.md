@@ -1,37 +1,77 @@
 my dotfiles
 ===========
 
-These are my dotfiles. I do not recommend installing this repo! Please
-clone them and modify or take bits and pieces. You may find the install
-script is helpful.
+These are my dotfiles. I do not recommend installing this repo as-is! Please
+clone them and modify or take bits and pieces.
 
-Usage
------
+These dotfiles are managed with [chezmoi](https://github.com/twpayne/chezmoi).
 
-### Install (you should not do this, see above)
+> The state of this repo before converting to chezmoi is available on the "before-chezmoi" tag
+> https://github.com/joemiller/dotfiles/tree/before-chezmoi
 
-clones this repo ~/.dotfiles and sets up symlinks.
+Install
+-------
 
-    curl -L https://raw.github.com/joemiller/dotfiles/master/install | bash
+### Install chezmoi
 
-### Update
-Pulls down any changes from github then sets up symlinks.
+macOS:
 
-    cd ~/.dotfiles
-    ./install
+```console
+brew install twpayne/taps/chezmoi
+```
 
-Skip all git actions with `-n` flag:
+Linux / other:
 
-    ./install -n
+```console
+curl -L https://raw.githubusercontent.com/joemiller/dotfiles/master/install-chezmoi.sh | bash
+sudo mv chezmoi /usr/local/bin
+```
 
-This is useful when used with something like my `dotfiles` chef recipe
-which handles sync'ing with git already:
-https://github.com/joemiller/workstation-bootstrap/blob/master/cookbooks/dotfiles/recipes/default.rb
+### Install dotfiles
 
-### Commit new changes and push them to github
+Clone this repo to `~/.local/share/chezmoi` and then deploy dotfiles to your $HOME dir:
 
-The standard git dance:
+> TIP: Run `chezmoi diff` before apply to see the changes chezmoi will make
 
-    git add .
-    git commit -a -m'new stuff'
-    git push 
+```console
+chezmoi init https://github.com/joemiller/dotfiles.git
+
+chezmoi apply
+```
+
+### setup zsh environment
+
+```console
+source ~/.zshrc
+```
+
+### install powerline-go
+
+The zsh theme will attempt to use [powerline-go](https://github.com/justjanne/powerline-go)
+if it's available in $PATH. If not available it falls back to a simpler theme.
+
+powerline-go can be installed by running:
+
+```console
+install_powerline
+```
+
+### vim / neovim
+
+Install neovim / vim plugins:
+
+```console
+# neovim
+setup_nvim
+update_nvim
+
+# vim
+setup_vim
+update_vim
+```
+
+Hacking
+-------
+
+The `./hacking` directory contains sample Dockerfiles useful for standing up a temporary environment for
+testing chezmoi without risking your existing dotfile setup.
