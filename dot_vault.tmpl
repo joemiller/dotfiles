@@ -1,0 +1,7 @@
+{{- if eq .chezmoi.hostname "macbook-joe" }}
+token_helper = "/usr/local/opt/vault-gpg-token-helper/bin/vault-gpg-token-helper"
+{{- end }}
+
+# for testing:
+# token_helper = "{{ .chezmoi.homedir }}/go/src/github.com/joemiller/vault-gpg-token-helper/example.rb"
+# token_helper = "{{ .chezmoi.homedir }}/git/joemiller/vault-gpg-token-helper/vault-gpg-token-helper"

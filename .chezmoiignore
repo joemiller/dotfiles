@@ -6,3 +6,4 @@ hacking/
 Makefile
 install-chezmoi.sh
 TODO-chezmoi.md
+chezmoi.toml.example

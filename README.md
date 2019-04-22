@@ -31,11 +31,25 @@ sudo mv chezmoi /usr/local/bin
 
 Clone this repo to `~/.local/share/chezmoi` and then deploy dotfiles to your $HOME dir:
 
-> TIP: Run `chezmoi diff` before apply to see the changes chezmoi will make
 
 ```console
 chezmoi init https://github.com/joemiller/dotfiles.git
+```
 
+Create the `~/.config/chezmoi/chezmoi.toml` config file and then customize it for the local machine:
+
+```console
+cp chezmoi.toml.example ~/.config/chezmoi/chezmoi.toml
+chmod 0600 ~/.config/chezmoi/chezmoi.toml
+
+chezmoi edit-config
+```
+
+Deploy rendered dotfiles:
+
+> TIP: Run `chezmoi diff` before apply to see the changes chezmoi will make
+
+```console
 chezmoi apply
 ```
 
