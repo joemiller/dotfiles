@@ -35,9 +35,6 @@
 [gpg]
 	program = gpg
 [commit]
+{{- if eq .chezmoi.hostname "macbook-joe" }}
 	gpgSign = true
-#[url "git@github.com:"]
-#	insteadOf = https://github.com/
-#[log]
-#    showSignature = true
-
+{{- end }}
