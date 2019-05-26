@@ -67,7 +67,9 @@ if it's available in $PATH. If not available it falls back to a simpler theme.
 powerline-go can be installed by running:
 
 ```console
-install_powerline
+install-powerline.sh
+# alternatively, if ~/.bin is not in $PATH:
+~/.bin/install-powerline.sh
 ```
 
 ### vim / neovim
