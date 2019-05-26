@@ -15,12 +15,12 @@ wifi.autoConnectVPNs = {}
 --
 function wifi.onDisconnect()
     hs.notify.new({ title="Disconnected WiFi", informativeText="Wifi connection closed." }):send()
-    utils.disconnectTunnelblickVPNs()
+    -- utils.disconnectTunnelblickVPNs()
 end
 
 function wifi.onJoinHomeNetwork(newSSID)
     hs.notify.new({ title="Connected to WiFi", informativeText="Welcome home!" }):send()
-    utils.disconnectTunnelblickVPNs()
+    -- utils.disconnectTunnelblickVPNs()
 end
 
 function wifi.onJoinForeignNetwork(newSSID)
