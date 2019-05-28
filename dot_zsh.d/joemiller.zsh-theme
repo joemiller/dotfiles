@@ -19,7 +19,7 @@ precmd() {
 ###
 if command -v "powerline-go" >/dev/null; then
     function powerline_precmd() {
-        PS1="$(powerline-go -error $? -shell zsh -modules host,cwd,aws,docker,kube,git,root -colorize-hostname -cwd-max-depth 4 -theme ~/.powerline-go/joe.json)"
+        PS1="$(powerline-go -error $? -shell zsh -modules host,cwd,aws,docker,kube,git,root -colorize-hostname -cwd-max-depth 4 -shorten-gke-names -theme ~/.powerline-go/joe.json)"
     }
 
     function install_powerline_precmd() {
