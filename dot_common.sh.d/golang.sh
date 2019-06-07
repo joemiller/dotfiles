@@ -6,3 +6,5 @@ if type go >/dev/null 2>&1; then
   export GOROOT=$(go env GOROOT)
   export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 fi
+
+export GOPROXY=https://proxy.golang.org
