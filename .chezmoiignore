@@ -3,6 +3,7 @@ README.md
 install
 Dockerfile.*
 hacking/
+dev/
 Makefile
 install-chezmoi.sh
 TODO-chezmoi.md

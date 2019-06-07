@@ -1,5 +1,5 @@
-hacking
-=======
+dev
+===
 
 Use this directory for setting up temporary home directories on different
 linux distros for testing dotfiles without risking your real home dir.
