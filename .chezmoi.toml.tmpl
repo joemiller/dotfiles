@@ -1,4 +1,4 @@
-{{ vault_token_helper_gpg_key_id := promptString "Vault GPG token helper, GPG Key ID" -}}
+{{ $vault_token_helper_gpg_key_id := promptString "Vault GPG token helper, GPG Key ID" -}}
 [data]
   [data.vault_gpg_token_helper]
     gpg_key_id = "{{ $vault_token_helper_gpg_key_id }}"
