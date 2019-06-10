@@ -46,7 +46,7 @@ modal:bind('','v', function() hs.application.launchOrFocus( "Vivaldi" )        ;
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
 modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )
 modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
--- modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
+modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
 modal:bind('','k', function() hs.application.launchOrFocus( "kitty.app" )      ; modal:exit() end )
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
