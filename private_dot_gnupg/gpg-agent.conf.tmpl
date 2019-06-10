@@ -1,7 +1,9 @@
 # NOTES:
 # - mostly tested with gnupg 2.2, and 2.1
-# - install:  macos:  brew install gnupg
-# - install: ubuntu: apt install gnupg scdaemon pcscd
+# install
+# - macos:  brew install gnupg
+# - ubuntu: apt install gnupg scdaemon pcscd
+# - fedora: sudo dnf install gnupg2 pcsc-tools scdaemon opensc pcsc-lite-ccid ; sudo systemctl start pcscd ; sudo systemctl enable pcscd
 # TROUBLESHOOTING:
 # - common source of ambiguous errors:
 #   - `pinentry-program` is specified and points to a non-existing file
