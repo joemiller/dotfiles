@@ -2,17 +2,26 @@
 
 include ~/.config/kitty/OneDark.conf
 
-font_family      SauceCodePro Nerd Font Regular
-bold_font        SauceCodePro Nerd Font Bold
-italic_font      SauceCodePro Nerd Font Italic
-bold_italic_font SauceCodePro Nerd Font Medium Italic
 
-font_size 12.0
-
-adjust_line_height 95%
+{{- if eq .chezmoi.hostname "macbook-air" }}
+# macbook-air 11" fedora
+font_family         SauceCodePro Nerd Font Medium
+bold_font           SauceCodePro Nerd Font Bold
+italic_font         SauceCodePro Nerd Font Italic
+bold_italic_font    SauceCodePro Nerd Font Bold Italic
+font_size           9.0
+{{- else }}
+# macos, maybe retina specific? or just on the macbook pro
+font_family         SauceCodePro Nerd Font Regular
+bold_font           SauceCodePro Nerd Font Bold
+italic_font         SauceCodePro Nerd Font Italic
+bold_italic_font    SauceCodePro Nerd Font Medium Italic
+font_size           12.0
+adjust_line_height  95%
 adjust_column_width 97%
+{{- end }}
 
-#: Fonts {{{
+#: Fonts
 
 #: kitty has very powerful font management. You can configure
 #: individual font faces and even specify special fonts for particular
@@ -84,7 +93,7 @@ adjust_column_width 97%
 
 #: }}}
 
-#: Cursor customization {{{
+#: Cursor customization 
 
 # cursor #cccccc
 
@@ -114,7 +123,7 @@ cursor_blink_interval 0
 
 #: }}}
 
-#: Scrollback {{{
+#: Scrollback 
 
 scrollback_lines 20000
 
@@ -158,7 +167,7 @@ scrollback_lines 20000
 
 #: }}}
 
-#: Mouse {{{
+#: Mouse 
 
 # mouse_hide_wait 3.0
 
@@ -231,7 +240,7 @@ copy_on_select yes
 
 #: }}}
 
-#: Performance tuning {{{
+#: Performance tuning 
 
 # repaint_delay 10
 
@@ -261,7 +270,7 @@ copy_on_select yes
 
 #: }}}
 
-#: Terminal bell {{{
+#: Terminal bell 
 
 # enable_audio_bell yes
 
@@ -286,7 +295,7 @@ copy_on_select yes
 
 #: }}}
 
-#: Window layout {{{
+#: Window layout 
 
 # remember_window_size  yes
 # initial_window_width  640
@@ -386,7 +395,7 @@ copy_on_select yes
 
 #: }}}
 
-#: Tab bar {{{
+#: Tab bar 
 
 tab_bar_edge top
 
@@ -446,7 +455,7 @@ tab_bar_edge top
 
 #: }}}
 
-#: Color scheme {{{
+#: Color scheme 
 
 # foreground #dddddd
 # background #000000
@@ -538,7 +547,7 @@ tab_bar_edge top
 
 #: }}}
 
-#: Advanced {{{
+#: Advanced 
 
 # shell .
 
@@ -628,7 +637,7 @@ tab_bar_edge top
 
 #: }}}
 
-#: OS specific tweaks {{{
+#: OS specific tweaks 
 
 # macos_titlebar_color system
 
@@ -693,7 +702,7 @@ macos_thicken_font 0.50
 
 #: }}}
 
-#: Keyboard shortcuts {{{
+#: Keyboard shortcuts 
 
 #: For a list of key names, see: GLFW keys
 #: <https://www.glfw.org/docs/latest/group__keys.html>. The name to
@@ -758,7 +767,7 @@ macos_thicken_font 0.50
 #: You can have kitty remove all shortcut definition seen up to this
 #: point. Useful, for instance, to remove the default shortcuts.
 
-#: Clipboard {{{
+#: Clipboard 
 
 # map kitty_mod+c copy_to_clipboard
 
@@ -786,7 +795,7 @@ macos_thicken_font 0.50
 
 #: }}}
 
-#: Scrolling {{{
+#: Scrolling 
 
 # map kitty_mod+up        scroll_line_up
 # map alt+cmd+page_up     scroll_line_up
@@ -818,7 +827,7 @@ macos_thicken_font 0.50
 
 #: }}}
 
-#: Window management {{{
+#: Window management 
 
 # map kitty_mod+enter new_window
 
@@ -872,7 +881,7 @@ macos_thicken_font 0.50
 # map kitty_mod+0 tenth_window
 #: }}}
 
-#: Tab management {{{
+#: Tab management 
 
 # map kitty_mod+right next_tab
 # map ctrl+tab        next_tab
@@ -914,7 +923,7 @@ map cmd+9 goto_tab 9
 #:     map ctrl+t new_tab !neighbor [optional cmd to run]
 #: }}}
 
-#: Layout management {{{
+#: Layout management 
 
 # map kitty_mod+l next_layout
 
@@ -928,7 +937,7 @@ map cmd+9 goto_tab 9
 #:    map ctrl+alt+p last_used_layout
 #: }}}
 
-#: Font sizes {{{
+#: Font sizes 
 
 #: You can change the font size for all top-level kitty OS windows at
 #: a time or only the current one.
@@ -950,7 +959,7 @@ map cmd+9 goto_tab 9
 #:     map kitty_mod+f6 change_font_size current 10.0
 #: }}}
 
-#: Select and act on visible text {{{
+#: Select and act on visible text 
 
 #: Use the hints kitten to select text and either pass it to an
 #: external program or insert it into the terminal or copy it to the
@@ -991,7 +1000,7 @@ map cmd+9 goto_tab 9
 #: to different shortcuts. For a full description see kittens/hints.
 #: }}}
 
-#: Miscellaneous {{{
+#: Miscellaneous 
 
 # map kitty_mod+f11    toggle_fullscreen
 # map kitty_mod+u      kitten unicode_input
