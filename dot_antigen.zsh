@@ -249,7 +249,7 @@ antigen () {
 
   if [[ -n "$bundle" ]]; then
     local dir=$(-antigen-get-clone-dir $ANTIGEN_DEFAULT_REPO_URL)
-    echo $(ls $dir/themes/ | eval "$_ANTIGEN_GREP_COMMAND '.zsh-theme$'" | sed 's/.zsh-theme//')
+    echo $(ls $dir/themes/ | grep '.zsh-theme$' | sed 's/.zsh-theme//')
   fi
 
   return 0
@@ -453,7 +453,6 @@ antigen () {
   fi
 
   -antigen-set-default ANTIGEN_COMPDUMP "${ADOTDIR:-$HOME}/.zcompdump"
-  -antigen-set-default ANTIGEN_COMPINIT_OPTS "-i"
   -antigen-set-default ANTIGEN_LOG /dev/null
 
   # CLONE_OPTS uses ${=CLONE_OPTS} expansion so don't use spaces
@@ -467,9 +466,7 @@ antigen () {
 
   # Compatibility with oh-my-zsh themes.
   -antigen-set-default _ANTIGEN_THEME_COMPAT true
-
-  -antigen-set-default _ANTIGEN_GREP_COMMAND 'GREP_OPTIONS= command grep '
-
+  
   # Add default built-in extensions to load at start up
   -antigen-set-default _ANTIGEN_BUILTIN_EXTENSIONS 'lock parallel defer cache'
 
@@ -477,7 +474,7 @@ antigen () {
   if -antigen-interactive-mode; then
     TRACE "Gonna create compdump file @ env-setup" COMPDUMP
     autoload -Uz compinit
-    compinit $ANTIGEN_COMPINIT_OPTS -d "$ANTIGEN_COMPDUMP"
+    compinit -d "$ANTIGEN_COMPDUMP"
     compdef _antigen antigen
   else
     (( $+functions[antigen-ext-init] )) && antigen-ext-init
@@ -791,7 +788,7 @@ antigen-apply () {
   # the one that actually initializes completions.
   TRACE "Gonna create compdump file @ apply" COMPDUMP
   autoload -Uz compinit
-  compinit $ANTIGEN_COMPINIT_OPTS -d "$ANTIGEN_COMPDUMP"
+  compinit -d "$ANTIGEN_COMPDUMP"
 
   # Apply all `compinit`s that have been deferred.
   local cdef
@@ -875,7 +872,7 @@ antigen-bundles () {
   # quoting rules applied.
   local line
   setopt localoptions no_extended_glob # See https://github.com/zsh-users/antigen/issues/456
-  eval "$_ANTIGEN_GREP_COMMAND '^[[:space:]]*[^[:space:]#]'" | while read line; do
+  grep '^[[:space:]]*[^[:space:]#]' | while read line; do
     antigen-bundle ${=line%#*}
   done
 }
@@ -999,7 +996,7 @@ antigen-init () {
   fi
 
   # Otherwise we expect it to be a heredoc
-  eval "$_ANTIGEN_GREP_COMMAND '^[[:space:]]*[^[:space:]#]'" | while read -r line; do
+  grep '^[[:space:]]*[^[:space:]#]' | while read -r line; do
     eval $line
   done
 }
@@ -1383,11 +1380,13 @@ antigen-use () {
   fi
 }
 antigen-version () {
-  local extensions
+  local version="v2.2.2"
+  local extensions revision=""
+  if [[ -d $_ANTIGEN_INSTALL_DIR/.git ]]; then
+    revision=" ($(git --git-dir=$_ANTIGEN_INSTALL_DIR/.git rev-parse --short '@'))"
+  fi
 
-  printf "Antigen %s (%s)\nRevision date: %s\n" "v2.2.3" "ff391b5" "2018-01-02 13:19:57 +0100"
-
-  # Show extension information if any is available
+  printf "Antigen %s%s\n" $version $revision
   if (( $+functions[antigen-ext] )); then
     typeset -a extensions; extensions=($(antigen-ext-list))
     if [[ $#extensions -gt 0 ]]; then
@@ -1809,7 +1808,7 @@ typeset -g _ZCACHE_CAPTURE_PREFIX
 cat > $ANTIGEN_CACHE <<EOC
 #-- START ZCACHE GENERATED FILE
 #-- GENERATED: $(date)
-#-- ANTIGEN v2.2.3
+#-- ANTIGEN v2.2.2
 $(functions -- _antigen)
 antigen () {
   local MATCH MBEGIN MEND
@@ -1819,7 +1818,7 @@ antigen () {
 typeset -gaU fpath path
 fpath+=(${_fpath[@]}) path+=(${_PATH[@]})
 _antigen_compinit () {
-  autoload -Uz compinit; compinit $ANTIGEN_COMPINIT_OPTS -d "$ANTIGEN_COMPDUMP"; compdef _antigen antigen
+  autoload -Uz compinit; compinit -d "$ANTIGEN_COMPDUMP"; compdef _antigen antigen
   add-zsh-hook -D precmd _antigen_compinit
 }
 autoload -Uz add-zsh-hook; add-zsh-hook precmd _antigen_compinit
@@ -1834,7 +1833,7 @@ ${(j::)_sources}
 typeset -gaU _ANTIGEN_BUNDLE_RECORD; _ANTIGEN_BUNDLE_RECORD=($(print ${(qq)_ANTIGEN_BUNDLE_RECORD}))
 typeset -g _ANTIGEN_CACHE_LOADED; _ANTIGEN_CACHE_LOADED=true
 typeset -ga _ZCACHE_BUNDLE_SOURCE; _ZCACHE_BUNDLE_SOURCE=($(print ${(qq)_ZCACHE_BUNDLE_SOURCE}))
-typeset -g _ANTIGEN_CACHE_VERSION; _ANTIGEN_CACHE_VERSION='v2.2.3'
+typeset -g _ANTIGEN_CACHE_VERSION; _ANTIGEN_CACHE_VERSION='v2.2.2'
 
 #-- END ZCACHE GENERATED FILE
 EOC
@@ -1893,11 +1892,7 @@ EOC
     # `antigen` wrapper not `antigen-apply` directly and it's called by an extension.
     LOG "TRACE: ${funcfiletrace}"
     if [[ $ANTIGEN_AUTO_CONFIG == true && $#ANTIGEN_CHECK_FILES -eq 0 ]]; then
-      # Check common configuration file does exist.
-      if [[ -f ${ZDOTDIR:-$HOME}/.zshrc ]]; then
-        ANTIGEN_CHECK_FILES+=(${ZDOTDIR:-$HOME}/.zshrc)
-      fi
-      # TODO Fix: Fuzzy match shoud be replaced by a sane way to determine it.
+      ANTIGEN_CHECK_FILES+=(~/.zshrc)
       if [[ $#funcfiletrace -ge 6 ]]; then
         ANTIGEN_CHECK_FILES+=("${${funcfiletrace[6]%:*}##* }")
       fi

@@ -106,3 +106,16 @@ Hacking
 
 The `./hacking` directory contains sample Dockerfiles useful for standing up a temporary environment for
 testing chezmoi without risking your existing dotfile setup.
+
+Antigen
+-------
+
+Update `antigen`:
+
+```console
+curl -L git.io/antigen > dot_antigen.zsh
+chezmoi apply
+```
+
+git commit changes
+
