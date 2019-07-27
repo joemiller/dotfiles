@@ -27,24 +27,24 @@ curl -L https://raw.githubusercontent.com/joemiller/dotfiles/master/install-chez
 sudo mv chezmoi /usr/local/bin
 ```
 
-Install 1password (`op` binary). This is optional if you're not me. The files that use
-1password secrets can be find by running `grep -R onepassword .`
+Install 1password (`op` binary). This is optional if you're not me.  You will be
+prompted `Enable templates that require 1password? y/n? n` when running `chezmoi init` later.
+Enter `n` if you do not intend to use 1password. This will prevent the rendering
+of 1password secrets.
+
+The files that use 1password secrets can be find by running `grep -R onepassword .`.
 
 ### Install dotfiles
 
 Clone this repo to `~/.local/share/chezmoi` and then deploy dotfiles to your $HOME dir:
 
-
 ```console
 chezmoi init https://github.com/joemiller/dotfiles.git
 ```
 
-Create the `~/.config/chezmoi/chezmoi.toml` config file and then customize it for the local machine:
+Check out the `~/.config/chezmoi/chezmoi.toml` config file and then customize it for the local machine:
 
 ```console
-cp chezmoi.toml.example ~/.config/chezmoi/chezmoi.toml
-chmod 0600 ~/.config/chezmoi/chezmoi.toml
-
 chezmoi edit-config
 ```
 
