@@ -36,13 +36,13 @@ The files that use 1password secrets can be find by running `grep -R onepassword
 
 ### Install dotfiles
 
-Clone this repo to `~/.local/share/chezmoi` and then deploy dotfiles to your $HOME dir:
+Run `chezmoi init` to clone this repo to `~/.local/share/chezmoi`:
 
 ```console
 chezmoi init https://github.com/joemiller/dotfiles.git
 ```
 
-Check out the `~/.config/chezmoi/chezmoi.toml` config file and then customize it for the local machine:
+Check out the `~/.config/chezmoi/chezmoi.toml` config file and customize it for the local machine:
 
 ```console
 chezmoi edit-config
