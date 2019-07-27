@@ -89,6 +89,18 @@ setup_vim
 update_vim
 ```
 
+### nerd fonts
+
+A lot of the editor and terminal configs require Nerd Fonts installed.
+
+Install nerd font pkgs (https://github.com/ryanoasis/nerd-fonts/blob/master/readme.md)
+
+```console
+git clone git@github.com:ryanoasis/nerd-fonts.git --depth=1
+cd nerd-fonts; ./install.sh
+rm -rf -- nerd-fonts
+```
+
 Hacking
 -------
 
