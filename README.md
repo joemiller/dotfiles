@@ -27,6 +27,9 @@ curl -L https://raw.githubusercontent.com/joemiller/dotfiles/master/install-chez
 sudo mv chezmoi /usr/local/bin
 ```
 
+Install 1password (`op` binary). This is optional if you're not me. The files that use
+1password secrets can be find by running `grep -R onepassword .`
+
 ### Install dotfiles
 
 Clone this repo to `~/.local/share/chezmoi` and then deploy dotfiles to your $HOME dir:

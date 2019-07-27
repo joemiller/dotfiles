@@ -1,1 +1,4 @@
 [data]
+{{ $enable_1password := promptString "Enable templates that require 1password? y/n" -}}
+  [data.features]
+    onepassword = "{{ $enable_1password }}"
