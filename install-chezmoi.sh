@@ -8,6 +8,8 @@ case "$OSTYPE" in
     artifact_slug="darwin_amd64" ;;
   linux*)
     artifact_slug="linux_amd64" ;;
+  openbsd*)
+    artifact_slug="openbsd_amd64" ;;
   default)
     echo "Unknown OSTYPE: $OSTYPE"
     exit 1
