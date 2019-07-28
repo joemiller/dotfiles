@@ -67,10 +67,10 @@ antigen bundle vault
 if [[ "$(uname)" != "OpenBSD" ]]; then
     # don't load this on openbsd. it slows down prompt re-draw significantly
     antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle zsh-users/zsh-syntax-highlighting
+    antigen bundle djui/alias-tips
 fi
-antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-completions src
-antigen bundle djui/alias-tips
 
 antigen apply
 
