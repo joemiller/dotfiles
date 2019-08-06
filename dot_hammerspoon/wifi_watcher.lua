@@ -1,3 +1,14 @@
+-- NOTE: 2019/08/07: this script no longer in use!
+-- ----------------------------------------
+-- -- Example usage (init.lua):
+-- local wifi = require "wifi_watcher"
+-- wifi.homeSSIDs = {"reddragon-5G", "reddragon-2G"}
+-- wifi.autoConnectVPNs = {
+--     ["BREW BROS"] = "home (all traffic)",
+--     ["AnotherGuest"] = "home (all traffic)",
+-- }
+-- ----------------------------------------
+
 -- Callback function for wifi events
 --
 local utils = require "utils"

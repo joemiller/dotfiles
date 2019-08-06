@@ -1,37 +1,54 @@
 -- include our modules
 require "app_watcher"
 require "app_jump_menu"
-local wifi = require "wifi_watcher"
 require "auto_reloader"
 local winmod = require "window_controls"
 local utils = require "utils"
 
+-- load .hammerspoon/Spoon/SpoonInstall
+hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.use_syncinstall = true
+
 -- anycomplete from: https://github.com/nathancahill/anycomplete
-require "anycomplete"
+-- require "anycomplete"
 
 -- settings
 hs.window.animationDuration = 0
 
--- recognize our home networks so we can take action on connection to "foreign" networks
--- wifi.homeSSIDs = {"reddragon-5G", "reddragon-2G"}
 
--- auto-connect to Tunnelblick VPNs when connected to these networks
--- wifi.autoConnectVPNs = {
---     ["BREW BROS"] = "home-joeym-net (all traffic)",
---     ["AnotherGuest"] = "home-joeym-net (all traffic)",
---     ["#SFWiFi"] = "home-joeym-net (all traffic)",
---     ["the brew"] = "home-joeym-net (all traffic)",
---     ["LIQUIDGOLD_PUBLIC"] = "home-joeym-net (all traffic)",
---     ["Pantheon"] = "home-joeym-net",
---     ["Pantheon-Secure"] = "home-joeym-net",
---     ["Pantheon Guest"] = "home-joeym-net",
---     ["Pantheon-5G"] = "home-joeym-net",
---     ["Pantheon-5G"] = "home-joeym-net",
---     ["Pantheon-5G-802.11r"] = "home-joeym-net",
---     ["jwm"] = "home-joeym-net",
---     ["jwm-n"] = "home-joeym-net",
--- }
-wifi.autoConnectVPNs = {}
+-- Spoons. Installed and started using the SpoonInstall spoon.
+Install=spoon.SpoonInstall
+Install:andUse("TimeMachineProgress",
+               {
+                 start = true
+               }
+)
+
+Install:andUse("HeadphoneAutoPause",
+               {
+                 start = true,
+                 autoResume = false
+               }
+)
+
+Install:andUse("WifiNotifier",
+               {
+                 start = true
+               }
+)
+
+-- Install:andUse("MicrophoneMuter",
+--                {
+--                  start = true,
+--                  loglevel = "debug",
+--                  config = {
+--                      refresh_interval = 10,
+--                  },
+--                  hotkeys = {
+--                      toggle = { {"ctrl", "alt", "cmd"}, "b" }
+--                  }
+--                }
+-- )
 
 -- global key binds
 hs.hotkey.bind({"ctrl", "alt",      }, "F",     winmod.toggleMaximized)
@@ -47,9 +64,10 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N",     winmod.currentAppAllWindowsToNex
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left",  winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "M",     utils.toggleMicrophoneMute)
-
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
+
+-- set to 'debug' for debug output in the console
+-- hs.logger.setGlobalLogLevel('debug')
 
 -- ready!
 hs.notify.new( {title='Hammerspoon', subTitle='Configuration loaded successfully'} ):send()
