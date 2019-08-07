@@ -1,7 +1,6 @@
 -- include our modules
 require "app_watcher"
 require "app_jump_menu"
-require "auto_reloader"
 local winmod = require "window_controls"
 local utils = require "utils"
 
@@ -15,9 +14,15 @@ spoon.SpoonInstall.use_syncinstall = true
 -- settings
 hs.window.animationDuration = 0
 
-
 -- Spoons. Installed and started using the SpoonInstall spoon.
 Install=spoon.SpoonInstall
+
+Install:andUse("ReloadConfiguration",
+               {
+                 start = true
+               }
+)
+
 Install:andUse("TimeMachineProgress",
                {
                  start = true
