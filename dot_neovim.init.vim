@@ -575,3 +575,11 @@ let g:syntastic_style_warning_symbol = 's'
 " Align GitHub-flavored Markdown tables (Plug 'junegunn/vim-easy-align')
 " The <Bslash> key is also the | key, a mnemonic when looking at the |s of the table.
 au FileType markdown vmap <Leader><Bslash> :EasyAlign*<Bar><Enter>
+
+" disable fatih/vim-hclfmt on *.tf and *.tfvars files
+let g:tf_fmt_autosave = 0
+
+" enable hashivim/tterraform fmt'ing on *.tf *.tfvars files
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+
