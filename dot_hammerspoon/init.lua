@@ -42,6 +42,18 @@ Install:andUse("WifiNotifier",
                }
 )
 
+-- Install:andUse("MiroWindowsManager",
+--                {
+--                    hotkeys = {
+--                       up = {{"ctrl", "alt", "cmd"}, "up"},
+--                       right = {{"ctrl", "alt", "cmd"}, "right"},
+--                       down = {{"ctrl", "alt", "cmd"}, "down"},
+--                       left = {{"ctrl", "alt", "cmd"}, "left"},
+--                       fullscreen = {{"ctrl", "alt", "cmd"}, "f"}
+--                    }
+--                }
+-- )
+
 -- Install:andUse("MicrophoneMuter",
 --                {
 --                  start = true,
@@ -56,10 +68,10 @@ Install:andUse("WifiNotifier",
 -- )
 
 -- global key binds
-hs.hotkey.bind({"ctrl", "alt",      }, "F",     winmod.toggleMaximized)
-hs.hotkey.bind({"ctrl", "alt",      }, "P",     winmod.windowPreviousPosition)
-hs.hotkey.bind({"ctrl", "alt",      }, "H",     winmod.currentWindowToSizeOfLaptopScreen)
-hs.hotkey.bind({"ctrl", "alt",      }, "C",     winmod.center)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F",     winmod.toggleMaximized)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "P",     winmod.windowPreviousPosition)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "H",     winmod.currentWindowToSizeOfLaptopScreen)
+hs.hotkey.bind({"ctrl", "alt", "cmd"}, "C",     winmod.center)
 hs.hotkey.bind({"ctrl", "alt",      }, "Left",  winmod.currentWindowToLeft)
 hs.hotkey.bind({"ctrl", "alt",      }, "Right", winmod.currentWindowToRight)
 hs.hotkey.bind({"ctrl", "alt",      }, "Up",    winmod.currentWindowToTop)
