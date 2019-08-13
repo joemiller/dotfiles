@@ -18,53 +18,67 @@ hs.window.animationDuration = 0
 Install=spoon.SpoonInstall
 
 Install:andUse("ReloadConfiguration",
-               {
-                 start = true
-               }
+    {
+     start = true
+    }
 )
 
 Install:andUse("TimeMachineProgress",
-               {
-                 start = true
-               }
+    {
+        start = true
+    }
 )
 
 Install:andUse("HeadphoneAutoPause",
-               {
-                 start = true,
-                 autoResume = false
-               }
+    {
+        start = true,
+        config = {
+            autoResume = false
+        }
+    }
 )
 
 Install:andUse("WifiNotifier",
-               {
-                 start = true
-               }
+    {
+         start = true
+    }
+)
+
+-- examples: https://zzamboni.org/post/my-hammerspoon-configuration-with-commentary/
+Install:andUse("WiFiTransitions",
+    {
+        start = true,
+            config = {
+                 actions = {
+                     fn ={hs.fnutils.partial(utils.reconnectWireGuardVPN("lan"))},
+            }
+        }
+    }
 )
 
 -- Install:andUse("MiroWindowsManager",
---                {
---                    hotkeys = {
---                       up = {{"ctrl", "alt", "cmd"}, "up"},
---                       right = {{"ctrl", "alt", "cmd"}, "right"},
---                       down = {{"ctrl", "alt", "cmd"}, "down"},
---                       left = {{"ctrl", "alt", "cmd"}, "left"},
---                       fullscreen = {{"ctrl", "alt", "cmd"}, "f"}
---                    }
---                }
+--     {
+--         hotkeys = {
+--             up = {{"ctrl", "alt", "cmd"}, "up"},
+--             right = {{"ctrl", "alt", "cmd"}, "right"},
+--             down = {{"ctrl", "alt", "cmd"}, "down"},
+--             left = {{"ctrl", "alt", "cmd"}, "left"},
+--             fullscreen = {{"ctrl", "alt", "cmd"}, "f"}
+--         }
+--     }
 -- )
 
 -- Install:andUse("MicrophoneMuter",
---                {
---                  start = true,
---                  loglevel = "debug",
---                  config = {
---                      refresh_interval = 10,
---                  },
---                  hotkeys = {
---                      toggle = { {"ctrl", "alt", "cmd"}, "b" }
---                  }
---                }
+--     {
+--         start = true,
+--         loglevel = "debug",
+--         config = {
+--             refresh_interval = 10,
+--         },
+--         hotkeys = {
+--             toggle = { {"ctrl", "alt", "cmd"}, "b" }
+--         }
+--     }
 -- )
 
 -- global key binds

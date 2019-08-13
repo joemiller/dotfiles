@@ -66,4 +66,16 @@ function utils.chromeQuickTabs()
     hs.eventtap.keyStroke({"cmd"}, "e")
 end
 
+-- utils.reconnectWireGuardVPN() - WIP
+--
+function utils.reconnectWireGuardVPN(vpn)
+    cmd = string.format("%s/%s", hs.configdir, 'wireguard-reconnect.sh')
+    msg = string.format("%s: reconnected", vpn)
+    hs.task.new(
+		cmd,
+        function() hs.notify.new( {title="WireGuard", subTitle=msg} ):send() end,
+		{vpn}
+	):start()
+end
+
 return utils
