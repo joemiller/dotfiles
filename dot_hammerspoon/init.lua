@@ -4,17 +4,16 @@ require "app_jump_menu"
 local winmod = require "window_controls"
 local utils = require "utils"
 
--- load .hammerspoon/Spoon/SpoonInstall
-hs.loadSpoon("SpoonInstall")
-spoon.SpoonInstall.use_syncinstall = true
+-- settings
+hs.window.animationDuration = 0
 
 -- anycomplete from: https://github.com/nathancahill/anycomplete
 -- require "anycomplete"
 
--- settings
-hs.window.animationDuration = 0
+-- load: .hammerspoon/Spoon/SpoonInstall
+hs.loadSpoon("SpoonInstall")
+spoon.SpoonInstall.use_syncinstall = true
 
--- Spoons. Installed and started using the SpoonInstall spoon.
 Install=spoon.SpoonInstall
 
 Install:andUse("ReloadConfiguration",
