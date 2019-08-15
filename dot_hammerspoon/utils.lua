@@ -69,6 +69,7 @@ end
 -- utils.reconnectWireGuardVPN() - WIP
 --
 function utils.reconnectWireGuardVPN(vpn)
+    hs.notify.new( {title="WireGuard", subTitle="Reconnecting"} ):send()
     cmd = string.format("%s/%s", hs.configdir, 'wireguard-reconnect.sh')
     msg = string.format("%s: reconnected", vpn)
     hs.task.new(

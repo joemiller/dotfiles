@@ -46,12 +46,22 @@ Install:andUse("WifiNotifier",
 -- examples: https://zzamboni.org/post/my-hammerspoon-configuration-with-commentary/
 Install:andUse("WiFiTransitions",
     {
-        start = true,
-            config = {
-                 actions = {
-                     fn ={hs.fnutils.partial(utils.reconnectWireGuardVPN("lan"))},
+        config = {
+            actions = {
+                -- { -- Test action just to see the SSID transitions
+                --      fn = function(_, _, prev_ssid, new_ssid)
+                --         hs.notify.show("SSID change", string.format("From '%s' to '%s'", prev_ssid, new_ssid), "")
+                --      end
+                -- },
+                {
+                     fn = function(_, _, prev_ssid, new_ssid)
+                         utils.reconnectWireGuardVPN("lan")
+                     end
+                },
             }
-        }
+        },
+        start = true,
+        loglevel = "debug",
     }
 )
 
