@@ -80,7 +80,7 @@ Install:andUse(
     "TaskHammer",
     {
         repo = "TaskHammer",
-        loglevel = "debug",
+        -- loglevel = "debug",
         start = true,
         config = {
             tasks = {
