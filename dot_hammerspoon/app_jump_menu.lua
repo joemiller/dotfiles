@@ -50,7 +50,7 @@ modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ;
 modal:bind('','k', function() hs.application.launchOrFocus( "kitty.app" )      ; modal:exit() end )
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
--- modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
+modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
 modal:bind('','m', function() hs.application.launchOrFocus( "Messages.app" )   ; modal:exit() end )
 modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
