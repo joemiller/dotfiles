@@ -7,4 +7,8 @@ if type go >/dev/null 2>&1; then
   export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 fi
 
+if [[ -e "/usr/local/go/bin/go" ]]; then
+  export PATH=$PATH:/usr/local/go/bin
+fi
+
 export GOPROXY=https://proxy.golang.org
