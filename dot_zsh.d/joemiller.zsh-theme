@@ -22,7 +22,7 @@ if command -v "powerline-go" >/dev/null; then
         PS1="$(powerline-go -error $? -shell zsh -modules host,cwd,aws,docker,kube,git,root -colorize-hostname -cwd-max-depth 4 -shorten-gke-names -theme ~/.powerline-go/joe.json)"
     }
 
-    function install_powerline_precmd() {
+    function _install_powerline_precmd() {
       for s in "${precmd_functions[@]}"; do
         if [ "$s" = "powerline_precmd" ]; then
           return
@@ -32,7 +32,7 @@ if command -v "powerline-go" >/dev/null; then
     }
 
     if [ "$TERM" != "linux" ]; then
-        install_powerline_precmd
+        _install_powerline_precmd
     fi
 ###
 ### fallback to old hand-rolled artisinal prompt if powerline-go is not available

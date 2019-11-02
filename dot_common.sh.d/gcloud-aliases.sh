@@ -1,5 +1,5 @@
 # if no arguments are given, show the current project. Else change the current project.
-function gcloud-project() {
+tools-gcp-project() {
     local proj="${1:-}"
     if [ -z "$proj" ]; then
         gcloud config list project
@@ -8,7 +8,7 @@ function gcloud-project() {
     gcloud config set project "$proj"
 }
 
-revoke-sa-key() {
+tools-gcp-revoke-sa-key() {
   file="$1"
   if [[ -z "$file" ]]; then
     echo "usage: $0 file.json"

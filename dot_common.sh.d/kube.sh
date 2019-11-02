@@ -6,7 +6,7 @@ alias kud='kubectl describe'
 alias kctx='kubectx'
 alias kns='kube-ns'
 
-alias kube-whereami='kubectl config current-context'
+alias tools-kube-whereami='kubectl config current-context'
 
 if command -v kubectl >/dev/null; then
   # load shell completions
@@ -27,4 +27,4 @@ fi
 
 # kubectl krew install config-cleanup
 # https://github.com/b23llc/kubectl-config-cleanup
-alias kubeconfig-cleanup='cp ~/.kube/config ~/.kube/config.bak && kubectl config-cleanup --raw -t10 > ~/.kube/config-cleaned && mv ~/.kube/config-cleaned ~/.kube/config'
+alias tools-kubeconfig-cleanup='cp ~/.kube/config ~/.kube/config.bak && kubectl config-cleanup --raw -t10 > ~/.kube/config-cleaned && mv ~/.kube/config-cleaned ~/.kube/config'

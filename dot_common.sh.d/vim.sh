@@ -12,7 +12,7 @@ if command -v nvim >/dev/null 2>&1; then
 fi
 
 ## regular vim helpers
-setup_vim() {
+tools-setup_vim() {
   if [[ ! -d "$HOME/.vim/bundle/Vundle.vim" ]]; then
     git clone "https://github.com/gmarik/Vundle.vim.git" "$HOME/.vim/bundle/Vundle.vim"
     # install the plugins
@@ -22,20 +22,20 @@ setup_vim() {
   fi
 }
 
-update_vim() {
+tools-update_vim() {
   #vim '+PluginInstall!' +qall
   vim +PluginUpdate +qall
   vim +PluginClean +qall
 }
 
-update_ycm() {
+tools-update_vim_ycm() {
   cd ~/.vim/bundle/YouCompleteMe
   ./install.py --clang-completer --gocode-completer
   cd -
 }
 
 ## neovim helpers
-setup_nvim() {
+tools-setup_nvim() {
   echo "==> Symlinking $HOME/.neovim.init.vim -> $HOME/.config/nvim/init.vim"
   [[ ! -e "$HOME/.config/nvim" ]] && mkdir -p "$HOME/.config/nvim"
   [[ ! -e "$HOME/.config/nvim/init.vim" ]] && ln -sf "$HOME/.neovim.init.vim" "$HOME/.config/nvim/init.vim"
@@ -49,7 +49,7 @@ setup_nvim() {
   update_nvim
 }
 
-update_nvim() {
+tools-update_nvim() {
   echo "==> Installing/upgrading neovim python modules"
   if command -v pip3 > /dev/null; then
     pip3 install --upgrade neovim
