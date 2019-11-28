@@ -10,5 +10,3 @@ fi
 if [[ -e "/usr/local/go/bin/go" ]]; then
   export PATH=$PATH:/usr/local/go/bin
 fi
-
-export GOPROXY=https://proxy.golang.org
