@@ -24,6 +24,7 @@ string.format(
     m - iMessage \
     n - Notification Center \
     v - vivaldi (browser) \
+    z - zoom \
     . - Do not disturb (toggle) \
     / - hammerspoon console \
 \
@@ -55,3 +56,4 @@ modal:bind('','m', function() hs.application.launchOrFocus( "Messages.app" )   ;
 modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
 modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )
+modal:bind('','z', function() hs.application.launchOrFocus( "zoom.us.app" )   ; modal:exit() end )
