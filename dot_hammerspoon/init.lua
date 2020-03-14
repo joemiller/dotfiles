@@ -153,6 +153,16 @@ Install:andUse(
     }
 )
 
+Install:andUse(
+    "PushToTalk",
+    {
+        start = true,
+        config = {
+            app_switcher = { ['zoom.us'] = 'push-to-talk' }
+        }
+    }
+)
+
 -- Install:andUse("MiroWindowsManager",
 --     {
 --         hotkeys = {
