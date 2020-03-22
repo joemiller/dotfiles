@@ -1,0 +1,27 @@
+#!/bin/bash
+
+update_nvim() {
+  echo "==> Installing/upgrading neovim python modules"
+  if command -v pip3 >/dev/null; then
+    pip3 install --upgrade neovim
+    pip3 install --upgrade pynvim
+    pip3 install --upgrade msgpack
+  fi
+  if command -v pip2 >/dev/null; then
+    pip2 install --upgrade neovim
+    pip2 install --upgrade pynvim
+    pip2 install --upgrade msgpack
+  fi
+  if command -v pip >/dev/null; then
+    pip install --upgrade neovim
+    pip install --upgrade pynvim
+    pip install --upgrade msgpack
+  fi
+
+  echo "==> Updating nvim plugins"
+  nvim +PlugUpdate +qall
+  nvim +UpdateRemotePlugins +qall
+  nvim +PlugClean +qall
+}
+
+update_nvim "$@"

@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # Bash helper function for connecting to a remote JVM via jconsole using an SSH
 # tunnel.
@@ -32,7 +33,22 @@
 #
 # joe miller, https://github.com/joemiller
 #
-tools-jcon() {
+find_available_port() {
+    # find and return a TCP port available for listening
+    local start=${1:-8000}
+    local end=${2:-8200}
+    for i in $(seq $start $end); do
+        # echo "DEBUG: trying port $i"
+        if ! $(lsof -iTCP:${i} >/dev/null 2>&1); then
+            # port $i is available"
+            echo $i
+            return
+        fi
+    done
+    return
+}
+
+jcon() {
     local host=$1
     local jmx_port=${2:-7199}
     local local_proxy_port=$(find_available_port)
@@ -46,18 +62,4 @@ tools-jcon() {
     # kill the ssh tunnel after jconsole exits
     kill $ssh_pid
 }
-
-find_available_port() {
-    # find and return a TCP port available for listening
-    local start=${1:-8000}
-    local end=${2:-8200}
-    for i in $(seq $start $end); do
-        # echo "DEBUG: trying port $i"
-        if ! `lsof -iTCP:${i} >/dev/null 2>&1`; then
-            # port $i is available"
-            echo $i
-            return
-        fi
-    done
-    return
-}
+jcon "$@"
