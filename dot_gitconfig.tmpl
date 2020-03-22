@@ -36,6 +36,6 @@
 [gpg]
 	program = gpg
 [commit]
-{{- if eq .chezmoi.hostname "macbook-joe" }}
 	gpgSign = true
-{{- end }}
+[url "git@github.com:pantheon-systems"]
+    insteadOf = https://github.com/pantheon-systems

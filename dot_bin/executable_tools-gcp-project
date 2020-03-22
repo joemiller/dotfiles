@@ -1,0 +1,9 @@
+#!/bin/bash
+# if no arguments are given, show the current project. Else change the current project.
+proj="${1:-}"
+
+if [[ -z "$proj" ]]; then
+    gcloud config list project
+    exit 0
+fi
+gcloud config set project "$proj"

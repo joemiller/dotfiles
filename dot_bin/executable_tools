@@ -1,0 +1,88 @@
+#!/bin/bash
+# vim: set ft=sh
+
+set -eou pipefail
+
+usage() {
+  echo "Usage: tools [subcommand] [options]"
+  echo
+  echo "Enable shell completion:"
+  echo "  Bash:"
+  echo "    source <(tools bash-completion)"
+  echo "  zsh:"
+  echo "    source <(tools zsh-completion)"
+  echo
+  echo "Available subcommands:"
+  echo
+  print_subcommands
+}
+
+# XXX: compgen can be somewhat unreliable. If it continues to be problematic
+#      consider switching to a for loop over the $PATH like here: https://dev.to/rrampage/bash-command-completion---finding-all-the-cats-in-your-path-2am2
+print_subcommands() {
+  for cmd in $(_list_subcommands); do
+    echo "    $cmd"
+  done
+}
+
+_list_subcommands() {
+  for i in $(compgen -c tools- | sort); do
+    echo "${i#"tools-"}"
+  done
+}
+
+bash_completion() {
+  cat <<'EOF'
+__tools_completion() {
+  local cur cmds
+  cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=()
+
+  cmds=$(tools _list)
+  COMPREPLY=($(compgen -W "$cmds" -- "$cur"))
+}
+complete -F __tools_completion tools
+EOF
+}
+
+zsh_completion() {
+  echo "compdef __tools_completion tools"
+  bash_completion
+}
+
+main() {
+  subcommand="${1:-}"
+  if [[ -z "$subcommand" ]]; then
+    usage
+    exit 0
+  fi
+
+  shift
+
+  case "$subcommand" in
+    -h | --help)
+      usage
+      ;;
+    bash-completion)
+      bash_completion
+      ;;
+    zsh-completion)
+      zsh_completion
+      ;;
+    _list)
+      _list_subcommands
+      ;;
+    *)
+      subcommand_path="tools-$subcommand"
+
+      if ! command -v "$subcommand_path" >/dev/null; then
+        echo "Unknown command: $subcommand. Run with -h for help."
+        exit 1
+      fi
+
+      "$subcommand_path" "$@"
+      ;;
+  esac
+}
+
+main "$@"

@@ -1,0 +1,9 @@
+#!/bin/zsh
+
+# use this because 'antigen selfupdate' does not work in our configuration
+# https://github.com/zsh-users/antigen/wiki/Installation
+tools-antigen-selfupdate() {
+  curl -L git.io/antigen >"$HOME/.antigen.zsh"
+}
+
+tools-antigen-selfupdate "$@"

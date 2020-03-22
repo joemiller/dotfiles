@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eou pipefail
+
+file="${1:-}"
+
+if [[ -z "$file" ]]; then
+  echo "usage: $0 file.json"
+  exit 1
+fi
+
+if [[ ! -e "$file" ]]; then
+  echo "$file: file does not exist"
+  exit 1
+fi
+gcloud iam service-accounts keys delete "$(jq -r .private_key_id "$file")" \
+              --iam-account="$(jq -r .client_email "$file")"
+rm -f -- "$file"
