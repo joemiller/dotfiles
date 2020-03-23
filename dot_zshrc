@@ -82,4 +82,6 @@ bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 export KEYTIMEOUT=1
 
+source ~/.common.sh.d/tools.sh
+
 unsetopt share_history
