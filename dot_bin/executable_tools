@@ -26,7 +26,7 @@ print_subcommands() {
 }
 
 _list_subcommands() {
-  for i in $(compgen -c tools- | sort); do
+  for i in $(compgen -c tools- | sort | uniq); do
     echo "${i#"tools-"}"
   done
 }
