@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# requires the kubectl config-cleanup plugin
+# https://github.com/B23admin/kubectl-config-cleanup
+# kubectl krew intall config-cleanup
+
+set -eou pipefail
+
+cp ~/.kube/config ~/.kube/config.bak
+kubectl config-cleanup --raw >~/.kube/config.new
+mv ~/.kube/config.new ~/.kube/config
