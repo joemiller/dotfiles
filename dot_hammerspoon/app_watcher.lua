@@ -64,6 +64,14 @@ function apps(appName, eventType, appObject)
             win:moveToScreen(laptopScreen)
             win:setFullScreen(true)
         end
+
+        if (appName == "Messages") then
+            -- always move Messages to the laptop screen (Color LCD) and make it fullscreen
+            os.execute("sleep 3")
+            local win = appObject:mainWindow()
+            win:moveToScreen(laptopScreen)
+            win:setFullScreen(true)
+        end
     end
 end
 
