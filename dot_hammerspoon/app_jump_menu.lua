@@ -22,6 +22,7 @@ string.format(
     l - slack \
     s - spotify \
     m - iMessage \
+    t - thinkorswim \
     n - Notification Center \
     v - vivaldi (browser) \
     z - zoom \
@@ -53,6 +54,7 @@ modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ;
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
 modal:bind('','m', function() hs.application.launchOrFocus( "Messages.app" )   ; modal:exit() end )
+modal:bind('','t', function() hs.application.launchOrFocus( "thinkorswim.app" )   ; modal:exit() end )
 modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
 modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )
