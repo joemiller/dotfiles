@@ -134,6 +134,7 @@ Plug 'robbles/logstash'
 Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
 Plug 'liuchengxu/vim-which-key'
+Plug 'ap/vim-css-color'
 
 " Initialize plugin system
 call plug#end()
