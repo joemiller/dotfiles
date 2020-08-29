@@ -13,6 +13,7 @@ function modal:entered()
     hs.alert.show(
 string.format(
 "hot keys active: (exit: enter esc j) \
+    a - alacritty \
     c - chrome \
     d - VSCode \
     e - evernote \
@@ -44,6 +45,7 @@ modal:bind('','escape', function() modal:exit() end)
 modal:bind('','return', function() modal:exit() end)
 
 -- hotkeys while modal is active
+modal:bind('','a', function() hs.application.launchOrFocus( "Alacritty" )      ; modal:exit() end )
 modal:bind('','v', function() hs.application.launchOrFocus( "Vivaldi" )        ; modal:exit() end )
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
 modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )

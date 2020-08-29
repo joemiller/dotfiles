@@ -5,6 +5,8 @@ local winmod = require "window_controls"
 local utils = require "utils"
 -- require "volumes"
 
+local direction   = winmod.direction
+
 -- settings
 hs.window.animationDuration = 0
 
@@ -27,7 +29,7 @@ Install:andUse(
 Install:andUse(
     "TimeMachineProgress",
     {
-        start = true
+        start = false
     }
 )
 
@@ -153,6 +155,17 @@ Install:andUse(
     }
 )
 
+Install:andUse(
+    "i3-resize",
+    {
+        -- start = true,
+        loglevel = "debug",
+        hotkeys = {
+            toggle = {{"alt", "shift"}, "r"}
+        }
+    }
+)
+
 -- Install:andUse(
 --     "PushToTalk",
 --     {
@@ -202,11 +215,19 @@ hs.hotkey.bind({"ctrl", "alt"}, "N", winmod.currentWindowToNextScreen)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N", winmod.currentAppAllWindowsToNextScreen)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left", winmod.currentWindowToLeftHalf)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
+-- hs.hotkey.bind({"alt", "shift"}, "h", function() winmod.resize(direction.left, 0.06) end)
+-- hs.hotkey.bind({"alt", "shift"}, "j", function() winmod.resize(direction.down, 0.06) end)
+-- hs.hotkey.bind({"alt", "shift"}, "k", function() winmod.resize(direction.up, 0.06) end)
+-- hs.hotkey.bind({"alt", "shift"}, "l", function() winmod.resize(direction.right, 0.06) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "h", function() winmod.move(direction.left, 0.1) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "j", function() winmod.move(direction.down, 0.15) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "k", function() winmod.move(direction.up, 0.15) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "l", function() winmod.move(direction.right, 0.1) end)
 
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 
 -- set to 'debug' for debug output in the console
--- hs.logger.setGlobalLogLevel('debug')
+hs.logger.setGlobalLogLevel('debug')
 
 -- ready!
 hs.notify.new({title = "Hammerspoon", subTitle = "Configuration loaded successfully"}):send()
