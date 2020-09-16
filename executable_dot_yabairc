@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-# bar settings
-yabai -m config external_bar all:0:25
+# bar settings (also see .spacebarrc)
+yabai -m config external_bar all:0:23
 
 # global settings
 yabai -m config mouse_follows_focus          off
@@ -25,43 +25,47 @@ yabai -m config mouse_action1                move
 yabai -m config mouse_action2                resize
 
 # general space settings
-# yabai -m config layout                       bsp
-yabai -m config layout                       float
-yabai -m config top_padding                  8
+yabai -m config layout                       bsp
+# yabai -m config layout                       float
+yabai -m config top_padding                  5
 yabai -m config bottom_padding               5
-yabai -m config left_padding                 8
-yabai -m config right_padding                8
-yabai -m config window_gap                   06
+yabai -m config left_padding                 5
+yabai -m config right_padding                5
+yabai -m config window_gap                   6
 yabai -m config window_shadow                float
 
 # space specific settings
+# space 1 mostly used for floating chrome windows
 yabai -m config --space 1 layout float
 yabai -m config --space 1 top_padding 0
 yabai -m config --space 1 left_padding 0
 yabai -m config --space 1 right_padding 0
 
-yabai -m config --space 3 top_padding 0
-yabai -m config --space 3 bottom_padding 0
-yabai -m config --space 3 left_padding 0
-yabai -m config --space 3 right_padding 0
+# space 2, used by a single alacritty window with tmux inside, no border padding
+yabai -m config --space 2 layout float
+yabai -m config --space 2 top_padding 0
+yabai -m config --space 2 bottom_padding 0
+yabai -m config --space 2 left_padding 0
+yabai -m config --space 2 right_padding 0
 
-yabai -m config --space 4 top_padding 0
-yabai -m config --space 4 bottom_padding 0
-yabai -m config --space 4 left_padding 0
-yabai -m config --space 4 right_padding 0
+# yabai -m config --space 4 top_padding 0
+# yabai -m config --space 4 bottom_padding 0
+# yabai -m config --space 4 left_padding 0
+# yabai -m config --space 4 right_padding 0
 
-yabai -m config --space 5 top_padding 0
-yabai -m config --space 5 bottom_padding 0
-yabai -m config --space 5 left_padding 0
-yabai -m config --space 5 right_padding 0
+# yabai -m config --space 5 top_padding 0
+# yabai -m config --space 5 bottom_padding 0
+# yabai -m config --space 5 left_padding 0
+# yabai -m config --space 5 right_padding 0
 
 # float these apps
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Font Book$" manage=off
+yabai -m rule --add app="^Finder$" manage=off
 
 # move these apps to space
-yabai -m rule --add app="Slack"                 space=3
-yabai -m rule --add app="Evernote"              space=4
-yabai -m rule --add app="Messages"              space=5
+# yabai -m rule --add app="Slack"                 space=3
+# yabai -m rule --add app="Evernote"              space=4
+# yabai -m rule --add app="Messages"              space=5
 
 echo "yabai configuration loaded.."
