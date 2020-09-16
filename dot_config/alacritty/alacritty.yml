@@ -49,7 +49,7 @@ window:
   # Values for `decorations` (macOS only):
   #     - transparent: Title bar, transparent background and title bar buttons
   #     - buttonless: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  decorations: none
 
   # Startup Mode (changes require restart)
   #
@@ -60,7 +60,7 @@ window:
   #
   # Values for `startup_mode` (macOS only):
   #   - SimpleFullscreen
-  startup_mode: SimpleFullscreen
+  #startup_mode: SimpleFullscreen
   # startup_mode: Fullscreen
 
   # Window title
@@ -86,6 +86,7 @@ font:
   # Normal (roman) font face
   normal:
     family: SauceCodePro Nerd Font
+    # style: Bold
     style: Regular
 
   # Bold font face
@@ -148,7 +149,8 @@ colors:
   # Default colors
   primary:
     background: '0x282c34'
-    foreground: '0xabb2bf'
+    foreground: '0xc3cbd9'
+    #foreground: '0xabb2bf'
 
   # Normal colors
   normal:
@@ -528,7 +530,7 @@ key_bindings:
   #- { key: H,      mods: Command,         action: Hide             }
   #- { key: Q,      mods: Command,         action: Quit             }
   #- { key: W,      mods: Command,         action: Quit             }
-  #- { key: F,      mods: Command|Control, action: ToggleFullscreen }
+  - { key: F,      mods: Command|Control, action: ToggleSimpleFullscreen }
 
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
