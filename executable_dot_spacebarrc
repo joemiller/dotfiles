@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+spacebar -m config position           bottom
+spacebar -m config height             23
+# spacebar -m config spacing_left       25
+# spacebar -m config spacing_right      15
+#spacebar -m config text_font          "Helvetica Neue:Bold:12.0"
+#spacebar -m config text_font          "Source Code Pro for Powerline:Medium:12.0"
+spacebar -m config text_font          "SauceCodePro Nerd Font:Medium:12.0"
+spacebar -m config icon_font          "SauceCodePro Nerd Font:Medium:12.0"
+#spacebar -m config icon_font          "Font Awesome 5 Free:Regular:12.0"
+#spacebar -m config icon_font          "FontAwesome:Regular:12.0"
+spacebar -m config background_color   0xff202020
+spacebar -m config foreground_color   0xffa8a8a8
+spacebar -m config space_icon_color   0xff458588
+spacebar -m config power_icon_color   0xffcd950c
+spacebar -m config battery_icon_color 0xffd75f5f
+spacebar -m config dnd_icon_color     0xffa8a8a8
+spacebar -m config clock_icon_color   0xffa8a8a8
+spacebar -m config space_icon_strip   1 2 3 4 5 6 7 8 9 0 11 12 13 14
+#spacebar -m config space_icon_strip   1:Web 2:Kitty 3:Slack 4:Evernote 5:Messages 6 7 8 9 0
+#spacebar -m config space_icon_strip   I II III IV V VI VII VIII IX X
+spacebar -m config power_icon_strip    
+spacebar -m config space_icon         
+spacebar -m config clock_icon         
+spacebar -m config dnd_icon           
+spacebar -m config clock_format       "%m/%d/%y %R"
+
+echo "spacebar configuration loaded.."
