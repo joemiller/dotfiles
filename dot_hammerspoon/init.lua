@@ -50,6 +50,14 @@ Install:andUse(
     }
 )
 
+-- https://www.hammerspoon.org/Spoons/WindowHalfsAndThirds.html
+Install:andUse(
+    "WindowHalfsAndThirds"
+    -- {
+    --     start = true
+    -- }
+)
+
 -- examples: https://zzamboni.org/post/my-hammerspoon-configuration-with-commentary/
 -- Install:andUse(
 --     "WiFiTransitions",
@@ -203,18 +211,9 @@ Install:andUse(
 -- )
 
 -- global key binds
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "F", winmod.toggleMaximized)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "P", winmod.windowPreviousPosition)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "H", winmod.currentWindowToSizeOfLaptopScreen)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "C", winmod.center)
-hs.hotkey.bind({"ctrl", "alt"}, "Left", winmod.currentWindowToLeft)
-hs.hotkey.bind({"ctrl", "alt"}, "Right", winmod.currentWindowToRight)
-hs.hotkey.bind({"ctrl", "alt"}, "Up", winmod.currentWindowToTop)
-hs.hotkey.bind({"ctrl", "alt"}, "Down", winmod.currentWindowToBottom)
 hs.hotkey.bind({"ctrl", "alt"}, "N", winmod.currentWindowToNextScreen)
 hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N", winmod.currentAppAllWindowsToNextScreen)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Left", winmod.currentWindowToLeftHalf)
-hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 -- hs.hotkey.bind({"alt", "shift"}, "h", function() winmod.resize(direction.left, 0.06) end)
 -- hs.hotkey.bind({"alt", "shift"}, "j", function() winmod.resize(direction.down, 0.06) end)
 -- hs.hotkey.bind({"alt", "shift"}, "k", function() winmod.resize(direction.up, 0.06) end)
@@ -223,6 +222,28 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "Right", winmod.currentWindowToRightHalf)
 -- hs.hotkey.bind({"ctrl", "shift"}, "j", function() winmod.move(direction.down, 0.15) end)
 -- hs.hotkey.bind({"ctrl", "shift"}, "k", function() winmod.move(direction.up, 0.15) end)
 -- hs.hotkey.bind({"ctrl", "shift"}, "l", function() winmod.move(direction.right, 0.1) end)
+
+spoon.WindowHalfsAndThirds:bindHotkeys(
+{
+    left_half   = { {"ctrl", "alt", "cmd"}, "Left" },
+    right_half  = { {"ctrl", "alt", "cmd"}, "Right" },
+    top_half    = { {"ctrl", "alt", "cmd"}, "Up" },
+    bottom_half = { {"ctrl", "alt", "cmd"}, "Down" },
+    third_left  = { {"ctrl", "alt", "cmd"}, "J" },
+    third_right = { {"ctrl", "alt", "cmd"}, "L" },
+    -- third_up    = { {"ctrl", "alt"       }, "Up" },
+    -- third_down  = { {"ctrl", "alt"       }, "Down" },
+    -- top_left    = { {"ctrl",        "cmd"}, "1" },
+    -- top_right   = { {"ctrl",        "cmd"}, "2" },
+    -- bottom_left = { {"ctrl",        "cmd"}, "3" },
+    -- bottom_right= { {"ctrl",        "cmd"}, "4" },
+    max_toggle  = { {"ctrl", "alt", "cmd"}, "F" },
+    undo        = { {"ctrl", "alt", "cmd"}, "Z" },
+    center      = { {"ctrl", "alt", "cmd"}, "C" },
+    -- larger      = { {        "alt", "cmd", "shift"}, "Right" },
+    -- smaller     = { {        "alt", "cmd", "shift"}, "Left" },
+ }
+)
 
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 
