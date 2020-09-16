@@ -62,6 +62,7 @@ antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 #antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
 antigen bundle terraform
 antigen bundle vault
+antigen bundle fzf
 
 # load non-omz modules
 if [[ "$(uname)" != "OpenBSD" ]]; then
