@@ -6,19 +6,36 @@ alias kud='kubectl describe'
 alias kctx='kubectx'
 alias kns='kube-ns'
 
-if command -v kubectl >/dev/null; then
-  # load shell completions
-  if [[ -n "$ZSH_VERSION" ]]; then
+if [[ -d "$HOME/.krew/bin" ]]; then
+  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+fi
+
+# zsh:
+if [[ -n "$ZSH_VERSION" ]]; then
+  # kubectl
+  if command -v kubectl >/dev/null; then
     source <(kubectl completion zsh)
     # a helper alias because this seems to constantly be breaking when loaded from .zshrc
     alias kube-completions='source <(kubectl completion zsh)'
   fi
 
-  if [[ -n "$BASH_VERSION" ]]; then
-    source <(kubectl completion bash)
+  # kind
+  if command -v kind >/dev/null; then
+    source <(kind completion zsh)
   fi
 fi
 
-if [[ -d "$HOME/.krew/bin" ]]; then
-  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+# bash:
+if [[ -n "$ZSH_VERSION" ]]; then
+  # kubectl
+  if command -v kubectl >/dev/null; then
+    source <(kubectl completion bash)
+    # a helper alias because this seems to constantly be breaking when loaded from .zshrc
+    alias kube-completions='source <(kubectl completion zsh)'
+  fi
+
+  # kind
+  if command -v kind >/dev/null; then
+    source <(kind completion bash)
+  fi
 fi
