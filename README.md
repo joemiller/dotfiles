@@ -104,7 +104,7 @@ rm -rf -- nerd-fonts
 Hacking
 -------
 
-The `./hacking` directory contains sample Dockerfiles useful for standing up a temporary environment for
+The `./dev` directory contains sample Dockerfiles useful for standing up a temporary environment for
 testing chezmoi without risking your existing dotfile setup.
 
 Antigen
