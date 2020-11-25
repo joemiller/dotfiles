@@ -67,11 +67,14 @@ antigen bundle fzf
 # load non-omz modules
 if [[ "$(uname)" != "OpenBSD" ]]; then
     # don't load this on openbsd. it slows down prompt re-draw significantly
+    export ZSH_AUTOSUGGEST_USE_ASYNC=1
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-syntax-highlighting
     antigen bundle djui/alias-tips
 fi
 antigen bundle zsh-users/zsh-completions src
+
+antigen bundle marlonrichert/zsh-hist
 
 antigen apply
 
