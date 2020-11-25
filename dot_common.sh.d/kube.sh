@@ -26,12 +26,11 @@ if [[ -n "$ZSH_VERSION" ]]; then
 fi
 
 # bash:
-if [[ -n "$ZSH_VERSION" ]]; then
+if [[ -n "$BASH_VERSION" ]]; then
   # kubectl
   if command -v kubectl >/dev/null; then
     source <(kubectl completion bash)
-    # a helper alias because this seems to constantly be breaking when loaded from .zshrc
-    alias kube-completions='source <(kubectl completion zsh)'
+    alias kube-completions='source <(kubectl completion bash)'
   fi
 
   # kind
