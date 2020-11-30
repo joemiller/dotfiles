@@ -19,5 +19,5 @@ if command -v tmux >/dev/null; then
 fi
 
 if command -v tmate >/dev/null; then
-  alias tmux="_ssh_auth_save ; $(command -v tmate)"
+  alias tmate="_ssh_auth_save ; $(command -v tmate)"
 fi
