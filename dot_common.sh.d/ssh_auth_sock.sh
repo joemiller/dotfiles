@@ -10,14 +10,14 @@ _ssh_auth_save() {
 #alias screen='_ssh_auth_save ; export HOSTNAME=$(hostname) ; screen'
 #alias tmux='_ssh_auth_save ; export HOSTNAME=$(hostname) ; tmux'
 
-if command -v screen; then
+if command -v screen >/dev/null; then
   alias screen="_ssh_auth_save ; $(command -v screen)"
 fi
 
-if command -v tmux; then
+if command -v tmux >/dev/null; then
   alias tmux="_ssh_auth_save ; $(command -v tmux)"
 fi
 
-if command -v tmate; then
+if command -v tmate >/dev/null; then
   alias tmux="_ssh_auth_save ; $(command -v tmate)"
 fi
