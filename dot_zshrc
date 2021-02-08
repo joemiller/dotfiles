@@ -88,4 +88,8 @@ export KEYTIMEOUT=1
 
 source ~/.common.sh.d/tools.sh
 
+# history settings
 unsetopt share_history
+export HISTFILESIZE=250000 # override oh-my-zsh's default of 50k
+export HISTSIZE=250000     # override oh-my-zsh's default of 10k
+export HISTTIMEFORMAT="[%F %T] " # history -E
