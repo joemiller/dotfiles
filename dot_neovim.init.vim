@@ -95,7 +95,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
 Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+"Plug 'zchee/deoplete-go', { 'do': 'make'}
+"Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'fszymanski/deoplete-emoji'
 Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'ntpeters/vim-better-whitespace'
@@ -498,6 +499,9 @@ let g:deoplete#enable_at_startup = 1
 
 let g:deoplete#omni_patterns = {}
 let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
+
+" configure deoplete to use gopls: https://github.com/fatih/vim-go/pull/2231/files
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 
 " Let <Tab> also do completion
 inoremap <silent><expr> <Tab>
