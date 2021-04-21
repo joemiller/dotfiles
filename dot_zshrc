@@ -4,11 +4,14 @@
 #
 # test
 
+#zmodload zsh/zprof
+
 export PATH=$PATH:/usr/local/sbin
 
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)
 
+skip_global_compinit=1
 autoload -Uz compinit && compinit
 autoload -Uz bashcompinit
 bashcompinit -i
@@ -50,11 +53,11 @@ antigen bundle git
 # antigen bundle chruby      # DISABLED: slows startup down. disabled. https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#chruby
 #antigen bundle web-search  # adds commands google|bing|ddg https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#web-search
 # antigen bundle vagrant     # DISABLED: slows startup down.
-antigen bundle systemd     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#systemd
+#antigen bundle systemd     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#systemd
 # antigen bundle bundler     # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#bundler
 # antigen bundle composer    # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#composer
 antigen bundle docker      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#docker
-antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#fabric
+#antigen bundle fabric      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#fabric
 # antigen bundle encode64    # adds commands encode64|decode64 (https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins#encode64)
 # antigen bundle per-directory-history # ctrl-G to toggle global | per-dir history
 #antigen bundle sudo        # ESC twice: Puts sudo in front of the current command, or the last one if the command line is empty.
