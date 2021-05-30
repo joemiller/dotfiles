@@ -1,2 +1,17 @@
 i3-wm-mod: Mod1
 i3-wm-alt: Mod4
+
+! i3xrocks.value.font: Source Code Pro Medium 10
+i3xrocks.value.font: System San Francisco Display 10
+! i3xrocks.value.font: JetBrains Mono Medium 10
+i3-wm.bar.font: pango:System San Francisco Display 10, Material Design Icons 10
+! i3-wm.bar.font: pango:Source Code Pro Medium 10, Material Design Icons 10
+! i3-wm.bar.font: pango:JetBrains Mono Medium 10, Material Design Icons 10
+! rofi.font: Source Code Pro 12
+rofi.font: System San Francisco Display 10
+i3-wm.floatingwindow.border.size: 2
+! i3-wm.font: pango:Source Code Pro 10
+i3-wm.font: pango:System San Francisco Display 10
+
+!  might need this on 4k (from: https://regolith-linux.org/docs/howto/override-xres/)
+!  Xft.dpi: 192
