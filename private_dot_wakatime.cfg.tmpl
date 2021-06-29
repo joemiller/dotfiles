@@ -1,8 +1,6 @@
 [settings]
 debug = false
-{{- if eq "y" .features.onepassword }}
 api_key = {{ (onepassword "gkz72k6wxjd75ffogkel7hhx54").details.notesPlain }}
-{{- end }}
 hidefilenames = false
 ignore =
     COMMIT_EDITMSG$
