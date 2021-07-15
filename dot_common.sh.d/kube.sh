@@ -4,7 +4,7 @@ alias kud='kubectl describe'
 
 # aliases for kubectx (brew install kubectx)
 alias kctx='kubectx'
-alias kns='kube-ns'
+alias kns='kubens'
 
 if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
