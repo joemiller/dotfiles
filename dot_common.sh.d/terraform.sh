@@ -35,3 +35,5 @@ export PATH="$terraform_path:$PATH"
 
 alias tf=terraform
 alias tfw='terraform workspace'
+
+alias tg=terragrunt
