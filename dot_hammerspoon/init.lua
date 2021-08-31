@@ -81,78 +81,78 @@ Install:andUse(
 --     }
 -- )
 
-Install.repos["TaskHammer"] = {
-    desc = "TaskHammer.spoon repository",
-    url = "https://github.com/joemiller/TaskHammer"
-}
+-- Install.repos["TaskHammer"] = {
+--     desc = "TaskHammer.spoon repository",
+--     url = "https://github.com/joemiller/TaskHammer"
+-- }
 
-Install:andUse(
-    "TaskHammer",
-    {
-        repo = "TaskHammer",
-        -- loglevel = "debug",
-        start = true,
-        config = {
-            tasks = {
-                -- {
-                --     name = "test task",
-                --     cmd = "/usr/bin/env",
-                --     env = {
-                --         FOO = "bar",
-                --         BAZ = "blah"
-                --     }
-                -- },
-                -- {
-                --     name = "fake backup",
-                --     cmd = "/Users/joe/fake-backup.sh",
-                --     args = {"foo", "bar"}
-                -- },
-                -- {
-                --     namer = "missing name",
-                --     cmd = "/Users/joe/fake-backup.sh",
-                --     args = {"foo", "bar"}
-                -- },
-                -- {
-                --     name = "test prompt",
-                --     cmd = "/usr/bin/env",
-                --     prompts = {
-                --         {
-                --             envvar = "PASS",
-                --             description = "1password pass"
-                --         },
-                --         {
-                --             envvar = "ANOTHER_ONE",
-                --             description = "another input"
-                --         }
-                --     }
-                -- },
-                {
-                    name = "Restic Backup",
-                    cmd = "/Users/joe/backup-scripts/backup.sh",
-                    env = {
-                        SSH_AUTH_SOCK = "/Users/joe/.gnupg/S.gpg-agent.ssh"
-                    },
-                    prompts = {
-                        {
-                            envvar = "RESTIC_PASSWORD",
-                            description = "Please enter the Restic repository password"
-                        }
-                    }
-                },
-                {
-                    name = "1Password Backup",
-                    cmd = "/Users/joe/backup-scripts/1password-scripts/1p-backup-to-pass.sh",
-                    prompts = {
-                        {
-                            envvar = "PASS",
-                            description = "1password pass"
-                        }
-                    }
-                }
-            }
-        }
-    }
-)
+-- Install:andUse(
+--     "TaskHammer",
+--     {
+--         repo = "TaskHammer",
+--         -- loglevel = "debug",
+--         start = true,
+--         config = {
+--             tasks = {
+--                 -- {
+--                 --     name = "test task",
+--                 --     cmd = "/usr/bin/env",
+--                 --     env = {
+--                 --         FOO = "bar",
+--                 --         BAZ = "blah"
+--                 --     }
+--                 -- },
+--                 -- {
+--                 --     name = "fake backup",
+--                 --     cmd = "/Users/joe/fake-backup.sh",
+--                 --     args = {"foo", "bar"}
+--                 -- },
+--                 -- {
+--                 --     namer = "missing name",
+--                 --     cmd = "/Users/joe/fake-backup.sh",
+--                 --     args = {"foo", "bar"}
+--                 -- },
+--                 -- {
+--                 --     name = "test prompt",
+--                 --     cmd = "/usr/bin/env",
+--                 --     prompts = {
+--                 --         {
+--                 --             envvar = "PASS",
+--                 --             description = "1password pass"
+--                 --         },
+--                 --         {
+--                 --             envvar = "ANOTHER_ONE",
+--                 --             description = "another input"
+--                 --         }
+--                 --     }
+--                 -- },
+--                 {
+--                     name = "Restic Backup",
+--                     cmd = "/Users/joe/backup-scripts/backup.sh",
+--                     env = {
+--                         SSH_AUTH_SOCK = "/Users/joe/.gnupg/S.gpg-agent.ssh"
+--                     },
+--                     prompts = {
+--                         {
+--                             envvar = "RESTIC_PASSWORD",
+--                             description = "Please enter the Restic repository password"
+--                         }
+--                     }
+--                 },
+--                 {
+--                     name = "1Password Backup",
+--                     cmd = "/Users/joe/backup-scripts/1password-scripts/1p-backup-to-pass.sh",
+--                     prompts = {
+--                         {
+--                             envvar = "PASS",
+--                             description = "1password pass"
+--                         }
+--                     }
+--                 }
+--             }
+--         }
+--     }
+-- )
 
 Install:andUse(
     "Emojis",
