@@ -113,7 +113,8 @@ font:
 {{- if eq .chezmoi.hostname "gaming-rig" }}
   size: 10.0
 {{- else }}
-  size: 9.0
+  # TODO: might have to make this darwin-specific or hostname/machine specific
+  size: 12.0
 {{- end }}
 
   # Offset is the extra space around each character. `offset.y` can be thought of
