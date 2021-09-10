@@ -6,10 +6,16 @@ alias kud='kubectl describe'
 alias kctx='kubectx'
 alias kns='kubens'
 
+# setup krew
 if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
 
+# support multiple kubeconfig files by combining the standard ~/.kube/config with any files matching ~/.kube/*.kubeconfig
+_extra_kubeconfigs="$(printf "%s:" $HOME/.kube/*.kubeconfig)"
+export KUBECONFIG="$HOME/.kube/config:$_extra_kubeconfigs"
+
+## configure kubectl completions:
 # zsh:
 if [[ -n "$ZSH_VERSION" ]]; then
   # kubectl
