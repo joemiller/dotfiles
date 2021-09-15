@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# toggle between different monitor arrangements on macOS
+#
+# https://github.com/jakehilborn/displayplacer
+#
+# brew tap jakehilborn/jakehilborn && brew install displayplacer
+#
+# run `displayplacer list` without args to get the current arrangement
+
+case "$1" in
+  side-by-side)
+    displayplacer "id:E2BCFFF8-5E03-B11E-B69F-FEA6E5C3F64F res:2048x1280 hz:59 color_depth:8 scaling:on origin:(0,0) degree:0" "id:B6D74247-B7C7-7288-4B52-9FD502621AA6 res:3840x1600 hz:144 color_depth:8 scaling:on origin:(2048,-577) degree:0"
+    ;;
+  stacked)
+    displayplacer "id:E2BCFFF8-5E03-B11E-B69F-FEA6E5C3F64F res:2048x1280 hz:59 color_depth:8 scaling:on origin:(0,0) degree:0" "id:B6D74247-B7C7-7288-4B52-9FD502621AA6 res:3840x1600 hz:144 color_depth:8 scaling:on origin:(-889,-1600) degree:0"
+    ;;
+  standing-desk-side-by-side)
+    displayplacer "id:E2BCFFF8-5E03-B11E-B69F-FEA6E5C3F64F res:2048x1280 hz:59 color_depth:8 scaling:on origin:(0,0) degree:0" "id:2CA1B72D-0485-A3E3-3E2D-AA7817AD158A res:3200x1800 color_depth:8 scaling:on origin:(-3200,-439) degree:0"
+    ;;
+  *)
+    echo "unknown mode. valid modes: 'side-by-side', 'stacked', 'standing-desk-side-by-side'"
+    exit 1
+    ;;
+esac
