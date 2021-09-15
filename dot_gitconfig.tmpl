@@ -35,7 +35,15 @@
 	default = current
 [gpg]
 	program = gpg
+
 [commit]
+{{- if eq .chezmoi.hostname "macbook-joe" }}
 	gpgSign = true
+{{- else }}
+	gpgSign = false
+{{- end }}
+
 [url "git@github.com:pantheon-systems"]
     insteadOf = https://github.com/pantheon-systems
+[url "git@github.com:planetscale"]
+    insteadOf = https://github.com/planetscale
