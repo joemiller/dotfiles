@@ -36,6 +36,9 @@
 [gpg]
 	program = gpg
 
+[init]
+    defaultBranch = main
+
 [commit]
 {{- if eq .chezmoi.hostname "macbook-joe" }}
 	gpgSign = true
