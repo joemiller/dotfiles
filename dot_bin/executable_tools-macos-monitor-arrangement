@@ -18,8 +18,11 @@ case "$1" in
   standing-desk-side-by-side)
     displayplacer "id:E2BCFFF8-5E03-B11E-B69F-FEA6E5C3F64F res:2048x1280 hz:59 color_depth:8 scaling:on origin:(0,0) degree:0" "id:2CA1B72D-0485-A3E3-3E2D-AA7817AD158A res:3200x1800 color_depth:8 scaling:on origin:(-3200,-439) degree:0"
     ;;
+  standing-desk-stacked)
+    displayplacer "id:E2BCFFF8-5E03-B11E-B69F-FEA6E5C3F64F res:2048x1280 hz:59 color_depth:8 scaling:on origin:(0,0) degree:0" "id:2CA1B72D-0485-A3E3-3E2D-AA7817AD158A res:3200x1800 color_depth:8 scaling:on origin:(-612,-1800) degree:0"
+    ;;
   *)
-    echo "unknown mode. valid modes: 'side-by-side', 'stacked', 'standing-desk-side-by-side'"
+    echo "unknown mode. valid modes: 'side-by-side', 'stacked', 'standing-desk-stacked', standing-desk-side-by-side'"
     exit 1
     ;;
 esac
