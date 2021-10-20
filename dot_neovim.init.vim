@@ -97,7 +97,6 @@ Plug 'smerrill/vcl-vim-plugin'
 Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
 "Plug 'zchee/deoplete-go', { 'do': 'make'}
 "Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-Plug 'fszymanski/deoplete-emoji'
 Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
@@ -134,6 +133,7 @@ Plug 'markcornick/vim-bats'
 Plug 'robbles/logstash'
 Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
+Plug 'yorinasub17/vim-terragrunt'
 Plug 'liuchengxu/vim-which-key'
 Plug 'ap/vim-css-color'
 
