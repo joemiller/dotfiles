@@ -112,6 +112,8 @@ font:
   # Point size
 {{- if eq .chezmoi.hostname "gaming-rig" }}
   size: 10.0
+{{- else if eq .chezmoi.hostname "macbook-air" }}
+  size: 9.0
 {{- else }}
   # TODO: might have to make this darwin-specific or hostname/machine specific
   size: 12.0
