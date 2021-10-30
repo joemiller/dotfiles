@@ -124,17 +124,18 @@ Plug 'tpope/vim-endwise'
 " Plug 'xolox/vim-misc'
 Plug 'sjl/vitality.vim'                   " nice tweaks for making iterm2 + vim + tmux play together, including cursor shape toggling
 Plug 'b4b4r07/vim-hcl'
-Plug 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
+"Plug 'fatih/vim-hclfmt'                   " install hclfmt: go get github.com/fatih/hclfmt
 Plug 'mhinz/vim-startify'
 Plug 'markcornick/vim-bats'
 Plug 'robbles/logstash'
 Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
-Plug 'yorinasub17/vim-terragrunt'
+Plug 'rhadley-recurly/vim-terragrunt'
 Plug 'liuchengxu/vim-which-key'
 Plug 'ap/vim-css-color'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'neovim/nvim-lspconfig'
 
 " Initialize plugin system
 call plug#end()
@@ -661,4 +662,14 @@ require'nvim-tree'.setup {
     }
   }
 }
+EOF
+
+" neovim lsp configs
+lua << EOF
+require'lspconfig'.gopls.setup{}
+
+-- python
+require'lspconfig'.pyright.setup{}
+
+require'lspconfig'.terraformls.setup{}
 EOF
