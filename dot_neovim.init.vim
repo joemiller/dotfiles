@@ -136,6 +136,9 @@ Plug 'ap/vim-css-color'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Initialize plugin system
 call plug#end()
@@ -672,4 +675,26 @@ require'lspconfig'.gopls.setup{}
 require'lspconfig'.pyright.setup{}
 
 require'lspconfig'.terraformls.setup{}
+EOF
+
+" telescope.nvim
+nnoremap <silent> <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <silent> <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <silent> <leader>fz <cmd>Telescope spell_suggest<cr>
+
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup{
+  defaults = {
+    mappings = {
+      n = {
+        -- https://github.com/nvim-telescope/telescope.nvim/blob/master/lua/telescope/mappings.lua
+        -- match file open keys to the same config we use in NERDtree and nvim-tree.lua:
+        ["i"] = actions.select_horizontal,
+        ["s"] = actions.select_vertical,
+        ["t"] = actions.select_tab
+      }
+    }
+  }
+}
 EOF
