@@ -95,6 +95,7 @@ Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
 "Plug 'zchee/deoplete-go', { 'do': 'make'}
 "Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
 Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+Plug 'deoplete-plugins/deoplete-lsp'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'ekalinin/Dockerfile.vim'
@@ -139,6 +140,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'norcalli/nvim-colorizer.lua'
 
 " Initialize plugin system
 call plug#end()
@@ -472,6 +474,11 @@ let g:markdown_mapping_switch_status = '<Leader>t'
 " - Use relative path to python bin so that virtualenv python will be found and autocompletion for libs in the virtualenv will work - https://github.com/Valloric/YouCompleteMe#python-semantic-completion
 let g:ycm_python_binary_path = 'python'
 
+" point to specific location of the neovim-ruby-host. TODO: probably going to have to find a way to make this work well across hosts
+" run :checkhealth and look at the ruby section to understand if this is working. also ':ruby puts 1' is a good test.
+" necessary for some ruby plugings such as the deoplete terraform plugin
+let g:ruby_host_prog = '~/.gem/ruby/2.7.2/bin/neovim-ruby-host'
+
 " Startify configuration
 let g:startify_session_dir = '~/.vim/sessions'
 let g:startify_bookmarks = [ '~/.dotfiles', '~/.vimrc', '~/.zshrc' ]
@@ -481,21 +488,27 @@ let g:startify_session_autoload = 1
 let g:startify_files_number = 6
 
 " deoplete config
-let g:deoplete#enable_at_startup = 1
-
 let g:deoplete#omni_patterns = {}
 let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
+let g:deoplete#enable_at_startup = 1
+" call deoplete#custom#option('omni_patterns', {
+" \ 'complete_method': 'omnifunc',
+" \ 'terraform': '[^ *\t"{=$]\w*',
+" \})
+" deoplete-plugins/deoplete-lsp:
+let g:deoplete#lsp#use_icons_for_candidates = v:true
 
 " configure deoplete to use gopls: https://github.com/fatih/vim-go/pull/2231/files
 call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 
-" Let <Tab> also do completion
-inoremap <silent><expr> <Tab>
-\ pumvisible() ? "\<C-n>" :
-\ deoplete#mappings#manual_complete()
 
 " Close the documentation window when completion is done
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
+" Let <Tab> also do completion
+inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#manual_complete()
+
+call deoplete#initialize()
 
 " ------------------- begin linters config -----------------------
 " There is configuration for both ale and syntastic below, but only one is
@@ -668,14 +681,11 @@ require'nvim-tree'.setup {
 EOF
 
 " neovim lsp configs
-lua << EOF
-require'lspconfig'.gopls.setup{}
+lua require'lspconfig'.gopls.setup{}
+lua require'lspconfig'.pyright.setup{}
+lua require'lspconfig'.terraformls.setup{}
 
--- python
-require'lspconfig'.pyright.setup{}
-
-require'lspconfig'.terraformls.setup{}
-EOF
+lua require'colorizer'.setup()
 
 " telescope.nvim
 nnoremap <silent> <leader>ff <cmd>Telescope find_files<cr>
