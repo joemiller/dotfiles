@@ -23,11 +23,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=242
 # allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
 bindkey '^ ' autosuggest-accept
 
-# disable iterm2 3.x beta shell integration, it appears to be breaking with chruby (zsh hangs when trying to print prompt) - joe 2/29/2016
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-
-# load commond bash/zsh compatible shell configs
+# load common bash/zsh compatible shell configs
 for rc in "$HOME/.common.sh.d"/*; do
     source "$rc"
 done
@@ -93,6 +89,14 @@ source ~/.common.sh.d/tools.sh
 
 # history settings
 unsetopt share_history
-export HISTFILESIZE=250000 # override oh-my-zsh's default of 50k
-export HISTSIZE=250000     # override oh-my-zsh's default of 10k
+export HISTFILESIZE=500000 # override oh-my-zsh's default of 50k
+export HISTSIZE=500000     # override oh-my-zsh's default of 10k
 export HISTTIMEFORMAT="[%F %T] " # history -E
+
+# atuin (zsh history tool)
+if command -v atuin >/dev/null 2>&1; then
+    # bind ctrl-r to the atuin modal but not the up-arrow key
+    ATUIN_NOBIND=1
+    source <(atuin init zsh)
+    bindkey '^r' _atuin_search_widget
+fi
