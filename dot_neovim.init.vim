@@ -100,7 +100,6 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'kchmck/vim-coffee-script'
-Plug 'digitaltoad/vim-pug'                " pug, formerly Jade markup lang
 Plug 'tpope/vim-commentary'
 Plug 'nazo/pt.vim'
 Plug 'vim-ruby/vim-ruby'
@@ -114,6 +113,9 @@ Plug 'godlygeek/tabular'
 Plug 'gabrielelana/vim-markdown'
 Plug 'junegunn/vim-easy-align'
 Plug 'mkitt/tabline.vim'
+"Plug 'romgrk/barbar.nvim'
+"Plug 'akinsho/bufferline.nvim'
+Plug 'jose-elias-alvarez/buftabline.nvim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jez/vim-github-hub'
 Plug 'wakatime/vim-wakatime'
@@ -141,6 +143,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'axlebedev/footprints'
 
 " Initialize plugin system
 call plug#end()
@@ -251,7 +254,7 @@ nmap <C-m> :TagbarToggle<CR>
 
 "faith-go
 let g:go_auto_type_info = 1
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command = "gofumpt"
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
@@ -443,6 +446,14 @@ hi TabLine      ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
+" barbar (tabline lua plugin) config
+let bufferline = get(g:, 'bufferline', {})
+
+" Enable/disable auto-hiding the tab bar when there is a single buffer:
+let bufferline.auto_hide = v:true
+"let bufferline.insert_at_end = v:true
+let bufferline.add_in_buffer_number_order = v:true
+
 " gitgutter config
 " if emoji#available()
 "     let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
@@ -477,7 +488,8 @@ let g:ycm_python_binary_path = 'python'
 " point to specific location of the neovim-ruby-host. TODO: probably going to have to find a way to make this work well across hosts
 " run :checkhealth and look at the ruby section to understand if this is working. also ':ruby puts 1' is a good test.
 " necessary for some ruby plugings such as the deoplete terraform plugin
-let g:ruby_host_prog = '~/.gem/ruby/2.7.2/bin/neovim-ruby-host'
+"let g:ruby_host_prog = '~/.gem/ruby/2.7.2/bin/neovim-ruby-host'
+"let g:ruby_host_prog = '~/.gem/ruby/2.7.2/bin/neovim-ruby-host'
 
 " Startify configuration
 let g:startify_session_dir = '~/.vim/sessions'
