@@ -3,7 +3,7 @@
 # bar settings (also see .spacebarrc)
 yabai -m config external_bar all:0:23
 
-# global settings
+# bal settings
 yabai -m config mouse_follows_focus          off
 yabai -m config focus_follows_mouse          off
 yabai -m config window_placement             second_child
@@ -19,9 +19,9 @@ yabai -m config active_window_border_color   0xff775759
 yabai -m config normal_window_border_color   0xff555555
 yabai -m config insert_feedback_color        0xffd75f5f
 yabai -m config split_ratio                  0.50
-yabai -m config auto_balance                 on
-yabai -m config mouse_modifier               fn
-yabai -m config mouse_action1                move
+yabai -m config auto_balance                 off
+yabai -m config mouse_modifier               alt
+ai -m config mouse_action1                move
 yabai -m config mouse_action2                resize
 
 # general space settings
@@ -62,10 +62,11 @@ yabai -m config --space 2 right_padding 0
 yabai -m rule --add app="^System Preferences$" manage=off
 yabai -m rule --add app="^Font Book$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add title='Settings$' manage=off
 
 # move these apps to space
-# yabai -m rule --add app="Slack"                 space=3
-# yabai -m rule --add app="Evernote"              space=4
-# yabai -m rule --add app="Messages"              space=5
+yabai -m rule --add app="Slack"                 space=3
+yabai -m rule --add app="Evernote"              space=4
+yabai -m rule --add app="Messages"              space=5
 
 echo "yabai configuration loaded.."
