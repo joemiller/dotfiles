@@ -15,6 +15,9 @@ update_nvim() {
     pip install --upgrade msgpack
   fi
 
+  echo "==> Installing/Upgrading neovim ruby modules"
+  gem install neovim
+
   echo "==> Updating nvim plugins"
   nvim +PlugUpdate +qall
   nvim +UpdateRemotePlugins +qall
