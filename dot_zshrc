@@ -89,9 +89,11 @@ source ~/.common.sh.d/tools.sh
 
 # history settings
 unsetopt share_history
-export HISTFILESIZE=500000 # override oh-my-zsh's default of 50k
-export HISTSIZE=500000     # override oh-my-zsh's default of 10k
+export HISTFILESIZE=1000000 # override oh-my-zsh's default of 50k
+export HISTSIZE=$HISTFILESIZE     # override oh-my-zsh's default of 10k
+export SAVEHIST=$HISTFILESIZE
 export HISTTIMEFORMAT="[%F %T] " # history -E
+setopt EXTENDED_HISTORY
 
 # atuin (zsh history tool)
 if command -v atuin >/dev/null 2>&1; then
