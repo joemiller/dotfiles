@@ -102,3 +102,6 @@ if command -v atuin >/dev/null 2>&1; then
     source <(atuin init zsh)
     bindkey '^r' _atuin_search_widget
 fi
+
+# mostly for macos where the default seems to be 256. Need this often for terragrunt run-all
+ulimit -n 100000
