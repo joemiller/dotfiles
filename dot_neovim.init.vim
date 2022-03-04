@@ -121,6 +121,7 @@ Plug 'jez/vim-github-hub'
 Plug 'wakatime/vim-wakatime'
 Plug 'junegunn/vim-emoji'
 Plug 'rakr/vim-one'                       " another clone of atom's One theme
+Plug 'navarasu/onedark.nvim'              " a new one dark theme, added 2022/01/30
 Plug 'liuchengxu/space-vim-dark'
 Plug 'tpope/vim-endwise'
 " "Plugin 'xolox/vim-session'
@@ -143,7 +144,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'norcalli/nvim-colorizer.lua'
-Plug 'axlebedev/footprints'
+"Plug 'axlebedev/footprints'
 
 " Initialize plugin system
 call plug#end()
@@ -174,7 +175,7 @@ hi clear
 " configure statusline (currently using vim-airline)
 set laststatus=2
 "let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
-let g:airline_theme="one"                     " rakr/vim-one
+let g:airline_theme="onedark"
 let g:airline_powerline_fonts = 1             " hot fonts! https://github.com/powerline/fonts
 let g:airline_detect_spell=0                  " disable the pointless SPELL> marker in the statusline
 " let g:airline#extensions#syntastic#enabled=1
@@ -305,7 +306,11 @@ set background=dark
 "let g:solarized_contrast = "high"
 "colorscheme solarized
 "colorscheme bubblegum
-colorscheme one  " rakr/vim-one
+let g:onedark_config = {
+    \ 'style': 'dark',
+    \ 'transparent': v:true,
+\}
+colorscheme onedark
 "colorscheme space-vim-dark
 
 nmap <silent> <F2> <Plug>DashSearch
