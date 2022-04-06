@@ -105,3 +105,5 @@ fi
 
 # mostly for macos where the default seems to be 256. Need this often for terragrunt run-all
 ulimit -n 100000
+
+autoload -U +X bashcompinit && bashcompinit
