@@ -44,3 +44,15 @@ if [[ -n "$BASH_VERSION" ]]; then
     source <(kind completion bash)
   fi
 fi
+
+# kubeswitch (a better/different kubectx): https://github.com/danielfoehrKn/kubeswitch
+if command -v brew >/dev/null; then
+  if _KUBESWITCH_INSTALLATION_PATH=$(HOMEBREW_NO_AUTO_UPDATE=1 brew --prefix switch 2>/dev/null); then
+    source $_KUBESWITCH_INSTALLATION_PATH/switch.sh
+
+    # override kubectx aliases
+    alias kctx='switch'
+    alias kns='switch ns'
+  fi
+fi
+
