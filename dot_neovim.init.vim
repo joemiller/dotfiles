@@ -144,6 +144,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'jjo/vim-cue'
+Plug 'Shatur/neovim-session-manager'
 "Plug 'axlebedev/footprints'
 
 " Initialize plugin system
@@ -725,3 +727,7 @@ require('telescope').setup{
   }
 }
 EOF
+
+" neovim-session-manager
+autocmd User SessionLoadPost lua require"nvim-tree".toggle(false, true)
+
