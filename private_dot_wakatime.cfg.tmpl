@@ -1,6 +1,10 @@
 [settings]
 debug = false
-api_key = {{ (onepassword "gkz72k6wxjd75ffogkel7hhx54").details.notesPlain }}
+api_key = {{ range (onepassword "gkz72k6wxjd75ffogkel7hhx54").fields -}}
+{{-   if (eq .label "notesPlain") -}}
+{{-     .value -}}
+{{-   end -}}
+{{- end }}
 hidefilenames = false
 ignore =
     COMMIT_EDITMSG$
@@ -9,3 +13,4 @@ ignore =
     TAG_EDITMSG$
 
 status_bar_icon = true
+
