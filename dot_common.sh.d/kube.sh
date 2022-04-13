@@ -29,6 +29,11 @@ if [[ -n "$ZSH_VERSION" ]]; then
   if command -v kind >/dev/null; then
     source <(kind completion zsh)
   fi
+
+  # pskube
+  if command -v pskube >/dev/null; then
+    source <(pskube --completion zsh)
+  fi
 fi
 
 # bash:
@@ -42,6 +47,11 @@ if [[ -n "$BASH_VERSION" ]]; then
   # kind
   if command -v kind >/dev/null; then
     source <(kind completion bash)
+  fi
+
+  # pskube
+  if command -v pskube >/dev/null; then
+    source <(pskube --completion bash)
   fi
 fi
 
