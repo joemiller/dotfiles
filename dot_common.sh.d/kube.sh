@@ -12,8 +12,8 @@ if [[ -d "$HOME/.krew/bin" ]]; then
 fi
 
 # support multiple kubeconfig files by combining the standard ~/.kube/config with any files matching ~/.kube/*.kubeconfig
-_extra_kubeconfigs="$(printf "%s:" $HOME/.kube/*.kubeconfig)"
-export KUBECONFIG="$HOME/.kube/config:$_extra_kubeconfigs"
+# _extra_kubeconfigs="$(printf "%s:" $HOME/.kube/*.kubeconfig)"
+# export KUBECONFIG="$HOME/.kube/config:$_extra_kubeconfigs"
 
 ## configure kubectl completions:
 # zsh:
