@@ -72,8 +72,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'oplatek/Conque-Shell'
 Plug 'jiangmiao/auto-pairs'
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
+Plug 'nvim-lualine/lualine.nvim'
 Plug 't9md/vim-chef'
 Plug 'rodjek/vim-puppet'
 "Plug 'JSON.vim'
@@ -174,7 +175,7 @@ set scrolloff=6
 
 hi clear
 
-" configure statusline (currently using vim-airline)
+" configure statusline (currently using vim-airline) (NOTE: switched to lualine.nvim 2022/04/28. Delete these airline settings if we stick with lualine)
 set laststatus=2
 "let g:airline_theme="bubblegum"               " https://github.com/vim-airline/vim-airline/wiki/Screenshots
 let g:airline_theme="onedark"
@@ -608,6 +609,8 @@ let g:terraform_fmt_on_save=1
 
 " -- NvimTree settings: https://github.com/kyazdani42/nvim-tree.lua
 nmap <C-n> :NvimTreeToggle<CR>
+" auto-close nvimtree when it is the last window in a tab
+autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
 
 lua << EOF
 local tree_cb = require'nvim-tree.config'.nvim_tree_callback
@@ -655,11 +658,10 @@ require'nvim-tree'.setup {
   hijack_netrw        = true,
   open_on_setup       = true,
   ignore_ft_on_setup  = {"startify"},
-  auto_close          = true,
   open_on_tab         = true,
   hijack_cursor       = false,
   update_cwd          = false,
-  update_to_buf_dir   = {
+  hijack_directories  = {
     enable = true,
     auto_open = true,
   },
@@ -690,7 +692,6 @@ require'nvim-tree'.setup {
     height = 30,
     hide_root_folder = false,
     side = 'left',
-    auto_resize = false,
     mappings = {
       custom_only = false,
       list = list
@@ -730,4 +731,60 @@ EOF
 
 " neovim-session-manager
 autocmd User SessionLoadPost lua require"nvim-tree".toggle(false, true)
+lua << EOF
+require('session_manager').setup({
+  autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+  autosave_last_session = true, -- Automatically save last session on exit and on session switch.
+  autosave_ignore_not_normal = true, -- Plugin will not save a session when no buffers are opened, or all of them aren't writable or listed.
+  autosave_ignore_filetypes = { -- All buffers of these file types will be closed before the session is saved.
+    'gitcommit',
+  },
+  autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
+  max_path_length = 160,  -- Shorten the display path if length exceeds this threshold. Use 0 if don't want to shorten the path at all.
+})
+EOF
 
+lua <<EOF
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {},
+    always_divide_middle = true,
+    globalstatus = false,
+  },
+  sections = {
+    lualine_a = {'mode'},
+    -- lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_b = {'diff', 'diagnostics'},
+    lualine_c = {
+        {
+           'filename',
+            path = 1,
+         }
+        },
+    lualine_x = {'filetype'},
+    -- lualine_y = {'progress'},
+    lualine_y = {},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    -- lualine_c = {'filename'},
+    lualine_c = {
+        {
+           'filename',
+            path = 1,
+         }
+        },
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
+EOF
