@@ -15,6 +15,7 @@ skip_global_compinit=1
 autoload -Uz compinit && compinit
 autoload -Uz bashcompinit
 bashcompinit -i
+autoload -U +X bashcompinit && bashcompinit
 
 # configure zsh-autosuggestions
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
@@ -106,4 +107,3 @@ fi
 # mostly for macos where the default seems to be 256. Need this often for terragrunt run-all
 ulimit -n 100000
 
-autoload -U +X bashcompinit && bashcompinit
