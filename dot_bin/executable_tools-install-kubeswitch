@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# cross-platform helper for installing kubeswitch
+# https://github.com/danielfoehrKn/kubeswitch/releases
+
+VERSION=0.6.2
+
+case "$OSTYPE" in
+  darwin*) OS=darwin;;
+  linux*) OS=linux;;
+esac
+
+case $(uname -m) in
+  x86_64) ARCH=amd64;;
+  arm64) ARCH=arm64;;
+esac
+
+echo "Installing $OS/$ARCH/$VERSION to ~/.bin/switcher"
+curl -sL -o ~/.bin/switcher https://github.com/danielfoehrKn/kubeswitch/releases/download/${VERSION}/switcher_${OS}_${ARCH}
+chmod +x ~/.bin/switcher
+
+echo "Installing $OS/$ARCH/$VERSION to ~/.bin/switch.sh"
+curl -sL -o ~/.bin/switch.sh https://github.com/danielfoehrKn/kubeswitch/releases/download/${VERSION}/switch.sh
+chmod +x ~/.bin/switch.sh
