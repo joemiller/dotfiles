@@ -115,8 +115,8 @@ Plug 'gabrielelana/vim-markdown'
 Plug 'junegunn/vim-easy-align'
 Plug 'mkitt/tabline.vim'
 "Plug 'romgrk/barbar.nvim'
-"Plug 'akinsho/bufferline.nvim'
-Plug 'jose-elias-alvarez/buftabline.nvim'
+Plug 'akinsho/bufferline.nvim'
+"Plug 'jose-elias-alvarez/buftabline.nvim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'jez/vim-github-hub'
 Plug 'wakatime/vim-wakatime'
@@ -455,12 +455,12 @@ hi TabLineFill  ctermfg=Black  ctermbg=Green     cterm=NONE
 hi TabLineSel   ctermfg=White  ctermbg=DarkBlue  cterm=NONE
 
 " barbar (tabline lua plugin) config
-let bufferline = get(g:, 'bufferline', {})
+"let bufferline = get(g:, 'bufferline', {})
 
 " Enable/disable auto-hiding the tab bar when there is a single buffer:
-let bufferline.auto_hide = v:true
-"let bufferline.insert_at_end = v:true
-let bufferline.add_in_buffer_number_order = v:true
+"let bufferline.auto_hide = v:true
+""let bufferline.insert_at_end = v:true
+"let bufferline.add_in_buffer_number_order = v:true
 
 " gitgutter config
 " if emoji#available()
@@ -763,8 +763,9 @@ require('lualine').setup {
         {
            'filename',
             path = 1,
-         }
-        },
+            shorting_target = 0 --64,  -- defeault is 40
+        }
+    },
     lualine_x = {'filetype'},
     -- lualine_y = {'progress'},
     lualine_y = {},
@@ -773,11 +774,11 @@ require('lualine').setup {
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    -- lualine_c = {'filename'},
     lualine_c = {
         {
            'filename',
             path = 1,
+            shorting_target = 0,  -- defeault is 40
          }
         },
     lualine_x = {'location'},
@@ -786,5 +787,23 @@ require('lualine').setup {
   },
   tabline = {},
   extensions = {}
+}
+EOF
+
+lua <<EOF
+require('bufferline').setup {
+  options = {
+      separator_style = 'thin',  -- slant, thick
+      offsets = {
+        {
+          filetype = "NvimTree",
+          text = function()
+            return vim.fn.getcwd()
+          end,
+          highlight = "Directory",
+          text_align = "left"
+        }
+    }
+  }
 }
 EOF
