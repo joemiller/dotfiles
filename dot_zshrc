@@ -107,3 +107,6 @@ fi
 # mostly for macos where the default seems to be 256. Need this often for terragrunt run-all
 ulimit -n 100000
 
+# set default `time` output format:
+# https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-TIMEFMT
+TIMEFMT='%U user / %S system / %P cpu %*E total / %K amem / %M maxmem'
