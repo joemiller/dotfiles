@@ -57,7 +57,8 @@ fi
 
 # kubeswitch (a better/different kubectx): https://github.com/danielfoehrKn/kubeswitch
 # Install with `tools install-kubeswitch`
-if command -v switch >/dev/null; then
+if command -v switch.sh >/dev/null; then
+  source $(command -v switch.sh)
   alias kctx='switch'
   alias kns='switch ns'
 fi
