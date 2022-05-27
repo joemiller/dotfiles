@@ -11,6 +11,10 @@ if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
 
+if [[ -d "$HOME/git/planetscale/planetscale-operator/utils/kubectl" ]]; then
+  export PATH="$HOME/git/planetscale/planetscale-operator/utils/kubectl:$PATH"
+fi
+
 # support multiple kubeconfig files by combining the standard ~/.kube/config with any files matching ~/.kube/*.kubeconfig
 # _extra_kubeconfigs="$(printf "%s:" $HOME/.kube/*.kubeconfig)"
 # export KUBECONFIG="$HOME/.kube/config:$_extra_kubeconfigs"
