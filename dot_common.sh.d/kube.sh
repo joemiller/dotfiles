@@ -24,19 +24,19 @@ fi
 if [[ -n "$ZSH_VERSION" ]]; then
   # kubectl
   if command -v kubectl >/dev/null; then
-    source <(kubectl completion zsh)
+    source <(KUBECONFIG=/dev/null kubectl completion zsh)
     # a helper alias because this seems to constantly be breaking when loaded from .zshrc
     alias kube-completions='source <(kubectl completion zsh)'
   fi
 
   # kind
   if command -v kind >/dev/null; then
-    source <(kind completion zsh)
+    source <(KUBECONFIG=/dev/null kind completion zsh)
   fi
 
   # pskube
   if command -v pskube >/dev/null; then
-    source <(pskube --completion zsh)
+    source <(KUBECONFIG=/dev/null pskube --completion zsh)
   fi
 fi
 
@@ -44,18 +44,18 @@ fi
 if [[ -n "$BASH_VERSION" ]]; then
   # kubectl
   if command -v kubectl >/dev/null; then
-    source <(kubectl completion bash)
+    source <(KUBECONFIG=/dev/null kubectl completion bash)
     alias kube-completions='source <(kubectl completion bash)'
   fi
 
   # kind
   if command -v kind >/dev/null; then
-    source <(kind completion bash)
+    source <(KUBECONFIG=/dev/null kind completion bash)
   fi
 
   # pskube
   if command -v pskube >/dev/null; then
-    source <(pskube --completion bash)
+    source <(KUBECONFIG=/dev/null pskube --completion bash)
   fi
 fi
 
