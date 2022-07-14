@@ -2,9 +2,7 @@
 # reminder: to update antigen: run `antigen selfupdate` and commit any changes
 # to update plugins run `antigen update`
 #
-# test
-
-#zmodload zsh/zprof
+zmodload zsh/zprof
 
 export PATH=$PATH:/usr/local/sbin
 
@@ -23,16 +21,6 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=242
 
 # allow ctrl + [space] to accept autosuggestions in addition to the default right-arrow-key
 bindkey '^ ' autosuggest-accept
-
-# load common bash/zsh compatible shell configs
-for rc in "$HOME/.common.sh.d"/*; do
-    source "$rc"
-done
-
-# load zsh configs
-for rc in "$HOME/.zsh.d"/*; do
-    source "$rc"
-done
 
 ###
 ### begin antigen. KEEP ANTIGEN STUFF AT THE BOTTOM ELSE YOU WILL HAVE A BAD TIME (MOSTLY WITH COMPLETIONS NOT WORKING)
@@ -61,7 +49,6 @@ antigen bundle docker      # https://github.com/robbyrussell/oh-my-zsh/wiki/Plug
 #antigen bundle urltools    # adds commands urlencode | urldecode
 #antigen bundle safe-paste  # bracketed-paste support (http://cirw.in/blog/bracketed-paste)
 antigen bundle terraform
-antigen bundle vault
 antigen bundle fzf
 
 # load non-omz modules
@@ -70,13 +57,23 @@ if [[ "$(uname)" != "OpenBSD" ]]; then
     export ZSH_AUTOSUGGEST_USE_ASYNC=1
     antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle zsh-users/zsh-syntax-highlighting
-    antigen bundle djui/alias-tips
+    #antigen bundle djui/alias-tips
 fi
 antigen bundle zsh-users/zsh-completions src
-
 antigen bundle marlonrichert/zsh-hist
+antigen bundle mroth/evalcache
 
 antigen apply
+
+# load common bash/zsh compatible shell configs
+for rc in "$HOME/.common.sh.d"/*; do
+    source "$rc"
+done
+
+# load zsh configs
+for rc in "$HOME/.zsh.d"/*; do
+    source "$rc"
+done
 
 # vi mode settings (for some reason these have to be _after_ antigen)
 bindkey -v
@@ -110,3 +107,5 @@ ulimit -n 100000
 # set default `time` output format:
 # https://zsh.sourceforge.io/Doc/Release/Parameters.html#index-TIMEFMT
 TIMEFMT='%U user / %S system / %P cpu %*E total / %K amem / %M maxmem'
+
+complete -o nospace -C /usr/local/bin/vault vault

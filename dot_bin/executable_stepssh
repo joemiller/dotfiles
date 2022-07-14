@@ -4,7 +4,7 @@ set -eou pipefail
 
 [[ -n "${DEBUG:-}" ]] && set -x
 
-SSH_CERT_FILE="${SSH_CERT_FILE:-$HOME/.ssh/stepssh}"
+SSH_CERT_FILE="${SSH_CERT_FILE:-$HOME/.ssh/planetscale}"
 USER="${USER:-}"
 
 unset SSH_AUTH_SOCK
