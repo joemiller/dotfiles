@@ -1,9 +1,21 @@
 kind: SwitchConfig
 version: v1alpha1
 kubeconfigName: "*.kubeconfig"
+refreshIndexAfter: 1h
 kubeconfigStores:
 - kind: filesystem
   kubeconfigName: "*.kubeconfig"
   paths:
   - ~/.kube/
   - ~/.kube/config
+hooks:
+  - name: pskube-update-planeteer
+    type: InlineCommand
+    # execution:
+    #   interval: 24h
+    arguments:
+      - "for i in $(pskube --list); do pskube $i >/dev/null ; done "
+  - name: pskube-update-ops
+    type: InlineCommand
+    arguments:
+      - "for i in $(pskube --list); do PS_USE_OPS_ROLE=1 pskube $i >/dev/null ; done "
