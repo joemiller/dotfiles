@@ -1,7 +1,7 @@
 kind: SwitchConfig
 version: v1alpha1
 kubeconfigName: "*.kubeconfig"
-refreshIndexAfter: 1h
+refreshIndexAfter: 24h
 kubeconfigStores:
 - kind: filesystem
   kubeconfigName: "*.kubeconfig"
