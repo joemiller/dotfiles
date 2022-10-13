@@ -95,4 +95,11 @@ function winmod.currentAppAllWindowsToNextScreen()
     )
 end
 
+
+-- function winmod.focusWindowWest()
+--     local win = hs.window.focusedWindow()
+--     local f = hs.window.filter.new():setAppFilter(hs.application.frontmostApplication())
+--     win.focusWindowWest(f.name)
+-- end
+
 return winmod

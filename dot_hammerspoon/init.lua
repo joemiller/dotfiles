@@ -86,6 +86,12 @@ Install:andUse(
 --     url = "https://github.com/joemiller/TaskHammer"
 -- }
 
+Install.repos["MenuHammer"] = {
+    url = "https://github.com/FryJay/MenuHammer"
+}
+Install:andUse( "MenuHammer")
+
+
 -- Install:andUse(
 --     "TaskHammer",
 --     {
@@ -223,6 +229,12 @@ hs.hotkey.bind({"ctrl", "alt", "cmd"}, "N", winmod.currentAppAllWindowsToNextScr
 -- hs.hotkey.bind({"ctrl", "shift"}, "k", function() winmod.move(direction.up, 0.15) end)
 -- hs.hotkey.bind({"ctrl", "shift"}, "l", function() winmod.move(direction.right, 0.1) end)
 
+-- hs.hotkey.bind({"ctrl", "shift"}, "h", function() hs.window.focusedWindow().focusWindowWest(hs.window.filter.defaultCurrentSpace()) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "h", function() winmod.focusWindowWest() end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "j", function() hs.window.focusedWindow().focusWindowSouth(hs.window.filter.defaultCurrentSpace()) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "k", function() hs.window.focusedWindow().focusWindowNorth(hs.window.filter.defaultCurrentSpace()) end)
+-- hs.hotkey.bind({"ctrl", "shift"}, "l", function() hs.window.focusedWindow().focusWindowEast(hs.window.filter.defaultCurrentSpace()) end)
+
 spoon.WindowHalfsAndThirds:bindHotkeys(
 {
     left_half   = { {"ctrl", "alt", "cmd"}, "Left" },
@@ -242,6 +254,8 @@ spoon.WindowHalfsAndThirds:bindHotkeys(
     center      = { {"ctrl", "alt", "cmd"}, "C" },
     -- larger      = { {        "alt", "cmd", "shift"}, "Right" },
     -- smaller     = { {        "alt", "cmd", "shift"}, "Left" },
+    larger      = { {"ctrl", "alt", "cmd"}, "=" },  -- + / =
+    smaller     = { {"ctrl", "alt", "cmd"}, "-" },
  }
 )
 
@@ -249,6 +263,47 @@ spoon.WindowHalfsAndThirds:bindHotkeys(
 
 -- set to 'debug' for debug output in the console
 hs.logger.setGlobalLogLevel('debug')
+
+config = {
+  apps = {
+    terms    = { 'kitty'                   },
+    browsers = { 'Google Chrome', 'Safari' }
+  },
+
+  wm = {
+    filters = {
+      { app = 'Finder', tile = false }, -- don't tile Finder
+      { app = 'Hammerspoon', title = 'Hammerspoon Console', tile = true } -- force tile Hammerspoon Console
+    },
+
+     moveKeys = {
+       { key = 'h', dir = "west"  },
+       { key = 'j', dir = "south" },
+       { key = 'k', dir = "north" },
+       { key = 'l', dir = "east"  },
+     },
+
+    defaultDisplayLayouts = {
+      ['Built-in Retina Display']    = 'side-by-side',
+      ['DELL U3818DW']               = 'main-center' -- TODO
+    },
+
+    -- displayLayouts = {
+    --   ['Built-in Retina Display']    = { 'main-center', 'monocle', 'main-right', 'side-by-side'     },
+    --   ['DELL U3818DW'] = { 'main-center', 'main-right', 'side-by-side' } -- TODO
+    -- }
+  },
+
+  window = {
+    highlightBorder = false,
+    highlightMouse  = true,
+    historyLimit    = 0
+  },
+}
+
+-- wm = require('utils.wm')
+-- wm.start()
+-- require('tiling').start()
 
 -- ready!
 hs.notify.new({title = "Hammerspoon", subTitle = "Configuration loaded successfully"}):send()

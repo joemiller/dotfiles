@@ -33,17 +33,20 @@ if [[ -n "$ZSH_VERSION" ]]; then
     fi
   fi
 
-  # pskube
-  if (( $+commands[pskube] )); then
-  # TODO: broken. fix this
-    if type _evalcache >/dev/null; then
-      _evalcache pskube --completion zsh
-    else
-  # TODO: broken. fix this
-      echo "WARNING: kube.sh: evalcache not found. Consider installing it."
-      source <(pskube --completion zsh)
-    fi
-  fi
+  # # pskube
+  # Follow kubernetes own recommendation here:
+  #   `pskube --completion zsh >${fpath[1]}/_pskube`  (or /usr/local/share/zsh/site-functions/ if that dir exists)
+  #
+  # if (( $+commands[pskube] )); then
+  # # TODO: broken. fix this
+  #   if type _evalcache >/dev/null; then
+  #     _evalcache pskube --completion zsh
+  #   else
+  # # TODO: broken. fix this
+  #     echo "WARNING: kube.sh: evalcache not found. Consider installing it."
+  #     source <(pskube --completion zsh)
+  #   fi
+  # fi
 fi
 
 # bash:
