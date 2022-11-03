@@ -74,4 +74,5 @@ if command -v switch.sh >/dev/null; then
   source $(command -v switch.sh)
   alias kctx='switch'
   alias kns='switch ns'
+  alias kctx-u='switch --unset'
 fi
