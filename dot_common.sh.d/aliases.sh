@@ -1,11 +1,13 @@
 case "$(uname)" in
     "Darwin")
+        # alias ls='exa'
         alias l.='ls -G -d .*'
         alias ll='ls -G -l'
         alias lla='ls -G -la'
         alias la='ls -G -a'
         alias top='top -o cpu' # because top should sort by cpu usage, by default, IMHO
         alias pbcopy='/usr/local/bin/reattach-to-user-namespace pbcopy'
+        alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
         ;;
     "OpenBSD")
         # OpenBSD 5.8+ replaces sudo with doas in the base system. sudo can optionally be installed from ports.
@@ -32,6 +34,3 @@ case "$(uname)" in
         alias la='ls -a --color=auto'
         alias joe_dstat='dstat -lpcgyrdnm'
 esac
-
-# ptgo - grep go repos while ignoring ./vendor and ./devops/make directory
-alias ptgo='pt --ignore=vendor --ignore=devops/make'

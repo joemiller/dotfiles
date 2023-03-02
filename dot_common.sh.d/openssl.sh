@@ -1,1 +1,5 @@
-alias x509='openssl x509 -text -noout'
+alias x509='openssl x509 -noout -text'
+alias x509-expiry='openssl x509 -noout -startdate -enddate'
+alias x509-ttl='openssl x509 -noout -startdate -enddate'
+alias x509-start='openssl x509 -noout -startdate'
+alias x509-end='openssl x509 -noout -enddate'

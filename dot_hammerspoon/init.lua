@@ -173,7 +173,7 @@ Install:andUse(
     "i3-resize",
     {
         -- start = true,
-        loglevel = "debug",
+        -- loglevel = "debug",
         hotkeys = {
             toggle = {{"alt", "shift"}, "r"}
         }
@@ -262,7 +262,7 @@ spoon.WindowHalfsAndThirds:bindHotkeys(
 -- @TODO: move the top level modal keybind from app_jump_menu into here somehow
 
 -- set to 'debug' for debug output in the console
-hs.logger.setGlobalLogLevel('debug')
+-- hs.logger.setGlobalLogLevel('debug')
 
 config = {
   apps = {

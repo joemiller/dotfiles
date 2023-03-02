@@ -148,6 +148,7 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'jjo/vim-cue'
 Plug 'Shatur/neovim-session-manager'
 "Plug 'axlebedev/footprints'
+Plug 'github/copilot.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -606,6 +607,9 @@ let g:tf_fmt_autosave = 0
 " enable hashivim/tterraform fmt'ing on *.tf *.tfvars files
 let g:terraform_align=1
 let g:terraform_fmt_on_save=1
+
+" -- github/copilot.vim settings:
+let g:copilot_node_command = "/usr/local/opt/node@16/bin/node"
 
 " -- NvimTree settings: https://github.com/kyazdani42/nvim-tree.lua
 nmap <C-n> :NvimTreeToggle<CR>
