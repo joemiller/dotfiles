@@ -46,7 +46,8 @@
 	gpgSign = false
 {{- end }}
 
-[url "git@github.com:pantheon-systems"]
-    insteadOf = https://github.com/pantheon-systems
 [url "git@github.com:planetscale"]
     insteadOf = https://github.com/planetscale
+
+[includeIf "gitdir:~/git/planetscale/"]
+    path = ~/.gitconfig-pscale
