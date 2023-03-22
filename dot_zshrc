@@ -96,9 +96,9 @@ setopt EXTENDED_HISTORY
 
 # atuin (zsh history tool)
 if command -v atuin >/dev/null 2>&1; then
-    # bind ctrl-r to the atuin modal but not the up-arrow key
-    ATUIN_NOBIND=1
-    source <(atuin init zsh)
+    # bind ctrl-r to the atuin modal but not the up-arrow key:
+    ATUIN_NOBIND=1 # atuin <0.13
+    source <(atuin init zsh --disable-up-arrow)
     bindkey '^r' _atuin_search_widget
 fi
 
