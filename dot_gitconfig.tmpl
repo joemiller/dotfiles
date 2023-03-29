@@ -39,15 +39,25 @@
 [init]
     defaultBranch = main
 
-[commit]
-{{- if eq .chezmoi.hostname "macbook-joe" }}
-	gpgSign = true
-{{- else }}
-	gpgSign = false
-{{- end }}
-
 [url "git@github.com:planetscale"]
     insteadOf = https://github.com/planetscale
 
 [includeIf "gitdir:~/git/planetscale/"]
     path = ~/.gitconfig-pscale
+
+# -- git commit signing -- #
+[commit]
+    gpgSign = true
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.ssh/allowed_git_signers
+
+{{- if eq .chezmoi.hostname "macbook-joe" }}
+[gpg]
+    program = gpg
+{{- else }}
+[gpg]
+    format = ssh
+[user]
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFORz4M70y8FEA4EUEgLOowZk0Z1eOAKkuwk6vwZnVze cardno:11_507_367
+{{- end }}
