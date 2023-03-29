@@ -92,11 +92,23 @@ Plug 'tpope/vim-repeat'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'smerrill/vcl-vim-plugin'
 "Plugin 'Valloric/YouCompleteMe'             " cd ~/.vim/bundle/YouCompleteMe ; ./install.py --clang-completer --gocode-completer
-Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
+"Plug 'Shougo/deoplete.nvim',       { 'do': ':UpdateRemotePlugins' }
 "Plug 'zchee/deoplete-go', { 'do': 'make'}
 "Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}
-Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
-Plug 'deoplete-plugins/deoplete-lsp'
+"Plug 'tbodt/deoplete-tabnine', { 'do': './install.sh' }
+"Plug 'deoplete-plugins/deoplete-lsp'
+
+" nvim-cmp:
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Matt-Deacalion/vim-systemd-syntax'
 Plug 'ekalinin/Dockerfile.vim'
@@ -508,28 +520,28 @@ let g:startify_session_persistence = 1
 let g:startify_session_autoload = 1
 let g:startify_files_number = 6
 
-" deoplete config
-let g:deoplete#omni_patterns = {}
-let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
-let g:deoplete#enable_at_startup = 1
-" call deoplete#custom#option('omni_patterns', {
-" \ 'complete_method': 'omnifunc',
-" \ 'terraform': '[^ *\t"{=$]\w*',
-" \})
-" deoplete-plugins/deoplete-lsp:
-let g:deoplete#lsp#use_icons_for_candidates = v:true
+" " deoplete config
+" let g:deoplete#omni_patterns = {}
+" let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
+" let g:deoplete#enable_at_startup = 1
+" " call deoplete#custom#option('omni_patterns', {
+" " \ 'complete_method': 'omnifunc',
+" " \ 'terraform': '[^ *\t"{=$]\w*',
+" " \})
+" " deoplete-plugins/deoplete-lsp:
+" let g:deoplete#lsp#use_icons_for_candidates = v:true
 
-" configure deoplete to use gopls: https://github.com/fatih/vim-go/pull/2231/files
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
+" " configure deoplete to use gopls: https://github.com/fatih/vim-go/pull/2231/files
+" call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
 
 
-" Close the documentation window when completion is done
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" " Close the documentation window when completion is done
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
-" Let <Tab> also do completion
-inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#manual_complete()
+" " Let <Tab> also do completion
+" inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#manual_complete()
 
-call deoplete#initialize()
+" call deoplete#initialize()
 
 " ------------------- begin linters config -----------------------
 " There is configuration for both ale and syntastic below, but only one is
@@ -660,8 +672,6 @@ local list = {
 require'nvim-tree'.setup {
   disable_netrw       = true,
   hijack_netrw        = true,
-  open_on_setup       = true,
-  ignore_ft_on_setup  = {"startify"},
   open_on_tab         = true,
   hijack_cursor       = false,
   update_cwd          = false,
@@ -733,8 +743,7 @@ require('telescope').setup{
 }
 EOF
 
-" neovim-session-manager
-autocmd User SessionLoadPost lua require"nvim-tree".toggle(false, true)
+" "neovim-session-manager
 lua << EOF
 require('session_manager').setup({
   autoload_mode = require('session_manager.config').AutoloadMode.CurrentDir, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
@@ -745,6 +754,18 @@ require('session_manager').setup({
   },
   autosave_only_in_session = false, -- Always autosaves session. If true, only autosaves after a session is active.
   max_path_length = 160,  -- Shorten the display path if length exceeds this threshold. Use 0 if don't want to shorten the path at all.
+})
+
+-- bullshit to get nvim-tree.lua to open on session load and without errors:
+local config_group = vim.api.nvim_create_augroup('MyConfigGroup', {}) -- A global group for all your config autocommands
+vim.api.nvim_create_autocmd({ 'User' }, {
+  pattern = "SessionLoadPost",
+  group = config_group,
+  callback = function()
+    -- this is documented but wrong:
+    -- require('nvim-tree.api').toggle(false, true)
+    require('nvim-tree.api').tree.open(false, true)
+  end,
 })
 EOF
 
@@ -810,4 +831,83 @@ require('bufferline').setup {
     }
   }
 }
+EOF
+
+" nvim-cmp config:
+lua <<EOF
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'cmp_tabnine' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Set configuration for specific filetype.
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig').terraformls.setup {
+    capabilities = capabilities
+  }
+  require('lspconfig').gopls.setup {
+    capabilities = capabilities
+  }
+  require('lspconfig').pyright.setup {
+    capabilities = capabilities
+  }
 EOF
