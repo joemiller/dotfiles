@@ -621,7 +621,8 @@ let g:terraform_align=1
 let g:terraform_fmt_on_save=1
 
 " -- github/copilot.vim settings:
-let g:copilot_node_command = "/usr/local/opt/node@16/bin/node"
+" UPDATED (2023/03/29): see ~/.common.sh.d/nodejs.sh for setting PATH instead of hardcoding the path to node here
+" let g:copilot_node_command = "/usr/local/opt/node@16/bin/node"
 
 " -- NvimTree settings: https://github.com/kyazdani42/nvim-tree.lua
 nmap <C-n> :NvimTreeToggle<CR>
