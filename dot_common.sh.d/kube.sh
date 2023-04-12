@@ -69,10 +69,10 @@ if [[ -n "$BASH_VERSION" ]]; then
 fi
 
 # kubeswitch (a better/different kubectx): https://github.com/danielfoehrKn/kubeswitch
-# Install with `tools install-kubeswitch`
-if command -v switch.sh >/dev/null; then
-  source $(command -v switch.sh)
+if command -v brew >/dev/null; then
+  switch_install_path=$(brew --prefix switch) && source "$switch_install_path/switch.sh"
   alias kctx='switch'
   alias kns='switch ns'
   alias kctx-u='switch --unset'
 fi
+

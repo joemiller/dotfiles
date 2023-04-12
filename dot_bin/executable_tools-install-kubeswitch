@@ -1,9 +1,16 @@
 #!/bin/bash
+#
+# !!!!!!!!!!!!!!
+# NOT used anymore when homebrew/linuxbrew are available. See ~/.common.sh.d/kube.sh
+# !!!!!!!!!!!!!!
 
 # cross-platform helper for installing kubeswitch
 # https://github.com/danielfoehrKn/kubeswitch/releases
 
 VERSION=0.6.2
+
+echo "NOT used anymore when homebrew/linuxbrew are available. See ~/.common.sh.d/kube.sh!!!! pausing to give you a chance to reconsider"
+sleep 5
 
 case "$OSTYPE" in
   darwin*) OS=darwin;;
