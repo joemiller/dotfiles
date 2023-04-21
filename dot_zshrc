@@ -55,6 +55,8 @@ antigen bundle zsh-users/zsh-completions src
 antigen bundle marlonrichert/zsh-hist
 antigen bundle mroth/evalcache
 
+antigen bundle jeffreytse/zsh-vi-mode
+
 # load non-omz modules
 if [[ "$(uname)" != "OpenBSD" ]]; then
     # don't load this on openbsd. it slows down prompt re-draw significantly
