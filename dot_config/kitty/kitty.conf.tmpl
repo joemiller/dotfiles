@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8:ft=conf:foldmethod=marker
 
-include ~/.config/kitty/OneDark.conf
-
+#include ~/.config/kitty/OneDark.conf
+include ~/.config/kitty/One Half Dark.conf
 
 {{- if eq .chezmoi.hostname "macbook-air" }}
 # macbook-air 11" fedora
@@ -10,16 +10,25 @@ bold_font           SauceCodePro Nerd Font Bold
 italic_font         SauceCodePro Nerd Font Italic
 bold_italic_font    SauceCodePro Nerd Font Bold Italic
 font_size           9.0
+
 {{- else }}
 # macos, maybe retina specific? or just on the macbook pro
-# font_family         SauceCodePro Nerd Font Regular
-font_family         SauceCodePro Nerd Font Medium
+font_family         SauceCodePro Nerd Font Regular
+#font_family         SauceCodePro Nerd Font Medium
 bold_font           SauceCodePro Nerd Font Bold
 italic_font         SauceCodePro Nerd Font Italic
 bold_italic_font    SauceCodePro Nerd Font Medium Italic
 font_size           12.0
-# adjust_line_height  95%
-# adjust_column_width 97%
+
+modify_font cell_height 93%
+modify_font cell_width 91%
+modify_font baseline 2
+
+macos_thicken_font 0.15
+
+hide_window_decorations yes
+
+macos_traditional_fullscreen yes
 {{- end }}
 
 #: Fonts
@@ -373,7 +382,7 @@ copy_on_select yes
 #: Fade the text in inactive windows by the specified amount (a number
 #: between zero and one, with zero being fully faded).
 
-hide_window_decorations no
+#hide_window_decorations no
 
 #: Hide the window decorations (title-bar and window borders). Whether
 #: this works and exactly what effect it has depends on the window
@@ -678,7 +687,7 @@ macos_quit_when_last_window_closed yes
 #: Disable this if you want kitty top-level (OS) windows to not be
 #: resizable on macOS.
 
-macos_thicken_font 0.50
+#macos_thicken_font 0.50
 
 #: Draw an extra border around the font with the given width, to
 #: increase legibility at small font sizes. For example, a value of
