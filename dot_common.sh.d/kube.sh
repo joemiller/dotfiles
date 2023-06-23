@@ -11,6 +11,10 @@ if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
 
+if [[ -d "$HOME/git/planetscale/kubectl-plugins/plugins" ]]; then
+ export PATH="$PATH:$HOME/git/planetscale/kubectl-plugins/plugins"
+fi
+
 ## configure kubectl completions:
 # zsh:
 if [[ -n "$ZSH_VERSION" ]]; then
