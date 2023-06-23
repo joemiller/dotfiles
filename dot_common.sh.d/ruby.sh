@@ -17,12 +17,18 @@
 alias be='bundle exec'
 alias bi='bundle install'
 
-## old stuff, pre-chruby
+case "$OSTYPE" in
+  darwin*)
+    # do nothing, we're using chruby on macos which should handle setting gem bin paths
+    ;;
 
-#[ -d "$HOME/.gem/ruby/2.0.0/bin" ] && export PATH=$PATH:"$HOME/.gem/ruby/2.0.0/bin"
-#export GEM_HOME="$HOME/.gem"
+  linux*)
+    if command -v ruby >/dev/null 2>&1; then
+      export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+    fi
+    ;;
 
-# jruby
-#alias jrs='jruby -S'
-#alias jbe='jruby -S bundle exec'
-#alias jbi='jruby -S bundle install'
+  # openbsd*)
+  # TODO
+  #   ;;
+esac
