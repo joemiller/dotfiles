@@ -1,0 +1,11 @@
+# for ~/.bin/pushover.sh script
+USER={{ range (onepassword "ujb4r3kbn5czrozclewbook3zi").fields -}}
+{{-   if (eq .label "curl-user") -}}
+{{-     .value -}}
+{{-   end -}}
+{{- end }}
+TOKEN={{ range (onepassword "ujb4r3kbn5czrozclewbook3zi").fields -}}
+{{-   if (eq .label "curl-token") -}}
+{{-     .value -}}
+{{-   end -}}
+{{- end }}
