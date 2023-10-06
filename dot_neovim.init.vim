@@ -70,7 +70,8 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'Chiel92/vim-autoformat'
 Plug 'tpope/vim-fugitive'
 Plug 'oplatek/Conque-Shell'
-Plug 'jiangmiao/auto-pairs'
+"Plug 'jiangmiao/auto-pairs'
+Plug 'windwp/nvim-autopairs'
 Plug 'airblade/vim-gitgutter'
 " Plug 'vim-airline/vim-airline'
 " Plug 'vim-airline/vim-airline-themes'
@@ -394,9 +395,6 @@ endfun
 autocmd FileType markdown,text let b:ShowColorColumn = 1
 autocmd FileType * call EnableColorColumn()
 
-" disable auto-pairs plugin for [] on markdown, it drives me crazy with the auto-spacing
-"au Filetype markdown let b:AutoPairs = {'(':')', '{':'}',"'":"'",'"':'"', '`':'`'}
-let g:AutoPairsMapSpace=0
 
 " map tab to scroll thru splits
 nnoremap <Tab> <c-w>w
@@ -630,8 +628,6 @@ nmap <C-n> :NvimTreeToggle<CR>
 autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
 
 lua << EOF
-local tree_cb = require'nvim-tree.config'.nvim_tree_callback
-
 local function on_attach(bufnr)
   local api = require('nvim-tree.api')
 
@@ -714,7 +710,7 @@ require'nvim-tree'.setup {
   view = {
     width = 25,
     -- height = 30,
-    hide_root_folder = false,
+    -- hide_root_folder = false,
     side = 'left'
   },
   on_attach = on_attach
@@ -917,4 +913,8 @@ lua <<EOF
   require('lspconfig').pyright.setup {
     capabilities = capabilities
   }
+EOF
+
+lua << EOF
+require("nvim-autopairs").setup {}
 EOF
