@@ -80,3 +80,6 @@ if command -v brew >/dev/null; then
   alias kctx-u='switch --unset'
 fi
 
+if [[ -d "$HOME/git/planetscale/kubectl-plugins/plugins" ]]; then
+  export PATH="$PATH:$HOME/git/planetscale/kubectl-plugins/plugins"
+fi
