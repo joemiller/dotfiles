@@ -3,7 +3,7 @@ if type go >/dev/null 2>&1; then
   unset GOROOT
   unset GOPATH
   export GOPATH="$HOME/go"
-  export GOROOT=$(go env GOROOT)
+  # export GOROOT=$(go env GOROOT)
   export PATH="$PATH:$GOROOT/bin:$GOPATH/bin"
 fi
 
