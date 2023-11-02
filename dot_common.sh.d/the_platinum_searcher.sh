@@ -1,6 +1,5 @@
 # aliases for the platinum searcher (pt) https://github.com/monochromegane/the_platinum_searcher
 alias pt-tf="pt -G '\.tf'"
-alias pt-hcl="pt -G '\.tf'"
 alias pt-go="pt -G '\.go'"
 alias pt-sh="pt -G '\.sh'"
 alias pt-py="pt -G '\.py'"
