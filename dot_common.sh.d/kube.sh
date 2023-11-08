@@ -2,6 +2,12 @@ alias ku='kubectl'
 alias kug='kubectl get'
 alias kud='kubectl describe'
 
+# 2023/11/08: added 'k'-based aliases after diabling 'k' for test-kitchen
+alias k='kubectl'
+alias kg='kubectl get'
+alias kd='kubectl describe'
+alias kdel='kubectl delete'
+
 # aliases for kubectx (brew install kubectx)
 alias kctx='kubectx'
 alias kns='kubens'
@@ -80,6 +86,3 @@ if command -v brew >/dev/null; then
   alias kctx-u='switch --unset'
 fi
 
-if [[ -d "$HOME/git/planetscale/kubectl-plugins/plugins" ]]; then
-  export PATH="$PATH:$HOME/git/planetscale/kubectl-plugins/plugins"
-fi
