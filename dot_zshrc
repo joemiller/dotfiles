@@ -5,6 +5,9 @@
 zmodload zsh/zprof
 
 export PATH=$PATH:/usr/local/sbin
+if [[ "$OSTYPE" =~ darwin ]] && [[ "$(uname -p)" == "arm" ]]; then
+  export PATH=/opt/homebrew/bin:$PATH
+fi
 
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)

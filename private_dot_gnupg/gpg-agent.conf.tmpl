@@ -10,7 +10,10 @@
 #   - any entry in *.conf files that contain tildes or env vars. These are not well supported.
 #
 
-{{- if eq .chezmoi.os "darwin" }}
+{{- if (and (eq .chezmoi.os "darwin") (eq .chezmoi.arch "arm64")) }}
+pinentry-program /opt/homebrew/bin/pinentry-mac
+{{- end }}
+{{- if (and (eq .chezmoi.os "darwin") (eq .chezmoi.arch "amd64")) }}
 pinentry-program /usr/local/bin/pinentry-mac
 {{- end }}
 # TODO: if linux
