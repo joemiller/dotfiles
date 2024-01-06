@@ -6,7 +6,7 @@ case "$(uname)" in
         alias lla='ls -G -la'
         alias la='ls -G -a'
         alias top='top -o cpu' # because top should sort by cpu usage, by default, IMHO
-        alias pbcopy='/usr/local/bin/reattach-to-user-namespace pbcopy'
+        alias pbcopy='reattach-to-user-namespace pbcopy'
         alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
         ;;
     "OpenBSD")
