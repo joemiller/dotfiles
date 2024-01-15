@@ -1,7 +1,7 @@
 kind: SwitchConfig
 version: v1alpha1
 kubeconfigName: "*.kubeconfig"
-refreshIndexAfter: 168h  # 7d
+refreshIndexAfter: 10m # use short ttl because all of our kubeconfigs are local. you can always clear the index by running `switch --no-index` one time
 kubeconfigStores:
 - kind: filesystem
   kubeconfigName: "*.kubeconfig"
@@ -9,7 +9,7 @@ kubeconfigStores:
   - ~/.kube/
   - ~/.kube/config
 hooks:
-  - name: pskube-update-planeteer
+  - name: pskube-update-user
     type: InlineCommand
     # execution:
     #   interval: 24h
@@ -17,5 +17,7 @@ hooks:
       - "for i in $(pskube --list); do pskube $i >/dev/null ; done "
   - name: pskube-update-ops
     type: InlineCommand
+    # execution:
+    #   interval: 24h
     arguments:
       - "for i in $(pskube --list); do PS_USE_OPS_ROLE=1 pskube $i >/dev/null ; done "
