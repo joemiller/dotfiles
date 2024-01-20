@@ -2,6 +2,8 @@ alias ku='kubectl'
 alias kug='kubectl get'
 alias kud='kubectl describe'
 
+alias pk='pskube'
+
 # 2023/11/08: added 'k'-based aliases after diabling 'k' for test-kitchen
 alias k='kubectl'
 alias kg='kubectl get'
