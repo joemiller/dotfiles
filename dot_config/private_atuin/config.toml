@@ -24,9 +24,29 @@ sync_frequency = "10m"
 # sync_address = "https://api.atuin.sh"
 
 ## which search mode to use
-## possible values: prefix, fulltext, fuzzy
- search_mode = "fuzzy"
+## https://docs.atuin.sh/configuration/config/#search_mode
+## Atuin supports “prefix”, “fulltext”, “fuzzy”, and “skim” search modes.
+ search_mode = "skim"
 
  style = "compact"
 
  inline_height = 20
+
+
+[stats]
+# Set commands where we should consider the subcommand for statistics. Eg, kubectl get vs just kubectl
+common_subcommands = [
+  "cargo",
+  "go",
+  "git",
+  "g",
+  "npm",
+  "yarn",
+  "pnpm",
+  "kubectl",
+  "k",
+  "ku"
+]
+
+# Set commands that should be totally stripped and ignored from stats
+common_prefix = ["sudo", "_"]
