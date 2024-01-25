@@ -32,6 +32,10 @@ sync_frequency = "10m"
 
  inline_height = 20
 
+# https://docs.atuin.sh/configuration/config/#keymap_mode
+#  keymap_mode = "vim_insert"
+# https://docs.atuin.sh/configuration/config/#keymap_cursor
+#  keymap_cursor = 
 
 [stats]
 # Set commands where we should consider the subcommand for statistics. Eg, kubectl get vs just kubectl
