@@ -68,6 +68,8 @@
 {{- if eq .chezmoi.hostname "macbook-joe" }}
 [gpg]
     program = gpg
+[user]
+    signingkey = 0B148DEB3B16BA35!
 {{/* on all other machines, fall back to using ssh key from a yubikey. this forwards over ssh whereas gpg does not forward well */}}
 {{- else }}
 [gpg]
