@@ -35,11 +35,21 @@
     delete-merged = "!git branch --merged | grep -v \"^\\s*master$\" | grep -v \"\\*\" | xargs -n 1 git branch -d"
 [push]
 	default = current
+    autosetupremote = true
 [gpg]
 	program = gpg
 
 [init]
     defaultBranch = main
+
+[branch]
+    sort = -committerdate
+
+[diff]
+	algorithm = histogram
+
+[merge]
+    conflictstyle = diff3
 
 [url "git@github.com:planetscale"]
     insteadOf = https://github.com/planetscale
