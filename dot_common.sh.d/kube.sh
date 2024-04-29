@@ -1,18 +1,29 @@
-alias ku='kubectl'
-alias kug='kubectl get'
-alias kud='kubectl describe'
+if command -v kubecolor >/dev/null; then
+  alias ku='kubecolor'
+  alias kug='kubecolor get'
+  alias kud='kubecolor describe'
 
-alias pk='pskube'
+  alias k='kubecolor'
+  alias kg='kubecolor get'
+  alias kd='kubecolor describe'
+  alias kdel='kubecolor delete'
+else
+  alias ku='kubectl'
+  alias kug='kubectl get'
+  alias kud='kubectl describe'
 
-# 2023/11/08: added 'k'-based aliases after diabling 'k' for test-kitchen
-alias k='kubectl'
-alias kg='kubectl get'
-alias kd='kubectl describe'
-alias kdel='kubectl delete'
+  # 2023/11/08: added 'k'-based aliases after diabling 'k' for test-kitchen
+  alias k='kubectl'
+  alias kg='kubectl get'
+  alias kd='kubectl describe'
+  alias kdel='kubectl delete'
+fi
 
 # aliases for kubectx (brew install kubectx)
 alias kctx='kubectx'
 alias kns='kubens'
+
+alias pk='pskube'
 
 # setup krew
 if [[ -d "$HOME/.krew/bin" ]]; then
