@@ -13,7 +13,7 @@
 # dialect = "uk"
 
 ## enable or disable automatic sync
-# auto_sync = true
+ auto_sync = true
 
 ## how often to sync history. note that this is only triggered when a command
 ## is ran, so sync intervals may well be longer
@@ -49,8 +49,14 @@ common_subcommands = [
   "pnpm",
   "kubectl",
   "k",
-  "ku"
+  "ku",
+  "pk",
+  "pskube"
 ]
 
 # Set commands that should be totally stripped and ignored from stats
 common_prefix = ["sudo", "_"]
+
+[sync]
+# enable the new v2 sync method:
+records = true
