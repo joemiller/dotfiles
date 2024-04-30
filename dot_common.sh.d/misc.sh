@@ -1,5 +1,9 @@
 export BLOCKSIZE=k
+
 export PAGER=less
+if command -v bat > /dev/null; then
+  export PAGER=bat
+fi
 
 alias rr=reset
 
