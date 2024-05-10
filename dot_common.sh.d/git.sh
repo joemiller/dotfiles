@@ -1,6 +1,6 @@
 alias g=git
 
-g TODO: update pr to use the new github cli
+# TODO: update pr to use the new github cli
 alias pr='hub pull-request'
 alias gup-master='gco master && gup'
 alias gup-main='gco main && gup'
