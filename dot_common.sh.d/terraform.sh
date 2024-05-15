@@ -37,3 +37,5 @@ alias tf=terraform
 alias tfw='terraform workspace'
 
 alias tg=terragrunt
+# XXX: the last version of terragrunt that didn't have horendous performance issues:
+alias tg55=terragrunt-0.55.5
