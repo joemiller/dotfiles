@@ -32,6 +32,9 @@ sync_frequency = "10m"
 
  inline_height = 20
 
+ show_help = false
+ show_tabs = false
+
 # https://docs.atuin.sh/configuration/config/#keymap_mode
 #  keymap_mode = "vim_insert"
 # https://docs.atuin.sh/configuration/config/#keymap_cursor
