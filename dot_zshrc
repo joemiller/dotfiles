@@ -8,6 +8,8 @@ export PATH=$PATH:/usr/local/sbin
 if [[ "$OSTYPE" =~ darwin ]] && [[ "$(uname -p)" == "arm" ]]; then
   export PATH=/opt/homebrew/bin:$PATH
 fi
+export "PATH=$HOME/.bin:$PATH"
+[[ -d "$HOME/.local/bin" ]] && export "PATH=$PATH:$HOME/.local/bin"
 
 # path to completions
 fpath=(/usr/local/share/zsh/site-functions $fpath)
