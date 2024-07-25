@@ -38,6 +38,7 @@ esac
 # if eza is installed, use it:
 if command -v eza > /dev/null; then
     alias ls=eza
-    alias l='eza -lag'
+    alias l='eza -laag'
     alias ll='eza -lg'
+    alias lla='eza -laag'
 fi
