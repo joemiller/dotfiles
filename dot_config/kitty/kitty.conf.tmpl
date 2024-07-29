@@ -24,7 +24,7 @@ modify_font cell_height 93%
 modify_font cell_width 91%
 modify_font baseline 2
 
-macos_thicken_font 0.05
+macos_thicken_font 0.02
 
 hide_window_decorations yes
 
@@ -253,6 +253,12 @@ copy_on_select yes
 #: }}}
 
 #: Performance tuning 
+
+# 2024/06/02: these 4 settings taken from: https://sw.kovidgoyal.net/kitty/performance/#keyboard-to-screen-latency
+input_delay 0
+repaint_delay 2
+sync_to_monitor no
+wayland_enable_ime no
 
 # repaint_delay 10
 
