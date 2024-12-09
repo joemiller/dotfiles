@@ -26,7 +26,8 @@ sync_frequency = "10m"
 ## which search mode to use
 ## https://docs.atuin.sh/configuration/config/#search_mode
 ## Atuin supports “prefix”, “fulltext”, “fuzzy”, and “skim” search modes.
- search_mode = "skim"
+# search_mode = "fuzzy"
+ search_mode = "fulltext"
 
  style = "compact"
 
