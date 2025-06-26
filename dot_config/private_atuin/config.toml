@@ -31,7 +31,7 @@ sync_frequency = "10m"
 
  style = "compact"
 
- inline_height = 20
+ inline_height = 22
 
  show_help = false
  show_tabs = false
@@ -54,6 +54,7 @@ common_subcommands = [
   "kubectl",
   "k",
   "ku",
+  "kug",
   "pk",
   "pskube"
 ]
