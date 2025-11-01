@@ -1,2 +1,7 @@
 Attic
+# go tool ignores _ dirs by default, use _Attic in go repos to ignore .go files in _Attic/
+_Attic
 .aider*
+.vscode/
+.claude/
+HACK.md
