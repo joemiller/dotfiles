@@ -13,7 +13,6 @@ function modal:entered()
     hs.alert.show(
 string.format(
 "hot keys active: (exit: enter esc j) \
-    a - alacritty \
     c - chrome \
     d - VSCode \
     e - evernote \
@@ -22,9 +21,11 @@ string.format(
     l - slack \
     s - spotify \
     m - iMessage \
+    n - Notion \
     o - Obsidian \
+    r - Discord \
     t - thinkorswim \
-    n - Notification Center \
+    u - cursor \
     z - zoom \
     . - Do not disturb (toggle) \
     / - hammerspoon console \
@@ -44,7 +45,7 @@ modal:bind('','escape', function() modal:exit() end)
 modal:bind('','return', function() modal:exit() end)
 
 -- hotkeys while modal is active
-modal:bind('','a', function() hs.application.launchOrFocus( "Alacritty" )      ; modal:exit() end )
+-- modal:bind('','a', function() hs.application.launchOrFocus( "Alacritty" )      ; modal:exit() end )
 -- modal:bind('','v', function() hs.application.launchOrFocus( "Vivaldi" )        ; modal:exit() end )
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
 modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )
@@ -57,9 +58,12 @@ modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ;
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','l', function() hs.application.launchOrFocus( "Slack.app" )      ; modal:exit() end )
 modal:bind('','m', function() hs.application.launchOrFocus( "Messages.app" )   ; modal:exit() end )
-modal:bind('','t', function() hs.application.launchOrFocus( "thinkorswim.app" ); modal:exit() end )
--- modal:bind('','u', function() hs.application.launchOrFocus( "UpNote.app" )     ; modal:exit() end )
-modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
+-- modal:bind('','n', function() nc.showNotificationCenter()                      ; modal:exit() end )
+modal:bind('','n', function() hs.application.launchOrFocus( "Notion.app" )   ; modal:exit() end )
+-- modal:bind('','t', function() hs.application.launchOrFocus( "thinkorswim.app" ); modal:exit() end )
+modal:bind('','r', function() hs.application.launchOrFocus( "Discord.app" )   ; modal:exit() end )
+modal:bind('','t', function() hs.application.launchOrFocus( "/Applications/thinkorswim/thinkorswim.app" ); modal:exit() end )
+modal:bind('','u', function() hs.application.launchOrFocus( "Cursor.app" )     ; modal:exit() end )
 modal:bind('','.', function() nc.toggleDoNotDisturb()                          ; modal:exit() end )
 modal:bind('','/', function() hs.toggleConsole()                               ; modal:exit() end )
 modal:bind('','z', function() hs.application.launchOrFocus( "zoom.us.app" )    ; modal:exit() end )
