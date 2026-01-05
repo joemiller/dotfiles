@@ -1,0 +1,14 @@
+[Unit]
+Description=Atuin Daemon
+Documentation=docs.atuin.sh
+
+[Service]
+#Environment=ATUIN_LOG=debug
+Environment=ATUIN_LOG=info
+ExecStart=/home/linuxbrew/.linuxbrew/bin/atuin daemon
+# Depending on your installation method, the path to the atuin binary might be different.
+# Use 'which atuin' to find the correct path if needed.
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
