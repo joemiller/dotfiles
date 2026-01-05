@@ -30,10 +30,6 @@ if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
 
-if [[ -d "$HOME/git/planetscale/kubectl-plugins/plugins" ]]; then
- export PATH="$PATH:$HOME/git/planetscale/kubectl-plugins/plugins"
-fi
-
 ## configure kubectl completions:
 # zsh:
 if [[ -n "$ZSH_VERSION" ]]; then
@@ -60,16 +56,16 @@ if [[ -n "$ZSH_VERSION" ]]; then
   # Follow kubernetes own recommendation here:
   #   `pskube --completion zsh >${fpath[1]}/_pskube`  (or /usr/local/share/zsh/site-functions/ if that dir exists)
   #
-  # if (( $+commands[pskube] )); then
-  # # TODO: broken. fix this
-  #   if type _evalcache >/dev/null; then
-  #     _evalcache pskube --completion zsh
-  #   else
-  # # TODO: broken. fix this
-  #     echo "WARNING: kube.sh: evalcache not found. Consider installing it."
-  #     source <(pskube --completion zsh)
-  #   fi
-  # fi
+  if (( $+commands[pskube] )); then
+  # TODO: broken. fix this
+    if type _evalcache >/dev/null; then
+      _evalcache pskube --completion zsh
+    else
+  # TODO: broken. fix this
+      echo "WARNING: kube.sh: evalcache not found. Consider installing it."
+      source <(pskube --completion zsh)
+    fi
+  fi
 fi
 
 # bash:
