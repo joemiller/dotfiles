@@ -1,0 +1,21 @@
+[Unit]
+Description=Offsite backup /home/joe with restic to GCS
+
+[Service]
+Type=simple
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=restic-backup
+
+Environment="RESTIC_CACHE_DIR=/home/joe/.cache/restic"
+Environment="RESTIC_PASSWORD_FILE=/home/joe/.config/restic/password"
+Environment="RESTIC_EXCLUDE_FILE=/home/joe/.config/restic/exclude"
+
+ExecStart=/bin/sh -c 'sudo --preserve-env=RESTIC_CACHE_DIR,RESTIC_PASSWORD_FILE,RESTIC_EXCLUDE_FILE \
+  /home/joe/git/joemiller/restic-tools/restic-gcs.sh \
+    backup /home/joe \
+    --tag automated'
+ExecStopPost=/bin/sh -c 'sudo --preserve-env=RESTIC_CACHE_DIR,RESTIC_PASSWORD_FILE,RESTIC_EXCLUDE_FILE \
+  /home/joe/git/joemiller/restic-tools/restic-gcs.sh unlock'
+
+IOSchedulingClass=idle

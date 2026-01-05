@@ -1,0 +1,14 @@
+.terraform
+.yor_plugins
+.terragrunt-cache
+.terraform.d
+.terraform.lock.hcl
+.cache
+/home/joe/go/pkg/mod/cache
+/var/lib/docker
+/home/joe/.local/state/nvim/log
+/home/joe/.local/state/nvim/lsp.log
+/home/joe/.kube/cache
+/home/joe/.npm/_cacache
+/home/joe/.bundle/cache/
+/home/joe/go/pkg

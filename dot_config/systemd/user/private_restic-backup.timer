@@ -1,0 +1,9 @@
+[Unit]
+Description=Schedule for Restic Backup
+
+[Timer]
+OnCalendar=hourly
+Unit=restic-backup.service
+
+[Install]
+WantedBy=timers.target
