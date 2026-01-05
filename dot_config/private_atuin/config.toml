@@ -65,3 +65,7 @@ common_prefix = ["sudo", "_"]
 [sync]
 # enable the new v2 sync method:
 records = true
+
+[daemon]
+enabled = true
+socket_path = "/home/joe/.config/atuin/atuin.sock"
