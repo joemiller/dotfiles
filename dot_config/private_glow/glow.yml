@@ -1,0 +1,12 @@
+# style name or JSON path (default "auto")
+style: "tokyo-night"
+#style: "dracula"
+# mouse support (TUI-mode only)
+mouse: false
+# use pager to display markdown
+pager: true
+# word-wrap at width
+#width: 120
+width: 0
+# show all files, including hidden and ignored.
+all: true
