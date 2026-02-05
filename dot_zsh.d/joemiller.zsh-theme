@@ -2,15 +2,32 @@
 
 # magic for iterm2 and tmux title bars to show current dir
 DISABLE_AUTO_TITLE="true"
+#precmd() {
+#  # set hostname:PWD in iterm2 title bar
+#  #printf "\033];$(hostname -s):$(basename "$PWD")\007"
+#  #printf "\033]1;%s\007" "${HOST%%.*}"
+#  # set tmux title
+#  if [[ "$TMUX" ]]; then
+#    printf "\033k%s\033\\" "${PWD##*/}"
+#  else
+#    printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"
+#  fi
+#}
 precmd() {
-  # set hostname:PWD in iterm2 title bar
-  #printf "\033];$(hostname -s):$(basename "$PWD")\007"
-  #printf "\033]1;%s\007" "${HOST%%.*}"
-  # set tmux title
-  if [[ "$TMUX" ]]; then
-    printf "\033k%s\033\\" "${PWD##*/}"
+  local title
+  if git rev-parse --show-toplevel &>/dev/null; then
+    title=$(basename "$(git rev-parse --show-toplevel)")
   else
-    printf "\033k%s::%s\033\\" "${HOST%%.*}" "${PWD##*/}"
+    title=${PWD##*/}
+  fi
+
+  # special cases, shorten these dir names to keep the tmux titles shorter
+  title="${title/infra-config-kubernetes/i-c-k}"
+
+  if [[ "$TMUX" ]]; then
+    printf "\033k%s\033\\" "$title"
+  else
+    printf "\033k%s::%s\033\\" "${HOST%%.*}" "$title"
   fi
 }
 

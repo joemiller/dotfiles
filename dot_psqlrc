@@ -1,0 +1,14 @@
+\set QUIET 1
+
+\pset pager always
+\set VERBOSITY terse
+\set PROMPT1 '[v%:SERVER_VERSION_NAME:][%p] %/%x%R%# '
+\set PROMPT2 '%/%x%R%# '
+\set PROMPT3 'c:%/%x%R%# '
+\set HISTCONTROL ignoredups
+\set HISTSIZE 100000
+\set HISTFILE ~/.psql_history- :DBNAME- :SERVER_VERSION_NAME- :PORT
+\setenv PAGER 'perl -pe \'s|\\\\(x..)|chr(hex($1))|ge\' | less'
+
+\timing on
+\set QUIET 0
