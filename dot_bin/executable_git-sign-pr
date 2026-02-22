@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+TMPDIR=""
+GREEN=$'\033[32m'
+RESET=$'\033[0m'
+
+msg() { echo "${GREEN}==> $1${RESET}"; }
+
+usage() {
+    cat <<EOF
+Usage: git sign-pr <pr-number>
+
+Re-sign all commits in a pull request with your GPG/SSH key.
+
+Clones the repo into a temporary directory, rebases the PR's commits to
+re-sign them, and force-pushes (with lease) back to the remote.
+
+Must be run from within a git repository that has an 'origin' remote.
+
+Requires: gh (GitHub CLI)
+EOF
+}
+
+main() {
+    if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+        usage
+        exit 0
+    fi
+
+    if ! command -v gh &>/dev/null; then
+        echo "error: 'gh' (GitHub CLI) is required but not found on PATH" >&2
+        echo >&2
+        usage >&2
+        exit 1
+    fi
+
+    if [[ $# -eq 0 ]]; then
+        usage >&2
+        exit 1
+    fi
+
+    local pr="$1"
+
+    local local_repo
+    local_repo="$(git rev-parse --show-toplevel)"
+    local remote_url
+    remote_url="$(git remote get-url origin)"
+
+    local gh_repo
+    gh_repo="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
+
+    local state head_branch base
+    read -r state head_branch base < <(
+        gh pr view "$pr" --repo "$gh_repo" \
+            --json state,headRefName,baseRefName \
+            --jq '[.state, .headRefName, .baseRefName] | @tsv'
+    )
+
+    if [[ "$state" != "OPEN" ]]; then
+        echo "error: PR #${pr} is not open (state: ${state})" >&2
+        exit 1
+    fi
+
+    TMPDIR="$(mktemp -d)"
+    trap 'rm -rf "$TMPDIR"' EXIT
+
+    msg "Cloning from '${local_repo}' -> '${TMPDIR}'..."
+    git clone --quiet --reference-if-able "$local_repo" "$remote_url" "$TMPDIR"
+    cd "$TMPDIR"
+
+    msg "Checking out PR #${pr} (${head_branch})..."
+    git checkout --quiet -B "$head_branch" "origin/$head_branch"
+    git branch --quiet --set-upstream-to="origin/$head_branch"
+
+    local merge_base count
+    merge_base="$(git merge-base HEAD "origin/${base}")"
+    count="$(git rev-list --count "${merge_base}..HEAD")"
+
+    msg "Re-signing ${count} commit(s)..."
+    git rebase --quiet --exec 'git commit --amend --no-edit' "$merge_base"
+
+    msg "Pushing..."
+    git push --quiet --force-with-lease
+
+    msg "Done. PR #${pr} commits re-signed."
+}
+
+main "$@"
