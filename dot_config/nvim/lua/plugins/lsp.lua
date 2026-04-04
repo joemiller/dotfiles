@@ -29,7 +29,9 @@ return {
       })
 
       conform.formatters.terragrunt_hclfmt = {
-        args = { "hcl", "format", "--file", "$FILENAME" },
+        args = { "hcl", "format", "--stdin" },
+        stdin = true,
+        condition = false,
       }
 
       vim.api.nvim_create_autocmd("BufWritePre", {
