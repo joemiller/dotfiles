@@ -9,7 +9,19 @@ return {
   {
     "ibhagwan/fzf-lua",
     dependencies = { "nvim-web-devicons" },
-    opts = {},
+    opts = function()
+      local actions = require("fzf-lua.actions")
+      return {
+        actions = {
+          files = {
+            ["enter"]  = actions.file_edit_or_qf,
+            ["ctrl-s"] = { fn = actions.file_split, header = "horizontal split" },
+            ["ctrl-x"] = { fn = actions.file_vsplit, header = "vertical split" },
+            ["ctrl-t"] = { fn = actions.file_tabedit, header = "new tab" },
+          },
+        },
+      }
+    end,
     keys = {
       { "<Leader>o", "<cmd>FzfLua files<CR>", desc = "Find Files" },
       { "<Leader>ff", "<cmd>FzfLua files<CR>", desc = "Find Files" },
