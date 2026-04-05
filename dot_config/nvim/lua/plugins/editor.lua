@@ -1,4 +1,5 @@
 return {
+  { "awalland/nvim-file-watch", opts = {} },
   { "windwp/nvim-autopairs", event = "InsertEnter", opts = {} },
   { "tpope/vim-commentary" },
   { "tpope/vim-surround" },
