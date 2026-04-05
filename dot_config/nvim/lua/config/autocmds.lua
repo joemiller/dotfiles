@@ -70,7 +70,19 @@ autocmd("BufEnter", {
   nested = true,
   callback = function()
     if vim.fn.winnr("$") == 1 and vim.fn.bufname():match("^NvimTree_") then
-      vim.cmd("quit")
+      local win = vim.api.nvim_get_current_win()
+      local tab = vim.api.nvim_get_current_tabpage()
+      vim.schedule(function()
+        if not vim.api.nvim_win_is_valid(win) then
+          return
+        end
+        if vim.api.nvim_get_current_tabpage() ~= tab then
+          return
+        end
+        if #vim.api.nvim_tabpage_list_wins(tab) == 1 then
+          vim.api.nvim_win_close(win, true)
+        end
+      end)
     end
   end,
 })
