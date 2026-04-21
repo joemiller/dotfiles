@@ -25,6 +25,9 @@ alias kns='kubens'
 
 alias pk='pskube'
 
+# mostly for argocd:
+export KUBECTL_EXTERNAL_DIFF="diff -u"
+
 # setup krew
 if [[ -d "$HOME/.krew/bin" ]]; then
   export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
