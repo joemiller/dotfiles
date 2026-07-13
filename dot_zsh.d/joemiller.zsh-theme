@@ -24,6 +24,10 @@ precmd() {
   # special cases, shorten these dir names to keep the tmux titles shorter
   title="${title/infra-config-kubernetes/i-c-k}"
 
+  # OSC 2: set pane title so #{pane_title} is never empty (tmux-resurrect saves an
+  # empty title as a shifted field, restoring the pane to $HOME)
+  printf '\033]2;%s\007' "$title"
+
   if [[ "$TMUX" ]]; then
     printf "\033k%s\033\\" "$title"
   else

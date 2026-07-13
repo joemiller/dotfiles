@@ -8,6 +8,7 @@
   "gitsigns.nvim": { "branch": "main", "commit": "50c205548d8b037b7ff6378fca6d21146f0b6161" },
   "go.nvim": { "branch": "master", "commit": "fe8e1de03157f8a68e9e5b819409368ce33aeb87" },
   "guihua.lua": { "branch": "master", "commit": "fdca486468a5d94676477917872767b5e67a2b4c" },
+  "herdr-splits.nvim": { "branch": "main", "commit": "65f8ce298454e1e4f5c91c03474e1b3de0f0b561" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
   "lualine.nvim": { "branch": "master", "commit": "47f91c416daef12db467145e16bed5bbfe00add8" },
   "neovim-session-manager": { "branch": "master", "commit": "89d253a6c68af60b49570044591d5b8701866601" },

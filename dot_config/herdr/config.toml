@@ -1,0 +1,39 @@
+onboarding = false
+[keys]
+# tmux defaults: % = side-by-side, " = stacked (literal chars; TOML literal strings)
+split_vertical   = 'prefix+%'
+split_horizontal = 'prefix+"'
+
+switch_workspace = "prefix+shift+1..9"
+
+## for https://github.com/lmilojevicc/herdr-splits.nvim
+command = [
+  { key = "ctrl+h", type = "plugin_action", command = "herdr-splits.nav-left" },
+  { key = "ctrl+j", type = "plugin_action", command = "herdr-splits.nav-down" },
+  { key = "ctrl+k", type = "plugin_action", command = "herdr-splits.nav-up" },
+  { key = "ctrl+l", type = "plugin_action", command = "herdr-splits.nav-right" },
+  { key = "alt+h",  type = "plugin_action", command = "herdr-splits.resize-left" },
+  { key = "alt+j",  type = "plugin_action", command = "herdr-splits.resize-down" },
+  { key = "alt+k",  type = "plugin_action", command = "herdr-splits.resize-up" },
+  { key = "alt+l",  type = "plugin_action", command = "herdr-splits.resize-right" },
+]
+
+[theme]
+name = "one-dark"
+auto_switch = false
+
+[experimental]
+kitty_graphics = true
+pane_history = true
+
+[ui]
+agent_panel_sort = "priority"
+hide_tab_bar_when_single_tab = true
+pane_gaps = false
+
+show_agent_labels_on_pane_borders = true
+[terminal]
+shell_mode = "login"
+
+[ui.toast]
+delivery = "off"
