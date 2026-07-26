@@ -4,10 +4,14 @@ onboarding = false
 split_vertical   = 'prefix+%'
 split_horizontal = 'prefix+"'
 
-switch_workspace = "prefix+shift+1..9"
+# macos alt=opt
+#switch_workspace = "prefix+alt+1..9"
+switch_workspace = "alt+1..9"
+next_workspace = "alt+n"
+previous_workspace = "alt+p"
 
-## for https://github.com/lmilojevicc/herdr-splits.nvim
 command = [
+  ## for https://github.com/lmilojevicc/herdr-splits.nvim
   { key = "ctrl+h", type = "plugin_action", command = "herdr-splits.nav-left" },
   { key = "ctrl+j", type = "plugin_action", command = "herdr-splits.nav-down" },
   { key = "ctrl+k", type = "plugin_action", command = "herdr-splits.nav-up" },
@@ -16,6 +20,8 @@ command = [
   { key = "alt+j",  type = "plugin_action", command = "herdr-splits.resize-down" },
   { key = "alt+k",  type = "plugin_action", command = "herdr-splits.resize-up" },
   { key = "alt+l",  type = "plugin_action", command = "herdr-splits.resize-right" },
+  ## for https://github.com/third774/herdr-last-workspace
+  { key = "prefix+tab", type = "plugin_action", command = "third774.last-workspace.toggle", description = "Switch to last workspace" },
 ]
 
 [theme]
