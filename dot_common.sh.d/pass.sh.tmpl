@@ -1,1 +1,3 @@
-export PASSWORD_STORE_DIR=~/GoogleDrive/settings/pass
+if [[ -d "$HOME/GoogleDrive/settings/pass" ]]; then
+    export PASSWORD_STORE_DIR=~/GoogleDrive/settings/pass
+fi
