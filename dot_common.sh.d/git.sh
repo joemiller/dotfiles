@@ -13,7 +13,11 @@ alias vci='EDITOR="code --wait" git ci'
 
 if command wt >/dev/null 2>&1; then
     if [[ -n "$ZSH_VERSION" ]]; then
-        source <(wt --init zsh)
+        if type _evalcache >/dev/null; then
+            _evalcache wt --init zsh
+        else
+            source <(wt --init zsh)
+        fi
     fi
     if [[ -n "$BASH_VERSION" ]]; then
         source <(wt --init bash)
