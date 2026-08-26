@@ -1,0 +1,215 @@
+#!/usr/bin/env bash
+set -e
+
+# Switch between git worktrees with speed.
+# originally based on: https://github.com/yankeexe/git-worktree-switcher/blob/2ab6f66bc68961f44cf6544063ad298b03fb02e3/wt
+
+args=("$@")
+VERSION="0.1.2"
+TMP_PATH=$(mktemp)
+BINARY_PATH=$(which wt)
+JQ_URL="https://stedolan.github.io/jq/download"
+RELEASE_URL="https://github.com/yankeexe/git-worktree-switcher/releases/latest"
+RELEASE_API_URL="https://api.github.com/repos/yankeexe/git-worktree-switcher/releases/latest"
+
+
+query="${args[0]}"
+is_interactive=false
+
+for arg in "${args[@]}"; do
+    if [[ "$arg" == "-i" ]]; then
+		if command -v fzf &> /dev/null
+		then is_interactive=true
+		else
+			echo "Error: fzf is not installed for interactive mode"
+			echo "Install from: https://github.com/junegunn/fzf#installation"
+			exit 1
+		fi
+        break
+    fi
+done
+
+# show worktree list
+worktree_list() {
+	git worktree list
+}
+
+help_message() {
+	echo -e "wt lets you switch between your git worktrees with speed.\n"
+	echo "Usage:"
+	echo -e "\twt <worktree-name>: search for worktree names and change to that directory."
+	echo -e "\twt -i: interactively select a worktree using fzf."
+	echo -e "\twt list: list out all the git worktrees."
+	echo -e "\twt update: update to the latest release of worktree switcher."
+	echo -e "\twt version: show the CLI version."
+	echo -e "\twt --completion bash|zsh: print shell completion setup."
+	echo -e "\twt --init bash|zsh: print shell integration and completion setup."
+	echo -e "\twt help: shows this help message."
+}
+
+print_completion() {
+	case "$1" in
+	bash)
+		cat <<'EOF'
+_wt_completion() {
+    local current branch
+    current="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=()
+
+    while IFS= read -r branch; do
+        if [[ "$branch" == "$current"* ]]; then
+            COMPREPLY+=("$branch")
+        fi
+    done < <(git worktree list --porcelain 2>/dev/null |
+        awk '$1 == "branch" { sub(/^refs\/heads\//, "", $2); print $2 }')
+}
+complete -F _wt_completion wt
+EOF
+		;;
+	zsh)
+		cat <<'EOF'
+#compdef wt
+_wt() {
+    local -a branches
+    branches=("${(@f)$(git worktree list --porcelain 2>/dev/null |
+        awk '$1 == "branch" { sub(/^refs\/heads\//, "", $2); print $2 }')}")
+    _describe 'worktree branch' branches
+}
+compdef _wt wt
+EOF
+		;;
+	*)
+		echo "Usage: wt --completion bash|zsh" >&2
+		return 1
+		;;
+	esac
+}
+
+print_init() {
+	case "$1" in
+	bash|zsh)
+		cat <<'EOF'
+wt() {
+    case "${1-}" in
+    ""|list|update|help|version|--completion|--init)
+        command wt "$@"
+        ;;
+    *)
+        local directory
+        directory="$(command wt "$@")" || return
+        if [[ -n "$directory" ]]; then
+            builtin cd -- "$directory"
+        fi
+        ;;
+    esac
+}
+EOF
+		print_completion "$1"
+		;;
+	*)
+		echo "Usage: wt --init bash|zsh" >&2
+		return 1
+		;;
+	esac
+}
+
+find_main_worktree() {
+	git worktree list --porcelain | awk '/^worktree / { sub(/^worktree /, ""); print; exit }'
+}
+
+download_latest_update() {
+	download_url=$(curl -sL $RELEASE_API_URL | jq -r '.assets[0].browser_download_url')
+
+	echo "Downloading latest version $fetched_tag_name"
+	curl -sL -o "$TMP_PATH" "$download_url"
+
+	echo "Updating to latest version..."
+	chmod +x "$TMP_PATH"
+	sudo mv "$TMP_PATH" "$BINARY_PATH"
+	rm -f "$TMP_PATH"
+
+	echo "You are using the latest version of worktree switcher: $fetched_tag_name"
+}
+
+check_release_version() {
+	fetched_tag_name=$(curl -sL $RELEASE_API_URL | jq -r '.tag_name')
+
+	if [ "$fetched_tag_name" == $VERSION ]; then
+		echo "You have the latest version of worktree switcher!"
+		echo "Version: $VERSION"
+	else
+		download_latest_update
+	fi
+}
+
+update() {
+	if [ -z "$(command -v jq)" ]; then
+		echo "jq is required for updating worktree switcher via this command."
+		echo -e "Install jq:\n$JQ_URL.\n"
+		echo -e "Or visit:\n$RELEASE_URL"
+	else
+		check_release_version
+	fi
+}
+
+if [ -z "${args[0]}" ]; then
+	help_message
+	exit 0
+fi
+
+case "${args[0]}" in
+list)
+	worktree_list
+	;;
+update)
+	update
+	;;
+help)
+	help_message
+	;;
+version)
+	echo Version: $VERSION
+	;;
+--completion)
+	print_completion "${args[1]}"
+	exit
+	;;
+--init)
+	print_init "${args[1]}"
+	exit
+	;;
+-)
+	directory=$(find_main_worktree)
+	;;
+*)
+	if [[ "$is_interactive" == true ]]; then
+		directory=$(git worktree list --porcelain |
+		awk '/worktree/ {wt=$2} /branch/ {sub("refs/heads/", "", $2); print wt " [" $2 "]"}' |
+		fzf --query "" --height=10% --no-multi --exit-0 |
+		awk '{print $1}')
+	else
+		directory=$(git worktree list --porcelain | awk -v query="$query" '
+		BEGIN { RS = ""; FS = "\n" }
+		{
+			path = substr($1, length("worktree ") + 1)
+			branch = ""
+			for (i = 2; i <= NF; i++) {
+				if ($i ~ /^branch refs\/heads\//) {
+					branch = $i
+					sub(/^branch refs\/heads\//, "", branch)
+					break
+				}
+			}
+			if (index(path, query) || index(branch, query)) {
+				print path
+				exit
+			}
+		}')
+	fi
+
+	;;
+esac
+
+if [ -n "$directory" ]; then
+	printf '%s\n' "$directory"
+fi

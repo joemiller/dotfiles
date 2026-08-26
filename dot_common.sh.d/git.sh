@@ -10,3 +10,12 @@ alias groot='cd $(git rev-parse --show-toplevel)'
 
 # vci to use vscode for git commit message authoring
 alias vci='EDITOR="code --wait" git ci'
+
+if command wt >/dev/null 2>&1; then
+    if [[ -n "$ZSH_VERSION" ]]; then
+        source <(wt --init zsh)
+    fi
+    if [[ -n "$BASH_VERSION" ]]; then
+        source <(wt --init bash)
+    fi
+fi
