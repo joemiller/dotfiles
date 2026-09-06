@@ -9,6 +9,7 @@ split_horizontal = 'prefix+"'
 switch_workspace = "alt+1..9"
 next_workspace = "alt+n"
 previous_workspace = "alt+p"
+previous_tab = "" # Disable the built-in positional previous-tab action.
 
 command = [
   ## for https://github.com/lmilojevicc/herdr-splits.nvim
@@ -22,6 +23,8 @@ command = [
   { key = "alt+l",  type = "plugin_action", command = "herdr-splits.resize-right" },
   ## for https://github.com/third774/herdr-last-workspace
   { key = "prefix+tab", type = "plugin_action", command = "third774.last-workspace.toggle", description = "Switch to last workspace" },
+  ## for https://github.com/beyondlex/herdr-recent-navigator
+  { key = "prefix+p", type = "plugin_action", command = "beyondlex.herdr-recent-navigator.focus-previous-tab", description = "Toggle previous tab" },
 ]
 
 [theme]
@@ -38,6 +41,21 @@ hide_tab_bar_when_single_tab = true
 pane_gaps = false
 
 show_agent_labels_on_pane_borders = true
+
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", "workspace"]
+]
+
+[ui.sidebar.agents]
+rows = [
+  # ["state_icon", "workspace", "tab"],
+  # ["agent", "$model"],
+  # ["state_text"],
+  ["state_icon", "workspace", "tab"],
+  ["agent", "state_text"],
+]
+
 [terminal]
 shell_mode = "login"
 
