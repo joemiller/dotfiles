@@ -1,4 +1,8 @@
 onboarding = false
+
+[remote]
+manage_ssh_config = false
+
 [keys]
 # tmux defaults: % = side-by-side, " = stacked (literal chars; TOML literal strings)
 split_vertical   = 'prefix+%'
