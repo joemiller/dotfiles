@@ -26,7 +26,11 @@ alias kns='kubens'
 alias pk='pskube'
 
 # mostly for argocd:
-export KUBECTL_EXTERNAL_DIFF="diff -u"
+if command -v delta >/dev/null; then
+  export KUBECTL_EXTERNAL_DIFF="delta --side-by-side --line-numbers --navigate --default-language=yaml"
+else
+  export KUBECTL_EXTERNAL_DIFF="diff -u"
+fi
 
 # setup krew
 if [[ -d "$HOME/.krew/bin" ]]; then
