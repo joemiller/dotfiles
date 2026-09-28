@@ -23,6 +23,7 @@ string.format(
     m - iMessage \
     n - Notion \
     o - Obsidian \
+    p - Paseo \
     r - Discord \
     t - thinkorswim \
     u - cursor \
@@ -53,6 +54,7 @@ modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ;
 -- modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
 modal:bind('','k', function() hs.application.launchOrFocus( "kitty.app" )      ; modal:exit() end )
 modal:bind('','o', function() hs.application.launchOrFocus( "Obsidian.app" )   ; modal:exit() end )
+modal:bind('','p', function() hs.application.launchOrFocus( "Paseo.app" )   ; modal:exit() end )
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
