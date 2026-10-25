@@ -115,3 +115,29 @@ ulimit -n 100000
 TIMEFMT='%U user / %S system / %P cpu %*E total / %K amem / %M maxmem'
 
 complete -o nospace -C /usr/local/bin/vault vault
+
+for mysql_bin in \
+  /opt/homebrew/opt/mysql@8.4/bin \
+  /usr/local/opt/mysql@8.4/bin \
+  /home/linuxbrew/.linuxbrew/opt/mysql@8.4/bin; do
+  if [[ -x "$mysql_bin/mysql" ]]; then
+    export PATH="$mysql_bin:$PATH"
+    break
+  fi
+done
+unset mysql_bin
+
+# hack/workaround for antigen's deferred compinit removing evalcache-sourced completions
+_reinit_evalcache() {
+    for f in ~/.zsh-evalcache/init-*.sh(N); do
+        source "$f"
+    done
+    add-zsh-hook -D precmd _reinit_evalcache
+}
+add-zsh-hook precmd _reinit_evalcache
+
+# disable ctrl-s (freeze)
+setopt noflowcontrol
+
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

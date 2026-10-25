@@ -16,6 +16,7 @@ previous_workspace = "alt+p"
 previous_tab = "" # Disable the built-in positional previous-tab action.
 
 command = [
+  { key = "prefix+ctrl+c", type = "shell", command = "workspace=$(herdr workspace list | jq -er '.result.workspaces[] | select(.label == \"Chief\") | .workspace_id') && herdr workspace focus \"$workspace\"", description = "Focus Chief workspace" },
   ## for https://github.com/lmilojevicc/herdr-splits.nvim
   { key = "ctrl+h", type = "plugin_action", command = "herdr-splits.nav-left" },
   { key = "ctrl+j", type = "plugin_action", command = "herdr-splits.nav-down" },
@@ -25,6 +26,9 @@ command = [
   { key = "alt+j",  type = "plugin_action", command = "herdr-splits.resize-down" },
   { key = "alt+k",  type = "plugin_action", command = "herdr-splits.resize-up" },
   { key = "alt+l",  type = "plugin_action", command = "herdr-splits.resize-right" },
+  ## for https://github.com/ChmaraX/herdr-nvim
+  { key = "prefix+e", type = "plugin_action", command = "chmarax.herdr-nvim.toggle", description = "Toggle Neovim sidebar" },
+  { key = "prefix+o", type = "plugin_action", command = "chmarax.herdr-nvim.pick-file", description = "Open file from agent output" },
   ## for https://github.com/third774/herdr-last-workspace
   { key = "prefix+tab", type = "plugin_action", command = "third774.last-workspace.toggle", description = "Switch to last workspace" },
   ## for https://github.com/beyondlex/herdr-recent-navigator
@@ -53,11 +57,17 @@ rows = [
 
 [ui.sidebar.agents]
 rows = [
-  # ["state_icon", "workspace", "tab"],
-  # ["agent", "$model"],
-  # ["state_text"],
   ["state_icon", "workspace", "tab"],
-  ["agent", "state_text"],
+  [
+    { token = "agent", bold = true },
+    { token = "state_text", dim = true, rules = [
+      { contains = "blocked", ignore_case = true, fg = "#e06c75", bold = true, dim = false },
+      { contains = "approval", ignore_case = true, fg = "#e06c75", bold = true, dim = false },
+      { contains = "question", ignore_case = true, fg = "#e5c07b", bold = true, dim = false },
+      { contains = "working", ignore_case = true, fg = "#61afef", dim = false },
+      { contains = "done", ignore_case = true, fg = "#98c379", bold = true, dim = false },
+    ] },
+  ],
 ]
 
 [terminal]

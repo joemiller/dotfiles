@@ -6,7 +6,8 @@
 
 # Specify desired highlighting theme (e.g. "TwoDark"). Run `bat --list-themes`
 # for a list of all available themes
---theme="TwoDark"
+#--theme="TwoDark"
+--theme="Catppuccin Mocha"
 
 # just print the contents with highlighting. I mainly don't want line numbers by default as that wrecks the copy-paste
 --style="plain"

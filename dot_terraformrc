@@ -1,2 +1,19 @@
-plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
-disable_checkpoint = true
+plugin_cache_dir                            = "$HOME/.terraform.d/plugin-cache"
+disable_checkpoint                          = true
+plugin_cache_may_break_dependency_lock_file = true
+
+provider_installation {
+
+  dev_overrides {
+    #      "planetscale/planetscale" = "/home/joe/git/planetscale/terraform-provider-planetscale"
+    #"planetscale/planetscale" = "/home/joe/git/planetscale/stainless-planetscale-terraform"
+    #"planetscale/planetscale" = "/home/joe/git/planetscale/speakeasy-planetscale-terraform"
+    # "hashicorp/google" = "/home/joe/go/bin/"
+    # "hashicorp/google-beta" = "/home/joe/go/bin/"
+  }
+
+  # For all other providers, install them directly from their origin provider
+  # registries as normal. If you omit this, Terraform will _only_ use
+  # the dev_overrides block, and so no other providers will be available.
+  direct {}
+}

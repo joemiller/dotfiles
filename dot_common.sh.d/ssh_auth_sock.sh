@@ -6,7 +6,10 @@ _ssh_auth_save() {
       rm -rf "$HOME/.ssh/ssh-auth-sock"
       ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh-auth-sock"
     fi
+#    export SSH_AUTH_SOCK="$HOME/.ssh/ssh-auth-sock"
 }
+#_ssh_auth_save
+
 #alias screen='_ssh_auth_save ; export HOSTNAME=$(hostname) ; screen'
 #alias tmux='_ssh_auth_save ; export HOSTNAME=$(hostname) ; tmux'
 

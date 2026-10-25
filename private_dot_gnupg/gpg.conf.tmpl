@@ -25,6 +25,9 @@ verify-options show-uid-validity
 with-fingerprint
 require-cross-certification
 no-symkey-cache
+{{ if ne .chezmoi.hostname "macbook-joe" -}}
+no-autostart
+{{ end -}}
 throw-keyids
 use-agent
 

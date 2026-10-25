@@ -10,3 +10,8 @@ fi
 if [[ -e "/usr/local/go/bin/go" ]]; then
   export PATH=$PATH:/usr/local/go/bin
 fi
+
+if command -v depot >/dev/null 2>&1; then
+  export GOCACHEPROG="depot gocache"
+  export GOLANGCI_LINT_CACHEPROG="depot gocache"
+fi

@@ -52,7 +52,7 @@ return {
           },
         },
         cmdline = {
-          keymap = { preset = "inherit" },
+          enabled = false,
         },
       })
 

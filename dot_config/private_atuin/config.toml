@@ -27,7 +27,8 @@ sync_frequency = "10m"
 ## https://docs.atuin.sh/configuration/config/#search_mode
 ## Atuin supports “prefix”, “fulltext”, “fuzzy”, and “skim” search modes.
 # search_mode = "fuzzy"
- search_mode = "fulltext"
+# search_mode = "fulltext"
+search_mode = "daemon-fuzzy"
 
  style = "compact"
 
@@ -66,6 +67,9 @@ common_prefix = ["sudo", "_"]
 # enable the new v2 sync method:
 records = true
 
+# [daemon]
+# enabled = false
+# socket_path = "/home/joe/.config/atuin/atuin.sock"
 [daemon]
 enabled = true
-socket_path = "/home/joe/.config/atuin/atuin.sock"
+autostart = true

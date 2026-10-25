@@ -14,10 +14,10 @@ hooks:
     # execution:
     #   interval: 24h
     arguments:
-      - "for i in $(pskube --list); do pskube $i >/dev/null ; done "
-  - name: pskube-update-ops
-    type: InlineCommand
-    # execution:
-    #   interval: 24h
-    arguments:
-      - "for i in $(pskube --list); do PS_USE_OPS_ROLE=1 pskube $i >/dev/null ; done "
+      - "for i in $(pskube --list-completion); do pskube $i >/dev/null ; done "
+  # - name: pskube-update-ops
+  #   type: InlineCommand
+  #   # execution:
+  #   #   interval: 24h
+  #   arguments:
+  #     - "for i in $(pskube --list); do PS_USE_OPS_ROLE=1 pskube $i >/dev/null ; done "
