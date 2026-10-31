@@ -1,0 +1,7 @@
+
+alias assume="source assume"
+
+# The link only exists on hosts where ~/.ssh/rc maintains it
+if [ -L "$HOME/.ssh/ssh_auth_sock" ]; then
+    export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+fi

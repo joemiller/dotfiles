@@ -1,8 +1,8 @@
-# We only want to run gpg-agent on our local workstation. We accomplish that by trying to
-# detect if this shell was spawned from ssh or not. If the SSH_CLIENT env var is set, then
-# this is probably a remote login and we don't want to run gpg-agent.
+# Only run gpg-agent on the Mac workstation. Remote hosts use the forwarded ssh agent
+# (see ~/.ssh/rc). Don't key this off SSH_CLIENT: multiplexer servers (tmux, herdr, rex)
+# outlive the ssh login and their shells don't have it.
 
-if [[ ! -n "$SSH_CLIENT" ]]; then
+if [[ "$OSTYPE" == darwin* ]]; then
   # gpg < 2.1, use gpg-connect-agent
   #[ -e "${HOME}/.gpg-agent-info" ] && source "${HOME}/.gpg-agent-info"
   #gpg-connect-agent /bye &>/dev/null || gpg-agent --daemon &>/dev/null
