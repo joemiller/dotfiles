@@ -5,7 +5,7 @@ return {
   { "tpope/vim-surround" },
   { "tpope/vim-repeat" },
   { "junegunn/vim-easy-align" },
-  { "christoomey/vim-tmux-navigator" },
+  { "christoomey/vim-tmux-navigator", cond = vim.env.REX_SESSION == nil },
 
   {
     "ibhagwan/fzf-lua",
