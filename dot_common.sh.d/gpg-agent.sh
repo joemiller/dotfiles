@@ -1,5 +1,5 @@
 # Only run gpg-agent on the Mac workstation. Remote hosts use the forwarded ssh agent
-# (see ~/.ssh/rc). Don't key this off SSH_CLIENT: multiplexer servers (tmux, herdr, rex)
+# (see ~/.zshenv). Don't key this off SSH_CLIENT: multiplexer servers (tmux, herdr, rex)
 # outlive the ssh login and their shells don't have it.
 
 if [[ "$OSTYPE" == darwin* ]]; then

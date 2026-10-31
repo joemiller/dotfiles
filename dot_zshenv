@@ -1,7 +1,12 @@
 
 alias assume="source assume"
 
-# The link only exists on hosts where ~/.ssh/rc maintains it
+# Stable forwarded-agent path for shells in long-lived multiplexers (tmux, herdr,
+# rex). Only a fresh ssh login hands us the raw agent socket; shells inside a
+# multiplexer inherit the symlink path, so they never relink.
+if [ -n "${SSH_CONNECTION:-}" ] && [ -S "${SSH_AUTH_SOCK:-}" ] && [ ! -L "$SSH_AUTH_SOCK" ]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+fi
 if [ -L "$HOME/.ssh/ssh_auth_sock" ]; then
     export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
 fi

@@ -1,6 +1,0 @@
-# Run by sshd on every login, before the shell or command. Points a stable path at
-# this connection's forwarded agent so shells in long-lived multiplexers keep working.
-# Caveat: while this file exists, sshd no longer runs xauth for X11 forwarding.
-if [ -S "$SSH_AUTH_SOCK" ]; then
-    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
-fi

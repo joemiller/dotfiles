@@ -1,1 +1,2 @@
 .common.sh.d/ssh_auth_sock.sh
+.ssh/rc
