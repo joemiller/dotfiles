@@ -16,3 +16,6 @@ rex.bind("resize/j", "pane.resize", { direction = "down" })
 rex.bind("resize/k", "pane.resize", { direction = "up" })
 rex.bind("resize/l", "pane.resize", { direction = "right" })
 rex.bind("resize/enter", "client.mode.exit")
+
+-- github/joemiller/rextore
+pcall(dofile, os.getenv("HOME") .. "/.local/share/rextore/palette.lua")

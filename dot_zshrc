@@ -141,3 +141,5 @@ setopt noflowcontrol
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+[[ -n $REX_BLOCK ]] && export PI_CLIPBOARD_OSC52=1
