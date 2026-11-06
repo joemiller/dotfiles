@@ -14,16 +14,16 @@ function modal:entered()
 string.format(
 "hot keys active: (exit: enter esc j) \
     c - chrome \
-    d - VSCode \
+    d - Rex \
     e - evernote \
     f - finder \
+    h - herdr \
     k - kitty \
     l - slack \
     s - spotify \
     m - iMessage \
     n - Notion \
     o - Obsidian \
-    p - Paseo \
     r - Discord \
     t - thinkorswim \
     u - cursor \
@@ -49,12 +49,14 @@ modal:bind('','return', function() modal:exit() end)
 -- modal:bind('','a', function() hs.application.launchOrFocus( "Alacritty" )      ; modal:exit() end )
 -- modal:bind('','v', function() hs.application.launchOrFocus( "Vivaldi" )        ; modal:exit() end )
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
-modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )
+-- modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )
+modal:bind('','d', function() hs.application.launchOrFocus( "Rex Beta.app" )  ; modal:exit() end )
 modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
+modal:bind('','h', function() hs.application.launchOrFocus( "Herdr.app" )      ; modal:exit() end )
 -- modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
 modal:bind('','k', function() hs.application.launchOrFocus( "kitty.app" )      ; modal:exit() end )
 modal:bind('','o', function() hs.application.launchOrFocus( "Obsidian.app" )   ; modal:exit() end )
-modal:bind('','p', function() hs.application.launchOrFocus( "Paseo.app" )   ; modal:exit() end )
+-- modal:bind('','p', function() hs.application.launchOrFocus( "Paseo.app" )   ; modal:exit() end )
 modal:bind('','f', function() hs.application.launchOrFocus( "Finder.app" )     ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
 modal:bind('','s', function() hs.application.launchOrFocus( "Spotify.app" )    ; modal:exit() end )
