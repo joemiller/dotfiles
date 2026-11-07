@@ -76,5 +76,13 @@
     "cmd-left": "send:\u0001",
     "cmd-right": "send:\u0005",
     "cmd-backspace": "send:\u0015"
+  },
+  "layout:joe": {
+    "alt-down": "space-folders.next",
+    "alt-up": "space-folders.prev",
+    "ctrl-shift-pagedown": "space-folders.next",
+    "ctrl-shift-pageup": "space-folders.prev",
+    "ctrl-space shift-n": "space-folders.next",
+    "ctrl-space shift-p": "space-folders.prev"
   }
 }
