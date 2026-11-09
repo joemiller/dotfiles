@@ -175,6 +175,16 @@
           "size": {
             "px": 28
           }
+        },
+        {
+          "id": "last-pane",
+          "type": "block",
+          "content": {
+            "mod": "last-pane"
+          },
+          "size": {
+            "px": 0
+          }
         }
       ],
       "resizable": false
