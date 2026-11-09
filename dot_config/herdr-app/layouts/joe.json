@@ -53,7 +53,7 @@
           "id": "machines",
           "type": "block",
           "size": {
-            "px": 150
+            "px": 124
           },
           "content": {
             "mod": "machine-stats"
@@ -177,10 +177,10 @@
           }
         },
         {
-          "id": "last-pane",
+          "id": "last-space",
           "type": "block",
           "content": {
-            "mod": "last-pane"
+            "mod": "last-space"
           },
           "size": {
             "px": 0

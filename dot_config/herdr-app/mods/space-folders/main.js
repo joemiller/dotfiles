@@ -126,7 +126,7 @@ function place(s, ps) {
   const tabs = new Set((s.tabs ?? []).map((c) => c.id));
   return ps.find((p) => tabs.has(p.tab) && p.cwd)?.cwd || s.folder;
 }
-const rowHeight = ({ tree }) => (tree ? 28 : 30);
+const rowHeight = ({ tree }) => (tree ? 22 : 24);
 const where = (s, ps) => JSON.stringify([s.machine ?? null, place(s, ps)]);
 const base = (path) => path.replace(/\/+$/, "").split("/").pop();
 // Changes made outside Herdr (an editor's save, a commit in another app): looked
@@ -552,7 +552,7 @@ export default class Spaces extends View {
     // A folder dragged over this one: a line where it would go, as for spaces.
     const moving = this.moving, aimed = moving && moving.id !== f.id && this.overMove === f.id;
     // As tall as a space's row, with an 18px tile where a space has its avatar.
-    const head = h_flex().relative().id(`folder-${f.id}`).h(30).flex_none().px(collapsed ? 2 : 8).when(!collapsed, (el) => el.pl(indent(null, nested))).gap(9).items_center().rounded(8)
+    const head = h_flex().relative().id(`folder-${f.id}`).h(24).flex_none().px(collapsed ? 2 : 8).when(!collapsed, (el) => el.pl(indent(null, nested))).gap(9).items_center().rounded(8)
       .text_color(t.foreground).cursor_pointer()
       .when(target, (el) => el.bg(t.selected).border_1().border_color(t.accent))
       .when(!target, (el) => el.hover((s) => s.bg(t.hover)))
@@ -661,7 +661,7 @@ export default class Spaces extends View {
   }
 
   loadingRow(m, t, collapsed) {
-    return div().id(`machine-loading-${m ?? "local"}`).h(28).flex_none().px(8).text_size(12).text_color(t.dim).child(collapsed ? "…" : "Loading…");
+    return div().id(`machine-loading-${m ?? "local"}`).h(24).flex_none().px(8).text_size(12).text_color(t.dim).child(collapsed ? "…" : "Loading…");
   }
 
   // A machine's header and, unless it's folded, its folders and spaces. In a
@@ -687,7 +687,7 @@ export default class Spaces extends View {
           .on_click((_e, cx) => { cx.stop_propagation(); newSpaceIn(m, null); }).child("+")))
         .child(div().size(6).rounded(3).flex_none().bg(connected ? t.ansi2 : t.dim))
         .child(svg(`mods/workspace-chrome/chevron-${folded ? "right" : "down"}.svg`).size(11).flex_none()));
-    const empty = h_flex().id(`machine-new-${m ?? "local"}`).h(28).flex_none().pl(indent(null, nested)).pr(8).gap(7).items_center().rounded(7)
+    const empty = h_flex().id(`machine-new-${m ?? "local"}`).h(24).flex_none().pl(indent(null, nested)).pr(8).gap(7).items_center().rounded(7)
       .text_size(12).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
       .on_click(() => newSpaceIn(m, null))
       .child(svg("mods/workspace-chrome/plus.svg").size(12)).when(!collapsed, el => el.child("New space there"));

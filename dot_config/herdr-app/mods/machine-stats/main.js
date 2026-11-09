@@ -119,8 +119,8 @@ export default class MachineStats extends View {
     return v_flex()
       .id(`ms-${key || "local"}`)
       .px(8)
-      .py(6)
-      .gap(4)
+      .py(3)
+      .gap(2)
       .rounded(6)
       .hover((st) => st.bg(t.hover))
       .child(
@@ -155,9 +155,9 @@ export default class MachineStats extends View {
       .child(
         h_flex()
           .px(16)
-          .h(41)
-          .pt(14)
-          .pb(5)
+          .h(30)
+          .pt(10)
+          .pb(2)
           .flex_none()
           .items_center()
           .child(div().text_size(11.5).font_medium().text_color(t.dim).child("Machines")),
