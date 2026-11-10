@@ -2,7 +2,7 @@
 
 import { div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { run, shared, setShared, closeOverlay, props, exec, window as appWindow } from "herdr";
+import { run, shared, setShared, closeOverlay, props, exec, agents, window as appWindow } from "herdr";
 import { age } from "./model.js";
 
 // Colors from the old HTML board, so a group reads the same at a glance.
@@ -28,6 +28,7 @@ export const isCompact = () => shared("chief.compact") === true;
 
 export function closeOverview() {
   setShared("chief.overview", null);
+  setShared("chief.detail", null);
   closeOverlay(props().overlay);
 }
 
@@ -35,7 +36,15 @@ export function closeOverview() {
 export function overviewKey(e, cx) {
   const m = e.modifiers ?? {};
   if (m.platform || m.control || m.alt) return;
-  if (e.key === "escape") closeOverview();
+  if (e.key === "escape") {
+    if (shared("chief.detail")) {
+      setShared("chief.detail", null);
+      cx.notify();
+    } else closeOverview();
+  } else if (e.key === "enter" && shared("chief.detail")) {
+    const agent = agents().find((a) => a.address === shared("chief.detail"));
+    if (agent) focusAgent(agent);
+  }
   else if (e.key === "c") {
     setShared("chief.compact", !isCompact());
     cx.notify();
@@ -104,7 +113,11 @@ function card(item, col, now, compact) {
     .shadow_sm()
     .cursor_pointer()
     .hover((s) => s.border_color(item.prio ? C.accent : C.edgeHover))
-    .on_click(() => focusAgent(a)))
+    .on_click((_e, cx) => {
+      cx.stop_propagation();
+      setShared("chief.detail", a.address);
+      cx.notify();
+    }))
     .child(div().h(2).flex_none().bg(col.color))
     .child(v_flex()
     .px(13)
@@ -151,6 +164,146 @@ function card(item, col, now, compact) {
       .when(compact && Boolean(r?.links.length), (f) => f.child(div().child(`${r.links.length} link${r.links.length === 1 ? "" : "s"}`))))));
 }
 
+const SITUATION = { needs_input: "Needs input", uncertain: "Unsure", working: "Working", waiting_external: "Waiting on something", follow_up_later: "Follow up later", finished: "Finished" };
+
+function button(id, label, onClick, primary = false) {
+  return control(div()
+    .id(id)
+    .px(10)
+    .py(4)
+    .rounded(6)
+    .border(1)
+    .border_color(primary ? C.accent : C.edge)
+    .text_size(12)
+    .text_color(primary ? C.accent : C.text)
+    .cursor_pointer()
+    .hover((s) => s.border_color(primary ? C.accent : C.edgeHover).bg("#ffffff0d"))
+    .on_click(onClick))
+    .child(label);
+}
+
+function field(label, value) {
+  return h_flex()
+    .gap(12)
+    .items_start()
+    .text_size(12)
+    .child(div().w(110).flex_none().text_color(C.muted).child(label))
+    .child(div().flex_1().min_w(0).text_color(C.body).child(value));
+}
+
+function agentChip(item, label) {
+  const a = item.agent;
+  return control(h_flex()
+    .id(`chief-rel-${a.address}`)
+    .gap(6)
+    .items_center()
+    .px(7)
+    .py(2)
+    .rounded(5)
+    .border(1)
+    .border_color(C.edge)
+    .text_size(11.5)
+    .text_color(C.body)
+    .cursor_pointer()
+    .hover((s) => s.border_color(C.edgeHover))
+    .on_click((_e, cx) => {
+      cx.stop_propagation();
+      setShared("chief.detail", a.address);
+      cx.notify();
+    }))
+    .child(div().size(6).rounded(3).bg(RUNTIME[a.status] ?? C.muted))
+    .child(label ?? item.report?.title ?? `${a.space_name} · ${a.tab_name || a.tab}`);
+}
+
+// The full report for one agent, shown in place of the board.
+function detail(t, item, items, now) {
+  const { agent: a, report: r } = item;
+  const col = COLUMNS.find((c) => c.id === item.group) ?? { label: "Not reporting", color: C.muted };
+  const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
+  const parent = item.parent && items.find((i) => i.agent.address === item.parent || i.agent.address.endsWith("/" + item.parent));
+  const children = items.filter((i) => i.parent && (i.parent === a.address || a.address.endsWith("/" + i.parent)));
+  const back = (_e, cx) => {
+    setShared("chief.detail", null);
+    cx.notify();
+  };
+  return v_flex()
+    .id("chief-detail")
+    .flex_1()
+    .min_h(0)
+    .overflow_y_scrollbar()
+    .child(v_flex()
+      .w_full()
+      .max_w(920)
+      .mx_auto()
+      .px(28)
+      .py(20)
+      .gap(14)
+      .child(h_flex()
+        .gap(8)
+        .items_center()
+        .child(button("chief-back", "‹ Board (Esc)", back))
+        .child(div().flex_1())
+        .child(button("chief-focus", "Focus agent (Enter)", () => focusAgent(a), true)))
+      .child(h_flex()
+        .gap(8)
+        .items_center()
+        .text_size(12)
+        .child(div().size(7).rounded(4).bg(col.color))
+        .child(div().text_color(col.color).child(col.label))
+        .child(div().text_color(C.muted).child(`· ${where}`))
+        .child(div().flex_1())
+        .child(badge(a.status)))
+      .child(div()
+        .text_size(18)
+        .font_weight(600)
+        .line_height("26px")
+        .text_color(C.text)
+        .child(item.prio ? `★ ${r?.title || where}` : r?.title || where))
+      .when(Boolean(r?.next), (el) => el.child(div()
+        .px(10)
+        .py(6)
+        .rounded(6)
+        .bg(col.color + "1f")
+        .text_size(13)
+        .line_height("20px")
+        .text_color(C.text)
+        .child(`Next: ${r.next}`)))
+      .when(Boolean(r?.update), (el) => el.child(div()
+        .text_size(13)
+        .line_height("21px")
+        .text_color(C.body)
+        .child(r.update)))
+      .when(!r, (el) => el.child(div().text_size(13).text_color(C.muted).child("This agent has not reported. Its runtime status comes from herdr only.")))
+      .when(Boolean(r?.links.length), (el) => el.child(v_flex()
+        .gap(5)
+        .children(r.links.map((url, i) => control(div()
+          .id(`chief-dlink-${i}`)
+          .truncate()
+          .text_size(12)
+          .text_color("#8fabd8")
+          .cursor_pointer()
+          .hover((s) => s.text_color(C.text))
+          .on_click((_e, cx) => {
+            cx.stop_propagation();
+            openUrl(url);
+          }))
+          .child(url)))))
+      .child(div().h(1).bg(C.edge))
+      .child(v_flex()
+        .gap(6)
+        .when(Boolean(r), (el) => el
+          .child(field("Reported", `${SITUATION[r.situation] ?? r.situation} · ${age(now - r.at)} ago · rev ${r.rev}`))
+          .child(field("Agent", [r.kind, r.session].filter(Boolean).join(" · "))))
+        .child(field("Runtime", a.status || "unknown"))
+        .child(field("Terminal", a.address))
+        .when(Boolean(parent), (el) => el.child(h_flex().gap(12).items_center().text_size(12)
+          .child(div().w(110).flex_none().text_color(C.muted).child("Parent"))
+          .child(agentChip(parent))))
+        .when(children.length > 0, (el) => el.child(h_flex().gap(12).items_start().text_size(12)
+          .child(div().w(110).flex_none().text_color(C.muted).child("Sub-agents"))
+          .child(h_flex().flex_1().flex_wrap().gap(5).children(children.map((c) => agentChip(c))))))));
+}
+
 function quietRow(t, item) {
   const a = item.agent;
   return control(h_flex()
@@ -163,7 +316,11 @@ function quietRow(t, item) {
     .rounded(6)
     .cursor_pointer()
     .hover((s) => s.bg(t.hover))
-    .on_click(() => focusAgent(a)))
+    .on_click((_e, cx) => {
+      cx.stop_propagation();
+      setShared("chief.detail", a.address);
+      cx.notify();
+    }))
     .child(div().size(6).flex_none().rounded(3).bg(RUNTIME[a.status] ?? C.muted))
     .child(div().flex_1().min_w(0).truncate().text_size(12).text_color(C.muted).child(`${a.space_name || "?"} · ${a.tab_name || a.tab}`));
 }
@@ -189,6 +346,7 @@ export function overview(t, items, now, handle) {
   const compact = isCompact();
   const quiet = items.filter((i) => i.group === "silent");
   const hidden = items.filter((i) => i.group === "hidden").length;
+  const detailItem = items.find((i) => i.agent.address === shared("chief.detail"));
   // The window is frameless and transparent. The board is a centered panel with a width cap,
   // because a mod cannot read the screen size and an overlay size has no maximum.
   return h_flex()
@@ -249,7 +407,8 @@ export function overview(t, items, now, handle) {
         .tooltip("Close (Esc)")
         .on_click(closeOverview))
         .child("✕")))
-    .child(v_flex()
+    .when(Boolean(detailItem), (el) => el.child(detail(t, detailItem, items, now)))
+    .when(!detailItem, (el) => el.child(v_flex()
       .id("chief-board")
       .flex_1()
       .min_h(0)
@@ -272,5 +431,5 @@ export function overview(t, items, now, handle) {
           .flex_none()
           .gap(2)
           .child(header({ label: "Not reporting", hint: "No reports yet", color: C.muted }, quiet.length))
-          .children(quiet.map((i) => quietRow(t, i))))))));
+          .children(quiet.map((i) => quietRow(t, i)))))))));
 }

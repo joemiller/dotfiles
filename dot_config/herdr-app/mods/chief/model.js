@@ -25,6 +25,8 @@ export function readReport(labels) {
     next: labels["chief.next"] ?? "",
     links: (labels["chief.links"] ?? "").split("\n").filter(Boolean),
     hidden: Boolean(rev) && labels["chief.hidden"] === rev,
+    kind: labels["chief.kind"] ?? "",
+    session: labels["chief.session"] ?? "",
   };
 }
 
@@ -51,10 +53,11 @@ export function classify(agent, report, now) {
 // Every agent with its report and group, in display order.
 export function collect(agentList, terminalList, now) {
   const labels = new Map(terminalList.map((term) => [term.address, term.labels ?? {}]));
+  const terminalParent = new Map(terminalList.map((term) => [term.address, term.parent ?? null]));
   const items = agentList.map((agent) => {
     const own = labels.get(agent.address) ?? {};
     const report = readReport(own);
-    return { agent, report, prio: own["chief.prio"] === "high", group: classify(agent, report, now) };
+    return { agent, report, parent: terminalParent.get(agent.address) ?? null, prio: own["chief.prio"] === "high", group: classify(agent, report, now) };
   });
   const rank = (i) => GROUPS.findIndex((g) => g.id === i.group);
   return items.sort((x, y) => rank(x) - rank(y) || Number(y.prio) - Number(x.prio) || (y.report?.at ?? 0) - (x.report?.at ?? 0) || y.agent.seq - x.agent.seq);
