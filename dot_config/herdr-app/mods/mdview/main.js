@@ -4,10 +4,11 @@
 // (props: file, machine) beside that terminal's pane (a new tab if it has
 // none), and clears the label.
 import { View, div } from "gpui-kit";
-import { v_flex, TextView } from "gpui-base";
-import { props, panes, terminals, readTextFile, hc, run, theme } from "herdr";
+import { v_flex, h_flex, TextView } from "gpui-base";
+import { props, panes, terminals, readTextFile, exec, hc, run, theme } from "herdr";
 
 const LABEL = "mdview.open";
+const MARKDOWN = /\.(md|markdown|mdx)$/i;
 const WATCH_MS = 300;
 const RELOAD_MS = 2000;
 
@@ -16,6 +17,7 @@ export default class MdView extends View {
     this.file = props()?.file ?? null;
     if (this.file) {
       this.machine = props().machine ?? null;
+      this.history = [];
       this.text = null;
       this.missing = false;
       cx.timer.every(RELOAD_MS, (cx) => this.reload(cx));
@@ -49,16 +51,41 @@ export default class MdView extends View {
   }
 
   reload(cx) {
+    const file = this.file;
     cx.spawn(async (cx) => {
       let text = null;
       try {
-        text = await readTextFile(this.file, { on: this.machine });
+        text = await readTextFile(file, { on: this.machine });
       } catch {}
+      if (file !== this.file) return;
+      if (text !== null && !MARKDOWN.test(file)) {
+        const ext = file.includes(".") ? file.split(".").pop() : "";
+        text = "````" + ext + "\n" + text + "\n````";
+      }
       if (text === this.text && this.missing === (text === null)) return;
       this.text = text;
       this.missing = text === null;
       cx.notify();
     });
+  }
+
+  openLink(url, cx) {
+    if (/^(https?|mailto):/i.test(url)) {
+      exec("open", [url]);
+      return;
+    }
+    const target = decodeURIComponent(url.replace(/^file:\/\//, "").replace(/[#?].*$/, ""));
+    if (!target) return;
+    this.history.push(this.file);
+    this.show(resolvePath(this.file.slice(0, this.file.lastIndexOf("/")), target), cx);
+  }
+
+  show(file, cx) {
+    this.file = file;
+    this.text = null;
+    this.missing = false;
+    this.reload(cx);
+    cx.notify();
   }
 
   render() {
@@ -70,9 +97,32 @@ export default class MdView extends View {
       .bg(t.background)
       .text_color(t.foreground)
       .text_size(14)
+      .when(this.history.length > 0, (el) =>
+        el.child(
+          h_flex()
+            .flex_none()
+            .h(28)
+            .px(12)
+            .gap(10)
+            .items_center()
+            .border_b(1)
+            .border_color(t.border)
+            .text_size(12)
+            .child(
+              div()
+                .id("mdview-back")
+                .flex_none()
+                .text_color(t.accent)
+                .hover((s) => s.text_color(t.foreground))
+                .child("← Back")
+                .on_click((_e, cx) => this.show(this.history.pop(), cx)),
+            )
+            .child(div().flex_1().truncate().text_color(t.dim).child(where)),
+        ),
+      )
       .child(
         div()
-          .id("mdview-scroll")
+          .id(`mdview-scroll-${this.file}`)
           .flex_1()
           .min_h(0)
           .overflow_y_scrollbar()
@@ -81,8 +131,23 @@ export default class MdView extends View {
           .child(
             this.missing
               ? div().text_color(t.dim).child(`Can't read ${where}`)
-              : div().max_w(860).child(TextView.markdown("mdview-doc", this.text ?? "").selectable(true)),
+              : div()
+                  .max_w(860)
+                  .child(
+                    TextView.markdown("mdview-doc", this.text ?? "")
+                      .selectable(true)
+                      .on_link_click((url, cx) => this.openLink(url, cx)),
+                  ),
           ),
       );
   }
+}
+
+function resolvePath(dir, target) {
+  const parts = target.startsWith("/") ? [] : dir.split("/");
+  for (const seg of target.split("/")) {
+    if (seg === "..") parts.pop();
+    else if (seg !== ".") parts.push(seg);
+  }
+  return "/" + parts.filter(Boolean).join("/");
 }
