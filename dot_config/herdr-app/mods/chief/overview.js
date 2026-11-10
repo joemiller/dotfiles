@@ -17,6 +17,7 @@ const RUNTIME = { idle: "#8fabd8", done: "#8fabd8", working: "#e3b36b", blocked:
 const C = { card: "#1d2129", edge: "#353b46", edgeHover: "#545d6c", text: "#edf0f5", body: "#c1c8d4", muted: "#a1a9b8", accent: "#e3bd80", column: "#14171c" };
 const SUMMARY_CHARS = { detailed: 520, compact: 0 };
 const RECENT_MS = 15 * 60000;
+const MAX_WIDTH = 1760;
 
 const clip = (text, n) => (text.length > n ? text.slice(0, n).trimEnd() + "…" : text);
 const shortUrl = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/^github\.com\//, "");
@@ -120,7 +121,7 @@ function card(item, col, now, compact) {
       .mt(compact ? 5 : 8)
       .text_size(13)
       .font_weight(600)
-      .line_height(20)
+      .line_height("19px")
       .text_color(C.text)
       .child(item.prio ? `★ ${r?.title || where}` : r?.title || where))
     .when(Boolean(r?.next), (el) => el.child(div()
@@ -135,7 +136,7 @@ function card(item, col, now, compact) {
     .when(Boolean(summary), (el) => el.child(div()
       .mt(8)
       .text_size(12)
-      .line_height(20)
+      .line_height("20px")
       .text_color(C.body)
       .child(summary)))
     .when(!compact && Boolean(r?.links.length), (el) => el.child(div().mt(9).child(links(item))))
@@ -188,13 +189,28 @@ export function overview(t, items, now, handle) {
   const compact = isCompact();
   const quiet = items.filter((i) => i.group === "silent");
   const hidden = items.filter((i) => i.group === "hidden").length;
-  return v_flex()
+  // The window is frameless and transparent. The board is a centered panel with a width cap,
+  // because a mod cannot read the screen size and an overlay size has no maximum.
+  return h_flex()
     .id("chief-overview-root")
     .track_focus(handle)
     .on_key_down(overviewKey)
     .size_full()
+    .justify_center()
+    .on_click(closeOverview)
+    .child(control(v_flex()
+    .id("chief-overview-panel")
+    .w_full()
+    .max_w(MAX_WIDTH)
+    .h_full()
+    .rounded(12)
+    .overflow_hidden()
+    .border(1)
+    .border_color(C.edge)
+    .shadow_lg()
     .bg(C.column)
     .text_size(13)
+    .on_click((_e, cx) => cx.stop_propagation()))
     .child(h_flex()
       .h(42)
       .px(16)
@@ -256,5 +272,5 @@ export function overview(t, items, now, handle) {
           .flex_none()
           .gap(2)
           .child(header({ label: "Not reporting", hint: "No reports yet", color: C.muted }, quiet.length))
-          .children(quiet.map((i) => quietRow(t, i)))))));
+          .children(quiet.map((i) => quietRow(t, i))))))));
 }

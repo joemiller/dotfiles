@@ -48,7 +48,7 @@ function toggleOverview() {
     closeOverlay(open);
     return;
   }
-  setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", key: "chief-overview", width: 0.94, height: 0.9, props: { view: "overview" } }));
+  setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", frame: "none", key: "chief-overview", width: 0.94, height: 0.88, props: { view: "overview" } }));
 }
 
 export default class Chief extends View {
