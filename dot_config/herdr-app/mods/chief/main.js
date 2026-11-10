@@ -103,7 +103,7 @@ export default class Chief extends View {
         .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
         .child(div().flex_1().min_w(0).truncate().text_color(group === "finished" || group === "silent" ? t.muted : t.foreground).child(title))
         .when(Boolean(r?.at), (el) => el.child(div().flex_none().text_size(11).text_color(t.dim).child(age(now - r.at)))))
-      .when(group === "needs" || !r, (el) => el.child(div().pl(21).truncate().text_size(11).text_color(t.dim).child(r ? where : a.title || where)));
+      .when(group === "needs" && Boolean(r), (el) => el.child(div().pl(21).truncate().text_size(11).text_color(t.dim).child(where)));
   }
 
   header(t, g, count) {

@@ -102,6 +102,7 @@ function column(t, label, color, members, render) {
   return v_flex()
     .flex_1()
     .min_w(0)
+    .h_full()
     .min_h(0)
     .gap(8)
     .child(h_flex()
@@ -157,7 +158,6 @@ export function overview(t, items, now) {
       .min_h(0)
       .p(12)
       .gap(12)
-      .items_start()
       .children(COLUMNS.map((id) => {
         const g = groupOf(id);
         return column(t, g.label, g.color, items.filter((i) => i.group === id), (i) => card(t, i, now));
