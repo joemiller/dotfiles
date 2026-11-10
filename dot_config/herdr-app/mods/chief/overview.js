@@ -1,9 +1,11 @@
-// The Overview window: one column per group, a card per agent, one scroll for the whole board.
+// The Overview window: an Agents board with a detail view per agent, and a PRs board.
 
 import { div, svg } from "gpui-kit";
-import { v_flex, h_flex } from "gpui-base";
+import { v_flex, h_flex, TextareaState, Textarea } from "gpui-base";
 import { run, shared, setShared, closeOverlay, props, exec, agents, window as appWindow } from "herdr";
 import { age } from "./model.js";
+import { label, send, kill, readScreen, suggestReply } from "./actions.js";
+import { prData, prIndex, prKey, prStatus, refreshPrs } from "./prs.js";
 
 // Colors from the old HTML board, so a group reads the same at a glance.
 const COLUMNS = [
@@ -24,6 +26,92 @@ const shortUrl = (url) => url.replace(/^https?:\/\/(www\.)?/, "").replace(/^gith
 // A press on a control must not start dragging the window.
 const control = (el) => el.on_mouse_down("left", (_e, cx) => cx.stop_propagation());
 
+// Detail state lives here because the window shows one detail at a time.
+// busy names the running action; error and note show its result.
+const ui = { input: null, typing: false, peek: "", busy: "", error: "", note: "", confirmClose: false };
+
+export function initOverview(cx) {
+  ui.input = TextareaState.new({ placeholder: "Message to the agent. Cmd-Enter sends." });
+  ui.input.set_auto_grow(2, 8);
+  ui.input.on("focus", (_e, cx) => {
+    ui.typing = true;
+    cx.notify();
+  });
+  ui.input.on("blur", (_e, cx) => {
+    ui.typing = false;
+    cx.notify();
+  });
+  // A detail left open when the window closed is not shown again.
+  if (shared("chief.detail")) openDetail(shared("chief.detail"), cx);
+}
+
+const currentAgent = () => agents().find((a) => a.address === shared("chief.detail"));
+
+export function openDetail(address, cx) {
+  const changed = shared("chief.detail") !== address;
+  setShared("chief.detail", address);
+  setShared("chief.ovtab", "agents");
+  if (changed) {
+    Object.assign(ui, { peek: "", busy: "", error: "", note: "", confirmClose: false });
+    ui.input?.set_value("");
+  }
+  refreshPeek(cx);
+  cx.notify();
+}
+
+function closeDetail(cx) {
+  setShared("chief.detail", null);
+  ui.confirmClose = false;
+  cx.notify();
+}
+
+// The terminal's own lines, without the trailing blank ones.
+function refreshPeek(cx) {
+  const address = shared("chief.detail");
+  cx.spawn(async (cx) => {
+    try {
+      const text = await readScreen(address, 40);
+      if (shared("chief.detail") !== address) return;
+      const lines = text.split("\n").map((l) => l.trimEnd()).filter((l) => !l.startsWith("[hc] "));
+      while (lines.length && !lines[lines.length - 1]) lines.pop();
+      ui.peek = lines.slice(-50).join("\n");
+    } catch (e) {
+      ui.peek = `Could not read the screen: ${e.message}`;
+    }
+    cx.notify();
+  });
+}
+
+// Runs one action at a time. The result shows under the action bar.
+function act(cx, name, fn) {
+  if (ui.busy) return;
+  Object.assign(ui, { busy: name, error: "", note: "" });
+  cx.notify();
+  const address = shared("chief.detail");
+  cx.spawn(async (cx) => {
+    try {
+      const note = await fn();
+      if (shared("chief.detail") === address) ui.note = note ?? "";
+    } catch (e) {
+      if (shared("chief.detail") === address) ui.error = `${name}: ${e.message}`;
+    }
+    ui.busy = "";
+    cx.notify();
+  });
+}
+
+function sendDraft(cx) {
+  const agent = currentAgent();
+  const text = ui.input.value().trim();
+  if (!agent || !text) return;
+  act(cx, "Send", async () => {
+    await send(agent.address, text);
+    ui.input.set_value("");
+    cx.timer.after(1500, (cx) => refreshPeek(cx));
+    return "Sent.";
+  });
+}
+
 export const isCompact = () => shared("chief.compact") === true;
 
 export function closeOverview() {
@@ -35,17 +123,23 @@ export function closeOverview() {
 // Esc closes, c toggles compact. Keys with Cmd, Ctrl or Alt are left to the app.
 export function overviewKey(e, cx) {
   const m = e.modifiers ?? {};
+  if (ui.typing && shared("chief.detail") && e.key === "enter" && (m.platform || m.control)) {
+    sendDraft(cx);
+    cx.stop_propagation();
+    return;
+  }
   if (m.platform || m.control || m.alt) return;
   if (e.key === "escape") {
-    if (shared("chief.detail")) {
-      setShared("chief.detail", null);
-      cx.notify();
-    } else closeOverview();
-  } else if (e.key === "enter" && shared("chief.detail")) {
-    const agent = agents().find((a) => a.address === shared("chief.detail"));
-    if (agent) focusAgent(agent);
+    if (shared("chief.detail")) closeDetail(cx);
+    else closeOverview();
+    return;
   }
-  else if (e.key === "c") {
+  // While the text box has the keyboard, plain keys are typing.
+  if (ui.typing) return;
+  if (e.key === "enter" && shared("chief.detail")) {
+    const agent = currentAgent();
+    if (agent) focusAgent(agent);
+  } else if (e.key === "c") {
     setShared("chief.compact", !isCompact());
     cx.notify();
   }
@@ -56,7 +150,7 @@ function focusAgent(agent) {
   closeOverview();
 }
 
-function openUrl(url) {
+export function openUrl(url) {
   exec(appWindow()?.platform === "macos" ? "open" : "xdg-open", [url]).catch(() => {});
 }
 
@@ -71,8 +165,14 @@ function badge(status) {
     .child(status || "unknown");
 }
 
+function prDot(url, index) {
+  const pr = index.get(prKey(url) ?? "");
+  return pr ? div().size(6).flex_none().rounded(3).bg(prStatus(pr).color) : null;
+}
+
 function links(item) {
   const a = item.agent;
+  const index = prIndex();
   return h_flex()
     .flex_wrap()
     .gap(4)
@@ -89,12 +189,17 @@ function links(item) {
       .text_color("#b1bdcc")
       .cursor_pointer()
       .hover((s) => s.text_color(C.text).border_color(C.edgeHover))
-      .tooltip(url)
+      .tooltip(prTooltip(url, index))
       .on_click((_e, cx) => {
         cx.stop_propagation();
         openUrl(url);
       }))
-      .child(shortUrl(url))));
+      .child(h_flex().gap(5).items_center().children([prDot(url, index), div().truncate().child(shortUrl(url))].filter(Boolean)))));
+}
+
+function prTooltip(url, index) {
+  const pr = index.get(prKey(url) ?? "");
+  return pr ? `${prStatus(pr).label} · ${pr.title}` : url;
 }
 
 function card(item, col, now, compact) {
@@ -115,8 +220,7 @@ function card(item, col, now, compact) {
     .hover((s) => s.border_color(item.prio ? C.accent : C.edgeHover))
     .on_click((_e, cx) => {
       cx.stop_propagation();
-      setShared("chief.detail", a.address);
-      cx.notify();
+      openDetail(a.address, cx);
     }))
     .child(div().h(2).flex_none().bg(col.color))
     .child(v_flex()
@@ -208,11 +312,93 @@ function agentChip(item, label) {
     .hover((s) => s.border_color(C.edgeHover))
     .on_click((_e, cx) => {
       cx.stop_propagation();
-      setShared("chief.detail", a.address);
-      cx.notify();
+      openDetail(a.address, cx);
     }))
     .child(div().size(6).rounded(3).bg(RUNTIME[a.status] ?? C.muted))
     .child(label ?? item.report?.title ?? `${a.space_name} · ${a.tab_name || a.tab}`);
+}
+
+function prRow(pr, id) {
+  const st = prStatus(pr);
+  return control(h_flex()
+    .id(id)
+    .gap(8)
+    .items_center()
+    .px(8)
+    .py(5)
+    .rounded(6)
+    .border(1)
+    .border_color(C.edge)
+    .text_size(12)
+    .cursor_pointer()
+    .hover((s) => s.border_color(C.edgeHover))
+    .tooltip(pr.url)
+    .on_click((_e, cx) => {
+      cx.stop_propagation();
+      openUrl(pr.url);
+    }))
+    .child(div().size(7).flex_none().rounded(4).bg(st.color))
+    .child(div().flex_none().text_color(C.muted).child(`${pr.repo}#${pr.number}`))
+    .child(div().flex_1().min_w(0).truncate().text_color(C.text).child(pr.title))
+    .child(div().flex_none().text_color(st.color).child(st.label));
+}
+
+function actionBar(a, r, item) {
+  const hidden = Boolean(r?.hidden);
+  const busy = (name) => ui.busy === name;
+  return h_flex()
+    .gap(8)
+    .flex_wrap()
+    .items_center()
+    .child(button("chief-act-suggest", busy("Suggest") ? "Drafting…" : "✨ Suggest reply", (_e, cx) => act(cx, "Suggest", async () => {
+      ui.input.set_value(await suggestReply(a));
+      ui.input.focus();
+      return "Draft ready. Edit it, then send.";
+    })))
+    .child(button("chief-act-prio", item.prio ? "★ Priority on" : "☆ Priority", (_e, cx) => act(cx, "Priority", () => label(a.address, { "chief.prio": item.prio ? "" : "high" }))))
+    .when(Boolean(r?.rev), (el) => el.child(button("chief-act-hide", hidden ? "Unhide" : "Hide until next report", (_e, cx) => act(cx, "Hide", async () => {
+      await label(a.address, { "chief.hidden": hidden ? "" : r.rev });
+      if (!hidden) closeDetail(cx);
+    }))))
+    .child(button("chief-act-peek", "↻ Screen", (_e, cx) => refreshPeek(cx)))
+    .child(div().flex_1())
+    .child(ui.confirmClose
+      ? h_flex().gap(6)
+        .child(button("chief-act-close-no", "Keep", (_e, cx) => {
+          ui.confirmClose = false;
+          cx.notify();
+        }))
+        .child(button("chief-act-close-yes", "End the agent", (_e, cx) => act(cx, "Close", async () => {
+          ui.confirmClose = false;
+          await kill(a.address);
+          closeDetail(cx);
+        }), true))
+      : button("chief-act-close", "Close…", (_e, cx) => {
+        ui.confirmClose = true;
+        cx.notify();
+      }));
+}
+
+function sendBox() {
+  return v_flex()
+    .gap(6)
+    .child(Textarea.new(ui.input)
+      .w_full()
+      .px(10)
+      .py(6)
+      .rounded(7)
+      .border(1)
+      .border_color(ui.typing ? C.accent : C.edge)
+      .bg(C.card)
+      .text_size(13)
+      .text_color(C.text))
+    .child(h_flex()
+      .gap(8)
+      .items_center()
+      .text_size(11.5)
+      .text_color(C.muted)
+      .child(div().flex_1().child("hc send pastes the text and presses Enter. A blocked agent refuses it."))
+      .child(button("chief-act-send", ui.busy === "Send" ? "Sending…" : "Send (Cmd-Enter)", (_e, cx) => sendDraft(cx), true)));
 }
 
 // The full report for one agent, shown in place of the board.
@@ -222,10 +408,9 @@ function detail(t, item, items, now) {
   const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
   const parent = item.parent && items.find((i) => i.agent.address === item.parent || i.agent.address.endsWith("/" + item.parent));
   const children = items.filter((i) => i.parent && (i.parent === a.address || a.address.endsWith("/" + i.parent)));
-  const back = (_e, cx) => {
-    setShared("chief.detail", null);
-    cx.notify();
-  };
+  const index = prIndex();
+  const prs = (r?.links ?? []).map((url) => index.get(prKey(url) ?? "")).filter(Boolean);
+  const otherLinks = (r?.links ?? []).filter((url) => !index.has(prKey(url) ?? ""));
   return v_flex()
     .id("chief-detail")
     .flex_1()
@@ -233,7 +418,7 @@ function detail(t, item, items, now) {
     .overflow_y_scrollbar()
     .child(v_flex()
       .w_full()
-      .max_w(920)
+      .max_w(980)
       .mx_auto()
       .px(28)
       .py(20)
@@ -241,7 +426,7 @@ function detail(t, item, items, now) {
       .child(h_flex()
         .gap(8)
         .items_center()
-        .child(button("chief-back", "‹ Board (Esc)", back))
+        .child(button("chief-back", "‹ Board (Esc)", (_e, cx) => closeDetail(cx)))
         .child(div().flex_1())
         .child(button("chief-focus", "Focus agent (Enter)", () => focusAgent(a), true)))
       .child(h_flex()
@@ -259,6 +444,12 @@ function detail(t, item, items, now) {
         .line_height("26px")
         .text_color(C.text)
         .child(item.prio ? `★ ${r?.title || where}` : r?.title || where))
+      .child(actionBar(a, r, item))
+      .when(Boolean(ui.busy || ui.error || ui.note), (el) => el.child(div()
+        .text_size(12)
+        .text_color(ui.error ? "#e996a6" : C.muted)
+        .child(ui.error || (ui.busy ? `${ui.busy}…` : ui.note))))
+      .child(sendBox())
       .when(Boolean(r?.next), (el) => el.child(div()
         .px(10)
         .py(6)
@@ -274,9 +465,12 @@ function detail(t, item, items, now) {
         .text_color(C.body)
         .child(r.update)))
       .when(!r, (el) => el.child(div().text_size(13).text_color(C.muted).child("This agent has not reported. Its runtime status comes from herdr only.")))
-      .when(Boolean(r?.links.length), (el) => el.child(v_flex()
+      .when(prs.length > 0, (el) => el.child(v_flex()
         .gap(5)
-        .children(r.links.map((url, i) => control(div()
+        .children(prs.map((pr, i) => prRow(pr, `chief-dpr-${i}`)))))
+      .when(otherLinks.length > 0, (el) => el.child(v_flex()
+        .gap(5)
+        .children(otherLinks.map((url, i) => control(div()
           .id(`chief-dlink-${i}`)
           .truncate()
           .text_size(12)
@@ -288,6 +482,23 @@ function detail(t, item, items, now) {
             openUrl(url);
           }))
           .child(url)))))
+      .child(v_flex()
+        .gap(6)
+        .child(div().text_size(11.5).text_color(C.muted).child("Screen"))
+        .child(div()
+          .id("chief-peek")
+          .max_h(360)
+          .overflow_y_scrollbar()
+          .p(10)
+          .rounded(7)
+          .bg("#0d0f13")
+          .border(1)
+          .border_color(C.edge)
+          .font_family("Menlo")
+          .text_size(11.5)
+          .line_height("16px")
+          .text_color(C.body)
+          .children((ui.peek || "Reading…").split("\n").map((line) => div().whitespace_nowrap().child(line || " ")))))
       .child(div().h(1).bg(C.edge))
       .child(v_flex()
         .gap(6)
@@ -318,8 +529,7 @@ function quietRow(t, item) {
     .hover((s) => s.bg(t.hover))
     .on_click((_e, cx) => {
       cx.stop_propagation();
-      setShared("chief.detail", a.address);
-      cx.notify();
+      openDetail(a.address, cx);
     }))
     .child(div().size(6).flex_none().rounded(3).bg(RUNTIME[a.status] ?? C.muted))
     .child(div().flex_1().min_w(0).truncate().text_size(12).text_color(C.muted).child(`${a.space_name || "?"} · ${a.tab_name || a.tab}`));
@@ -342,11 +552,114 @@ function header(col, count) {
     .child(div().ml(13).mt(3).text_size(11).text_color(C.muted).child(col.hint));
 }
 
+function tabButton(id, current, text) {
+  const on = id === current;
+  return control(div()
+    .id(`chief-ovtab-${id}`)
+    .px(9)
+    .py(3)
+    .rounded(6)
+    .text_size(12)
+    .text_color(on ? C.text : C.muted)
+    .when(on, (el) => el.bg("#ffffff14"))
+    .cursor_pointer()
+    .hover((s) => s.text_color(C.text))
+    .on_click((_e, cx) => {
+      setShared("chief.ovtab", id);
+      cx.notify();
+    }))
+    .child(text);
+}
+
+const PR_COLUMNS = [
+  { id: "review", label: "Review requested", hint: "Asked of you by name", color: "#e1b578" },
+  { id: "mine", label: "My PRs", hint: "Open, newest activity first", color: "#8fabd8" },
+  { id: "linked", label: "Agent PRs", hint: "Reported by agents, not in the other two", color: "#bc9cd7" },
+];
+
+function prCard(pr, now, linkedBy) {
+  const st = prStatus(pr);
+  return control(v_flex()
+    .id(`chief-pr-${pr.url}`)
+    .flex_none()
+    .rounded(9)
+    .overflow_hidden()
+    .bg(C.card)
+    .border(1)
+    .border_color(C.edge)
+    .cursor_pointer()
+    .hover((s) => s.border_color(C.edgeHover))
+    .tooltip(pr.url)
+    .on_click((_e, cx) => {
+      cx.stop_propagation();
+      openUrl(pr.url);
+    }))
+    .child(div().h(2).flex_none().bg(st.color))
+    .child(v_flex()
+      .px(13)
+      .py(10)
+      .gap(6)
+      .child(h_flex()
+        .gap(8)
+        .items_center()
+        .text_size(11)
+        .child(div().flex_1().min_w(0).truncate().text_color(C.muted).child(`${pr.repo}#${pr.number}${pr.author ? ` · ${pr.author}` : ""}`))
+        .child(div().flex_none().text_color(st.color).child(st.label)))
+      .child(div().text_size(13).font_weight(600).line_height("19px").text_color(C.text).child(pr.title))
+      .child(h_flex()
+        .gap(6)
+        .flex_wrap()
+        .items_center()
+        .text_size(11)
+        .text_color(C.muted)
+        .child(div().child(`updated ${age(now - pr.updated)} ago`))
+        .children(linkedBy.map((item) => agentChip(item)))));
+}
+
+function prBoard(items, now, prs) {
+  const byUrl = new Map();
+  for (const item of items) {
+    for (const url of item.report?.links ?? []) {
+      const key = prKey(url);
+      if (key) byUrl.set(key, [...(byUrl.get(key) ?? []), item]);
+    }
+  }
+  const lists = {
+    review: prs.review,
+    mine: prs.mine.slice().sort((x, y) => prStatus(x).rank - prStatus(y).rank || y.updated - x.updated),
+    linked: prs.linked.slice().sort((x, y) => prStatus(x).rank - prStatus(y).rank || y.updated - x.updated),
+  };
+  return v_flex()
+    .id("chief-prs")
+    .flex_1()
+    .min_h(0)
+    .overflow_y_scrollbar()
+    .when(Boolean(prs.error), (el) => el.child(div().px(16).pt(10).text_size(12).text_color("#e996a6").child(`Last refresh kept old data for ${prs.error}`)))
+    .when(!prs.at, (el) => el.child(div().p(16).text_size(12).text_color(C.muted).child("Loading PRs from gh…")))
+    .child(h_flex()
+      .p(14)
+      .gap(14)
+      .items_start()
+      .children(PR_COLUMNS.map((col) => {
+        const list = lists[col.id];
+        const count = col.id === "mine" && prs.mineTotal > list.length ? `${list.length} of ${prs.mineTotal}` : list.length;
+        return v_flex()
+          .flex_1()
+          .min_w(0)
+          .gap(10)
+          .child(header(col, count))
+          .children(list.map((pr) => prCard(pr, now, byUrl.get(prKey(pr.url)) ?? [])));
+      })));
+}
+
 export function overview(t, items, now, handle) {
   const compact = isCompact();
   const quiet = items.filter((i) => i.group === "silent");
   const hidden = items.filter((i) => i.group === "hidden").length;
-  const detailItem = items.find((i) => i.agent.address === shared("chief.detail"));
+  const tab = shared("chief.ovtab") === "prs" ? "prs" : "agents";
+  const detailItem = tab === "agents" ? items.find((i) => i.agent.address === shared("chief.detail")) : null;
+  const prs = prData();
+  const needs = items.filter((i) => i.group === "needs").length;
   // The window is frameless and transparent. The board is a centered panel with a width cap,
   // because a mod cannot read the screen size and an overlay size has no maximum.
   return h_flex()
@@ -379,9 +692,17 @@ export function overview(t, items, now, handle) {
       .border_color(t.border)
       .bg(t.chrome)
       .child(div().font_weight(600).text_color(C.text).child("Chief"))
-      .child(div().text_size(12).text_color(C.muted).child(`${items.length} agents${hidden ? ` · ${hidden} hidden` : ""}`))
+      .child(tabButton("agents", tab, needs ? `Agents · ${needs} need you` : "Agents"))
+      .child(tabButton("prs", tab, prs.review.length ? `PRs · ${prs.review.length} to review` : "PRs"))
+      .child(div().text_size(12).text_color(C.muted).child(tab === "agents"
+        ? `${items.length} agents${hidden ? ` · ${hidden} hidden` : ""}`
+        : prs.at ? `updated ${age(now - prs.at)} ago` : "loading…"))
       .child(div().flex_1())
-      .child(control(div()
+      .when(tab === "prs", (el) => el.child(button("chief-prs-refresh", "↻ Refresh", (_e, cx) => cx.spawn(async (cx) => {
+        await refreshPrs();
+        cx.notify();
+      }))))
+      .when(tab === "agents", (el) => el.child(control(div()
         .id("chief-compact")
         .px(8)
         .py(2)
@@ -396,7 +717,7 @@ export function overview(t, items, now, handle) {
           setShared("chief.compact", !compact);
           cx.notify();
         }))
-        .child(compact ? "Detailed (c)" : "Compact (c)"))
+        .child(compact ? "Detailed (c)" : "Compact (c)")))
       .child(control(div()
         .id("chief-overview-close")
         .px(6)
@@ -407,8 +728,9 @@ export function overview(t, items, now, handle) {
         .tooltip("Close (Esc)")
         .on_click(closeOverview))
         .child("✕")))
+    .when(tab === "prs", (el) => el.child(prBoard(items, now, prs)))
     .when(Boolean(detailItem), (el) => el.child(detail(t, detailItem, items, now)))
-    .when(!detailItem, (el) => el.child(v_flex()
+    .when(tab === "agents" && !detailItem, (el) => el.child(v_flex()
       .id("chief-board")
       .flex_1()
       .min_h(0)

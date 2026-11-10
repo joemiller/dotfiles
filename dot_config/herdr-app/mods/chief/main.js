@@ -5,13 +5,14 @@ import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
 import { GROUPS, collect, age } from "./model.js";
-import { overview } from "./overview.js";
+import { overview, initOverview, openUrl } from "./overview.js";
+import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
 
 const RAIL = 44;
 const WIDE = 340;
 const TABS = [
   { id: "agents", label: "Agents" },
-  { id: "prs", label: "PRs", later: "PRs arrive in the next build." },
+  { id: "prs", label: "PRs" },
   { id: "slack", label: "Slack", later: "Slack is phase 2." },
   { id: "closed", label: "Closed", later: "Closed sessions are phase 2." },
 ];
@@ -57,6 +58,7 @@ export default class Chief extends View {
       // A window does not take the keyboard when it opens, so Esc and c need this.
       this.handle = cx.focus_handle();
       this.handle.focus();
+      initOverview(cx);
       cx.timer.every(30000, (cx) => cx.notify());
       return;
     }
@@ -66,6 +68,14 @@ export default class Chief extends View {
     this.folded = new Set(GROUPS.filter((g) => g.folded).map((g) => g.id));
     // Ages and the stale rule depend on the clock, not only on live data.
     cx.timer.every(30000, (cx) => cx.notify());
+    // Only the docked copy polls, so one Herdr window makes one gh call per interval.
+    cx.spawn(async (cx) => {
+      for (;;) {
+        await refreshPrs().catch(() => {});
+        cx.notify();
+        await cx.sleep(POLL_MS);
+      }
+    });
     cx.spawn(async (cx) => {
       for (;;) {
         const command = await nextCommand();
@@ -180,6 +190,36 @@ export default class Chief extends View {
         .child("»"));
   }
 
+  prRows(t, now) {
+    const data = prData();
+    const sections = [
+      { label: "Review requested", prs: data.review },
+      { label: "My PRs", prs: data.mine.slice().sort((x, y) => prStatus(x).rank - prStatus(y).rank || y.updated - x.updated) },
+      { label: "Agent PRs", prs: data.linked },
+    ];
+    return sections.filter((sec) => sec.prs.length).flatMap((sec) => [
+      div().px(8).pt(8).h(28).flex_none().text_size(11).font_medium().text_color(t.dim).child(`${sec.label} ${sec.prs.length}`),
+      ...sec.prs.map((pr) => {
+        const st = prStatus(pr);
+        return h_flex()
+          .id(`chief-spr-${pr.url}`)
+          .h(24)
+          .px(8)
+          .gap(7)
+          .flex_none()
+          .items_center()
+          .rounded(7)
+          .cursor_pointer()
+          .hover((s) => s.bg(t.hover))
+          .tooltip(`${pr.repo}#${pr.number} · ${st.label}\n${pr.title}`)
+          .on_click(() => openUrl(pr.url))
+          .child(div().size(7).mx(3).flex_none().rounded(4).bg(st.color))
+          .child(div().flex_1().min_w(0).truncate().text_color(t.foreground).child(pr.title))
+          .child(div().flex_none().text_size(11).text_color(t.dim).child(age(now - pr.updated)));
+      }),
+    ]);
+  }
+
   rail(t, items) {
     const urgent = items.filter((i) => i.group === "needs" || i.group === "unclear");
     const working = items.filter((i) => i.group === "working").length;
@@ -237,7 +277,8 @@ export default class Chief extends View {
       .text_size(12.5)
       .child(this.tabs(t, needs))
       .when(Boolean(later), (el) => el.child(div().p(12).text_size(12).text_color(t.dim).child(later)))
-      .when(!later && items.length === 0, (el) => el.child(div().p(12).text_size(12).text_color(t.dim).child("No agents yet.")))
-      .when(!later, (el) => el.child(v_flex().id("chief-list").flex_1().min_h(0).px(6).pb(8).overflow_y_scrollbar().mode("always").children(rows)));
+      .when(this.tab === "agents" && items.length === 0, (el) => el.child(div().p(12).text_size(12).text_color(t.dim).child("No agents yet.")))
+      .when(this.tab === "prs" && !prData().at, (el) => el.child(div().p(12).text_size(12).text_color(t.dim).child("Loading PRs from gh…")))
+      .when(!later, (el) => el.child(v_flex().id("chief-list").flex_1().min_h(0).px(6).pb(8).overflow_y_scrollbar().mode("always").children(this.tab === "prs" ? this.prRows(t, now) : rows)));
   }
 }
