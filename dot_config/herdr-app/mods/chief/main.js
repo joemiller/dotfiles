@@ -48,12 +48,15 @@ function toggleOverview() {
     closeOverlay(open);
     return;
   }
-  setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", key: "chief-overview", width: 1240, height: 780, props: { view: "overview" } }));
+  setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", key: "chief-overview", width: 0.94, height: 0.9, props: { view: "overview" } }));
 }
 
 export default class Chief extends View {
   init(_props, cx) {
     if (props()?.view === "overview") {
+      // A window does not take the keyboard when it opens, so Esc and c need this.
+      this.handle = cx.focus_handle();
+      this.handle.focus();
       cx.timer.every(30000, (cx) => cx.notify());
       return;
     }
@@ -216,7 +219,7 @@ export default class Chief extends View {
     const t = theme();
     const now = Date.now();
     const items = collect(agents(), terminals(), now);
-    if (props()?.view === "overview") return overview(t, items, now);
+    if (props()?.view === "overview") return overview(t, items, now, this.handle);
     setAgentOrder(items.map((i) => i.agent.address));
     if (narrow()) return this.rail(t, items);
 
