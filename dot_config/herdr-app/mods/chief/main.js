@@ -3,8 +3,9 @@
 
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand } from "herdr";
-import { GROUPS, classify, readReport } from "./model.js";
+import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
+import { GROUPS, collect, age } from "./model.js";
+import { overview } from "./overview.js";
 
 const RAIL = 44;
 const WIDE = 340;
@@ -39,16 +40,25 @@ function toggle() {
   run("layout.resize", { id: block.id, px: RAIL });
 }
 
-function age(ms) {
-  const m = Math.floor(ms / 60000);
-  if (m < 1) return "now";
-  if (m < 60) return `${m}m`;
-  const h = Math.floor(m / 60);
-  return h < 24 ? `${h}h` : `${Math.floor(h / 24)}d`;
+// The Overview window's id lives in shared state so its own close button can clear it.
+function toggleOverview() {
+  const open = shared("chief.overview");
+  setShared("chief.overview", null);
+  if (open) {
+    closeOverlay(open);
+    return;
+  }
+  setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", key: "chief-overview", width: 1240, height: 780, props: { view: "overview" } }));
 }
 
 export default class Chief extends View {
   init(_props, cx) {
+    if (props()?.view === "overview") {
+      cx.timer.every(30000, (cx) => cx.notify());
+      return;
+    }
+    // The window is not kept, so after a restart a remembered id is stale.
+    setShared("chief.overview", null);
     this.tab = "agents";
     this.folded = new Set(GROUPS.filter((g) => g.folded).map((g) => g.id));
     // Ages and the stale rule depend on the clock, not only on live data.
@@ -57,6 +67,7 @@ export default class Chief extends View {
       for (;;) {
         const command = await nextCommand();
         if (command === "toggle") toggle();
+        if (command === "overview") toggleOverview();
         cx.notify();
       }
     });
@@ -147,6 +158,15 @@ export default class Chief extends View {
         .child(tab.id === "agents" && needs ? `Agents ${needs}` : tab.label)))
       .child(div().flex_1())
       .child(div()
+        .id("chief-overview")
+        .px(4)
+        .text_color(t.dim)
+        .cursor_pointer()
+        .hover((s) => s.text_color(t.foreground))
+        .tooltip("Overview (cmd-shift-o)")
+        .on_click(toggleOverview)
+        .child("⤢"))
+      .child(div()
         .id("chief-collapse")
         .px(4)
         .text_color(t.dim)
@@ -195,14 +215,8 @@ export default class Chief extends View {
   render(_cx) {
     const t = theme();
     const now = Date.now();
-    const labels = new Map(terminals().map((term) => [term.address, term.labels ?? {}]));
-    const items = agents().map((agent) => {
-      const own = labels.get(agent.address) ?? {};
-      const report = readReport(own);
-      return { agent, report, prio: own["chief.prio"] === "high", group: classify(agent, report, now) };
-    });
-    const rank = (i) => GROUPS.findIndex((g) => g.id === i.group);
-    items.sort((x, y) => rank(x) - rank(y) || Number(y.prio) - Number(x.prio) || (y.report?.at ?? 0) - (x.report?.at ?? 0) || y.agent.seq - x.agent.seq);
+    const items = collect(agents(), terminals(), now);
+    if (props()?.view === "overview") return overview(t, items, now);
     setAgentOrder(items.map((i) => i.agent.address));
     if (narrow()) return this.rail(t, items);
 

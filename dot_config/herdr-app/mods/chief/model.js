@@ -47,3 +47,23 @@ export function classify(agent, report, now) {
       return "unclear";
   }
 }
+
+// Every agent with its report and group, in display order.
+export function collect(agentList, terminalList, now) {
+  const labels = new Map(terminalList.map((term) => [term.address, term.labels ?? {}]));
+  const items = agentList.map((agent) => {
+    const own = labels.get(agent.address) ?? {};
+    const report = readReport(own);
+    return { agent, report, prio: own["chief.prio"] === "high", group: classify(agent, report, now) };
+  });
+  const rank = (i) => GROUPS.findIndex((g) => g.id === i.group);
+  return items.sort((x, y) => rank(x) - rank(y) || Number(y.prio) - Number(x.prio) || (y.report?.at ?? 0) - (x.report?.at ?? 0) || y.agent.seq - x.agent.seq);
+}
+
+export function age(ms) {
+  const m = Math.floor(ms / 60000);
+  if (m < 1) return "now";
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60);
+  return h < 24 ? `${h}h` : `${Math.floor(h / 24)}d`;
+}
