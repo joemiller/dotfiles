@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Opens a markdown file rendered in a herdr-app tab, from the Mac or any
+# machine herdr-app is connected to. The mdview mod watches for this label.
+set -euo pipefail
+
+main() {
+  if [[ $# -ne 1 ]]; then
+    echo "usage: mdv <file.md>" >&2
+    exit 2
+  fi
+  if [[ -z "${HC_TERMINAL_ID:-}" ]]; then
+    echo "mdv: not in a herdr-app terminal" >&2
+    exit 2
+  fi
+  if [[ ! -f "$1" ]]; then
+    echo "mdv: no such file: $1" >&2
+    exit 1
+  fi
+  hc label "$HC_TERMINAL_ID" "mdview.open=$(realpath "$1")" >/dev/null
+}
+
+main "$@"

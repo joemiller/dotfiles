@@ -185,6 +185,16 @@
           "size": {
             "px": 0
           }
+        },
+        {
+          "id": "mdview",
+          "type": "block",
+          "content": {
+            "mod": "mdview"
+          },
+          "size": {
+            "px": 0
+          }
         }
       ],
       "resizable": false
