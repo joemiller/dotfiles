@@ -188,6 +188,19 @@
         }
       ],
       "resizable": false
+    },
+    {
+      "id": "chief",
+      "type": "block",
+      "size": {
+        "px": 340
+      },
+      "min": 44,
+      "max": 520,
+      "background": "chrome",
+      "content": {
+        "mod": "chief"
+      }
     }
   ],
   "background": "canvas",
