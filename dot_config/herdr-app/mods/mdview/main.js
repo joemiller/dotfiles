@@ -21,25 +21,31 @@ export default class MdView extends View {
       cx.timer.every(RELOAD_MS, (cx) => this.reload(cx));
       this.reload(cx);
     } else {
-      this.pending = new Set();
+      this.handled = new Set();
       cx.timer.every(WATCH_MS, () => this.watch());
     }
   }
 
+  // A label is forgotten only once terminals() stops showing it: the clear
+  // reaches terminals() well after hc returns, especially from another machine.
   watch() {
+    const live = new Set();
     for (const t of terminals()) {
       const file = t.labels?.[LABEL];
+      if (!file) continue;
       const key = `${t.address}\n${file}`;
-      if (!file || this.pending.has(key)) continue;
-      this.pending.add(key);
+      live.add(key);
+      if (this.handled.has(key)) continue;
+      this.handled.add(key);
       const slash = t.address.indexOf("/");
       const machine = slash > 0 ? t.address.slice(0, slash) : null;
       const viewer = { file, machine };
       const pane = panes().find((p) => p.terminal === t.address)?.pane;
       if (pane) run("pane.split", { direction: "right", pane, mod: "mdview", props: viewer });
       else run("tab.new", { name: file.split("/").pop(), mod: "mdview", props: viewer });
-      hc(["label", t.address, `${LABEL}=`]).finally(() => this.pending.delete(key));
+      hc(["label", t.address, `${LABEL}=`]);
     }
+    for (const key of this.handled) if (!live.has(key)) this.handled.delete(key);
   }
 
   reload(cx) {
