@@ -15,7 +15,7 @@ string.format(
 "hot keys active: (exit: enter esc j) \
     c - chrome \
     d - Rex \
-    e - evernote \
+    e - linear \
     f - finder \
     h - herdr \
     k - kitty \
@@ -51,7 +51,8 @@ modal:bind('','return', function() modal:exit() end)
 modal:bind('','c', function() hs.application.launchOrFocus( "Google Chrome" )  ; modal:exit() end )
 -- modal:bind('','d', function() hs.application.launchOrFocus( "Visual Studio Code" )  ; modal:exit() end )
 modal:bind('','d', function() hs.application.launchOrFocus( "Rex Beta.app" )  ; modal:exit() end )
-modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
+-- modal:bind('','e', function() hs.application.launchOrFocus( "Evernote.app" )   ; modal:exit() end )
+modal:bind('','e', function() hs.application.launchOrFocus( "Linear.app" )   ; modal:exit() end )
 modal:bind('','h', function() hs.application.launchOrFocus( "Herdr.app" )      ; modal:exit() end )
 -- modal:bind('','i', function() hs.application.launchOrFocus( "iTerm.app" )      ; modal:exit() end )
 modal:bind('','k', function() hs.application.launchOrFocus( "kitty.app" )      ; modal:exit() end )
