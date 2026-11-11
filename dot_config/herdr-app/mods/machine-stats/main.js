@@ -1,13 +1,13 @@
 // CPU, memory and disk use for this computer and every connected machine.
-// Clicking a machine opens btop there in a floating window; a copy with the
-// `btop` prop is that window's title bar.
+// Clicking a machine opens top there in a floating window; a copy with the
+// `top` prop is that window's title bar.
 import { View, div } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
-import { exec, hc, machines, theme, props, openOverlay, closeOverlay, run } from "herdr";
+import { exec, hc, machines, theme, props, openOverlay, closeOverlay } from "herdr";
 
 const POLL_MS = 5000;
-// A login shell, for PATH from the user's profile (Homebrew on Linux lives in zsh's rc files).
-const BTOP_ARGV = ["sh", "-c", 'exec "${SHELL:-sh}" -lic "exec btop -u 500"'];
+// macOS top sorts by pid unless told otherwise, and its delay is whole seconds.
+const TOP_ARGV = ["sh", "-c", 'if [ "$(uname -s)" = Darwin ]; then exec top -o cpu -s 1; else exec top -d 0.5; fi'];
 
 // Prints key=value lines. macOS CPU is the sum of per-process %CPU (a decaying
 // average); Linux prints raw /proc/stat counters, so its CPU needs two samples.
@@ -46,8 +46,8 @@ const clampPct = (n) => Math.max(0, Math.min(100, Math.round(n)));
 
 export default class MachineStats extends View {
   init(_props, cx) {
-    this.btop = props()?.btop ?? null;
-    if (this.btop) return;
+    this.top = props()?.top ?? null;
+    if (this.top) return;
     this.stats = {};
     this.linuxCpu = {};
     cx.timer.every(POLL_MS, (cx) => this.refresh(cx));
@@ -70,33 +70,32 @@ export default class MachineStats extends View {
     }
   }
 
-  openBtop(m, cx) {
+  openTop(m, cx) {
     cx.spawn(async () => {
       const args = ["run", "--bg", "--json", "--no-parent", "--no-notify", "--rm"];
       if (m.name) args.push("--on", m.name);
-      const r = await hc([...args, "--", ...BTOP_ARGV]);
+      const r = await hc([...args, "--", ...TOP_ARGV]);
       const address = JSON.parse(r.stdout).address;
       openOverlay({
         kind: "window",
-        key: `btop:${m.name ?? ""}`,
-        width: 0.7,
+        key: `top:${m.name ?? ""}`,
+        width: 0.5,
         height: 0.75,
         layout: {
           type: "column",
           children: [
-            { type: "block", size: { px: 28 }, content: { mod: "machine-stats", props: { btop: address, machine: m.name ?? "local" } } },
+            { type: "block", size: { px: 28 }, content: { mod: "machine-stats", props: { top: address, machine: m.name ?? "local" } } },
             { type: "block", content: { terminal: address } },
           ],
         },
       });
-      run("pane.focus", { terminal: address });
     });
   }
 
-  // The window closes itself when btop ends (q); a window closed another way
-  // (Close, a layout switch, opening it again) takes btop with it.
+  // The window closes itself when top ends (q); a window closed another way
+  // (Close, a layout switch, opening it again) takes top with it.
   async close() {
-    if (this.btop) await hc(["kill", this.btop]);
+    if (this.top) await hc(["kill", this.top]);
   }
 
   titleBar() {
@@ -112,7 +111,7 @@ export default class MachineStats extends View {
       .text_size(12)
       .child(
         div()
-          .id("btop-close")
+          .id("top-close")
           .flex_none()
           .text_color(t.accent)
           .hover((s) => s.text_color(t.foreground))
@@ -120,7 +119,7 @@ export default class MachineStats extends View {
           .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
           .on_click(() => closeOverlay(props().overlay)),
       )
-      .child(div().flex_1().truncate().text_color(t.foreground).child(`btop · ${props().machine}`))
+      .child(div().flex_1().truncate().text_color(t.foreground).child(`top · ${props().machine}`))
       .child(div().flex_none().text_color(t.dim).child("q quits"));
   }
 
@@ -183,7 +182,7 @@ export default class MachineStats extends View {
       .gap(2)
       .rounded(6)
       .hover((st) => st.bg(t.hover))
-      .when(ready, (el) => el.cursor_pointer().on_click((_e, cx) => this.openBtop(m, cx)))
+      .when(ready, (el) => el.cursor_pointer().on_click((_e, cx) => this.openTop(m, cx)))
       .child(
         h_flex()
           .gap(6)
@@ -204,7 +203,7 @@ export default class MachineStats extends View {
   }
 
   render() {
-    if (this.btop) return this.titleBar();
+    if (this.top) return this.titleBar();
     const t = theme();
     return v_flex()
       .size_full()
