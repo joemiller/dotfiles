@@ -1,11 +1,12 @@
 // The Overview window: an Agents board with a detail view per agent, and a PRs board.
 
 import { div, svg } from "gpui-kit";
-import { v_flex, h_flex, TextareaState, Textarea } from "gpui-base";
+import { v_flex, h_flex, TextareaState, Textarea, InputState, Input } from "gpui-base";
 import { run, shared, setShared, closeOverlay, props, exec, agents, window as appWindow } from "herdr";
 import { age } from "./model.js";
 import { label, send, kill, readScreen, suggestReply } from "./actions.js";
 import { prData, prIndex, prKey, prStatus, refreshPrs } from "./prs.js";
+import { recent, loadRecent, liveSessions, recordTitle, matches, reopen } from "./recent.js";
 
 // Colors from the old HTML board, so a group reads the same at a glance.
 const COLUMNS = [
@@ -28,7 +29,7 @@ const control = (el) => el.on_mouse_down("left", (_e, cx) => cx.stop_propagation
 
 // Detail state lives here because the window shows one detail at a time.
 // busy names the running action; error and note show its result.
-const ui = { input: null, typing: false, peek: "", busy: "", error: "", note: "", confirmClose: false };
+const ui = { input: null, search: null, query: "", picked: "", typing: false, peek: "", busy: "", error: "", note: "", confirmClose: false };
 
 export function initOverview(cx) {
   ui.input = TextareaState.new({ placeholder: "Message to the agent. Cmd-Enter sends." });
@@ -41,8 +42,34 @@ export function initOverview(cx) {
     ui.typing = false;
     cx.notify();
   });
+  ui.search = InputState.new({ placeholder: "Search titles, reports, folders, session IDs" });
+  ui.search.on("change", (_e, cx) => {
+    ui.query = ui.search.value();
+    cx.notify();
+  });
+  ui.search.on("focus", (_e, cx) => {
+    ui.typing = true;
+    cx.notify();
+  });
+  ui.search.on("blur", (_e, cx) => {
+    ui.typing = false;
+    cx.notify();
+  });
   // A detail left open when the window closed is not shown again.
   if (shared("chief.detail")) openDetail(shared("chief.detail"), cx);
+  if (shared("chief.ovtab") === "recent") openRecent(cx);
+}
+
+function openRecent(cx) {
+  setShared("chief.ovtab", "recent");
+  ui.search.focus();
+  cx.spawn(async (cx) => {
+    const pending = loadRecent();
+    cx.notify();
+    await pending;
+    cx.notify();
+  });
+  cx.notify();
 }
 
 const currentAgent = () => agents().find((a) => a.address === shared("chief.detail"));
@@ -552,6 +579,90 @@ function header(col, count) {
     .child(div().ml(13).mt(3).text_size(11).text_color(C.muted).child(col.hint));
 }
 
+function recentRow(r, live, now) {
+  const open = live.get(r.id);
+  const picked = ui.picked === r.id;
+  const meta = [r.kind, r.where || r.cwd, open ? "open" : `last seen ${age(now - Date.parse(r.last))} ago`].join(" · ");
+  return control(v_flex()
+    .id(`chief-recent-${r.id}`)
+    .flex_none()
+    .px(12)
+    .py(8)
+    .gap(4)
+    .rounded(8)
+    .border(1)
+    .border_color(picked ? C.edgeHover : C.edge)
+    .bg(picked ? C.card : "#00000000")
+    .cursor_pointer()
+    .hover((s) => s.bg(C.card))
+    .on_click((_e, cx) => {
+      ui.picked = picked ? "" : r.id;
+      ui.error = "";
+      cx.notify();
+    }))
+    .child(h_flex()
+      .gap(8)
+      .items_center()
+      .child(div().size(7).flex_none().rounded(4).bg(open ? "#9fbb8f" : "#5c6370"))
+      .child(div().flex_1().min_w(0).truncate().text_size(13).font_weight(600).text_color(C.text).child(recordTitle(r)))
+      .child(div().flex_none().text_size(11).text_color(C.muted).child(r.report?.situation ?? "")))
+    .child(div().truncate().text_size(11.5).text_color(C.muted).child(meta))
+    .when(picked, (el) => el
+      .when(Boolean(r.report?.update), (el) => el.child(div().pt(4).text_size(12.5).line_height("19px").text_color(C.body).child(r.report.update)))
+      .child(div().text_size(11).text_color(C.muted).child(`${r.cwd} · ${r.id}`))
+      .child(h_flex()
+        .pt(4)
+        .gap(8)
+        .child(open
+          ? button(`chief-recent-focus-${r.id}`, "Focus agent", () => {
+            run("agent.focus", { terminal: open });
+            closeOverview();
+          }, true)
+          : button(`chief-recent-open-${r.id}`, "Reopen in a new tab", (_e, cx) => {
+            try {
+              reopen(r);
+              closeOverview();
+            } catch (e) {
+              ui.error = `Reopen: ${e.message}`;
+              cx.notify();
+            }
+          }, true))
+        .when(Boolean(ui.error), (el) => el.child(div().text_size(12).text_color("#e996a6").child(ui.error)))));
+}
+
+function recentView(now) {
+  const live = liveSessions();
+  const rows = recent.rows.filter((r) => matches(r, ui.query)).slice(0, 200);
+  return v_flex()
+    .id("chief-recent")
+    .flex_1()
+    .min_h(0)
+    .child(h_flex()
+      .px(16)
+      .py(10)
+      .gap(10)
+      .flex_none()
+      .items_center()
+      .child(Input.new(ui.search).flex_1())
+      .child(button("chief-recent-refresh", "↻ Refresh", (_e, cx) => openRecent(cx))))
+    .when(Boolean(recent.error), (el) => el.child(div().px(16).text_size(12).text_color("#e996a6").child(recent.error)))
+    .when(recent.at > 0 && rows.length === 0, (el) => el.child(div().px(16).py(8).text_size(12).text_color(C.muted)
+      .child(recent.rows.length ? "No session matches." : "No sessions recorded yet. Agents record themselves after their next start or turn.")))
+    .child(v_flex()
+      .id("chief-recent-list")
+      .flex_1()
+      .min_h(0)
+      .overflow_y_scrollbar()
+      .child(v_flex()
+        .w_full()
+        .max_w(1100)
+        .mx_auto()
+        .px(16)
+        .pb(16)
+        .gap(6)
+        .children(rows.map((r) => recentRow(r, live, now)))));
+}
+
 function tabButton(id, current, text) {
   const on = id === current;
   return control(div()
@@ -565,8 +676,11 @@ function tabButton(id, current, text) {
     .cursor_pointer()
     .hover((s) => s.text_color(C.text))
     .on_click((_e, cx) => {
-      setShared("chief.ovtab", id);
-      cx.notify();
+      if (id === "recent") openRecent(cx);
+      else {
+        setShared("chief.ovtab", id);
+        cx.notify();
+      }
     }))
     .child(text);
 }
@@ -656,7 +770,7 @@ export function overview(t, items, now, handle) {
   const compact = isCompact();
   const quiet = items.filter((i) => i.group === "silent");
   const hidden = items.filter((i) => i.group === "hidden").length;
-  const tab = shared("chief.ovtab") === "prs" ? "prs" : "agents";
+  const tab = ["prs", "recent"].includes(shared("chief.ovtab")) ? shared("chief.ovtab") : "agents";
   const detailItem = tab === "agents" ? items.find((i) => i.agent.address === shared("chief.detail")) : null;
   const prs = prData();
   const needs = items.filter((i) => i.group === "needs").length;
@@ -694,8 +808,10 @@ export function overview(t, items, now, handle) {
       .child(div().font_weight(600).text_color(C.text).child("Chief"))
       .child(tabButton("agents", tab, needs ? `Agents · ${needs} need you` : "Agents"))
       .child(tabButton("prs", tab, prs.review.length ? `PRs · ${prs.review.length} to review` : "PRs"))
+      .child(tabButton("recent", tab, "Recent"))
       .child(div().text_size(12).text_color(C.muted).child(tab === "agents"
         ? `${items.length} agents${hidden ? ` · ${hidden} hidden` : ""}`
+        : tab === "recent" ? (recent.loading ? "loading…" : recent.at ? `${recent.rows.length} sessions` : "")
         : prs.at ? `updated ${age(now - prs.at)} ago` : "loading…"))
       .child(div().flex_1())
       .when(tab === "prs", (el) => el.child(button("chief-prs-refresh", "↻ Refresh", (_e, cx) => cx.spawn(async (cx) => {
@@ -729,6 +845,7 @@ export function overview(t, items, now, handle) {
         .on_click(closeOverview))
         .child("✕")))
     .when(tab === "prs", (el) => el.child(prBoard(items, now, prs)))
+    .when(tab === "recent", (el) => el.child(recentView(now)))
     .when(Boolean(detailItem), (el) => el.child(detail(t, detailItem, items, now)))
     .when(tab === "agents" && !detailItem, (el) => el.child(v_flex()
       .id("chief-board")
