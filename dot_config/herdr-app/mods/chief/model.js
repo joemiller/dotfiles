@@ -51,13 +51,32 @@ export function classify(agent, report, now) {
 }
 
 // Every agent with its report and group, in display order.
+// The session's own name (/name, /rename), else a tab name someone chose, else the terminal
+// title without its program prefix. A tab name of only digits is herdr's automatic number.
+export function displayName(agent, labels) {
+  const tab = agent.tab_name ?? "";
+  const raw = agent.title ?? "";
+  // Pi titles are "π - <name> - <folder>".
+  const pi = raw.startsWith("π - ") ? raw.slice(4).split(" - ") : null;
+  const title = (pi ? (pi.length > 1 ? pi.slice(0, -1).join(" - ") : pi[0]) : raw.replace(/^[^\p{L}\p{N}]+/u, "")).trim();
+  return labels["chief.name"] || (tab && !/^\d+$/.test(tab) ? tab : "") || title || `${agent.space_name || "?"} · ${tab}`;
+}
+
 export function collect(agentList, terminalList, now) {
   const labels = new Map(terminalList.map((term) => [term.address, term.labels ?? {}]));
   const terminalParent = new Map(terminalList.map((term) => [term.address, term.parent ?? null]));
   const items = agentList.map((agent) => {
     const own = labels.get(agent.address) ?? {};
     const report = readReport(own);
-    return { agent, report, parent: terminalParent.get(agent.address) ?? null, prio: own["chief.prio"] === "high", group: classify(agent, report, now) };
+    return {
+      agent,
+      report,
+      name: displayName(agent, own),
+      touched: Date.parse(own["chief.touched"] ?? "") || 0,
+      parent: terminalParent.get(agent.address) ?? null,
+      prio: own["chief.prio"] === "high",
+      group: classify(agent, report, now),
+    };
   });
   const rank = (i) => GROUPS.findIndex((g) => g.id === i.group);
   return items.sort((x, y) => rank(x) - rank(y) || Number(y.prio) - Number(x.prio) || (y.report?.at ?? 0) - (x.report?.at ?? 0) || y.agent.seq - x.agent.seq);

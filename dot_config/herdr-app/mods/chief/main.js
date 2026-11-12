@@ -4,7 +4,7 @@
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
-import { GROUPS, collect, age } from "./model.js";
+import { collect, age } from "./model.js";
 import { overview, initOverview, openUrl } from "./overview.js";
 import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
 
@@ -61,6 +61,8 @@ function showOverview(tab) {
   toggleOverview();
 }
 
+const sortMode = () => (shared("chief.sort") === "space" ? "space" : "recent");
+
 export default class Chief extends View {
   init(_props, cx) {
     if (props()?.view === "overview") {
@@ -74,7 +76,7 @@ export default class Chief extends View {
     // The window is not kept, so after a restart a remembered id is stale.
     setShared("chief.overview", null);
     this.tab = "agents";
-    this.folded = new Set(GROUPS.filter((g) => g.folded).map((g) => g.id));
+    this.folded = new Set();
     // Ages and the stale rule depend on the clock, not only on live data.
     cx.timer.every(30000, (cx) => cx.notify());
     // Only the docked copy polls, so one Herdr window makes one gh call per interval.
@@ -102,33 +104,48 @@ export default class Chief extends View {
   }
 
   row(t, item, now) {
-    const { agent: a, report: r, group } = item;
+    const { agent: a, report: r } = item;
     const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
-    const title = r?.title || where;
-    return v_flex()
+    const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
+    return h_flex()
       .id(`chief-${a.address}`)
+      .h(26)
       .px(8)
-      .py(4)
+      .gap(7)
       .flex_none()
+      .items_center()
       .rounded(7)
-      .when(group === "needs", (el) => el.bg(t.blocked + "14").border_l(2).border_color(t.blocked))
+      .when(a.status === "blocked", (el) => el.bg(t.blocked + "14"))
       .when(a.focused, (el) => el.bg(t.selected))
       .cursor_pointer()
       .hover((s) => s.bg(t.hover))
-      .when(Boolean(r?.update), (el) => el.tooltip(r.update.slice(0, 600)))
+      .tooltip(tip)
       .on_click(() => run("pane.focus", { pane: a.pane }))
-      .child(h_flex()
-        .h(18)
-        .gap(7)
-        .items_center()
-        .child(this.status(t, a.status))
-        .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
-        .child(div().flex_1().min_w(0).truncate().text_color(group === "finished" || group === "silent" ? t.muted : t.foreground).child(title))
-        .when(Boolean(r?.at), (el) => el.child(div().flex_none().text_size(11).text_color(t.dim).child(age(now - r.at)))))
-      .when(group === "needs" && Boolean(r), (el) => el.child(div().pl(21).truncate().text_size(11).text_color(t.dim).child(where)));
+      .child(this.status(t, a.status))
+      .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
+      .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
+      .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–"));
+  }
+
+  // Blocked agents first, then the ones Joe prompted most recently. Flat, or grouped by space
+  // with spaces in the order of their most recent agent.
+  sections(all) {
+    const items = all.slice().sort((x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq);
+    const blocked = items.filter((i) => i.agent.status === "blocked");
+    const rest = items.filter((i) => i.agent.status !== "blocked");
+    const out = blocked.length ? [{ id: "blocked", label: "Needs you", color: "blocked", members: blocked }] : [];
+    if (sortMode() === "recent") return [...out, { id: "recent", label: "", members: rest }];
+    const bySpace = new Map();
+    for (const i of rest) {
+      const id = i.agent.space;
+      if (!bySpace.has(id)) bySpace.set(id, { id: `space-${id}`, label: i.agent.space_name || "?", members: [] });
+      bySpace.get(id).members.push(i);
+    }
+    return [...out, ...bySpace.values()];
   }
 
   header(t, g, count) {
+    if (!g.label) return null;
     const open = !this.folded.has(g.id);
     return h_flex()
       .id(`chief-group-${g.id}`)
@@ -232,8 +249,8 @@ export default class Chief extends View {
   }
 
   rail(t, items) {
-    const urgent = items.filter((i) => i.group === "needs" || i.group === "unclear");
-    const working = items.filter((i) => i.group === "working").length;
+    const urgent = items.filter((i) => i.agent.status === "blocked");
+    const working = items.filter((i) => i.agent.status === "working").length;
     return v_flex()
       .size_full()
       .bg(t.chrome)
@@ -259,11 +276,40 @@ export default class Chief extends View {
         .bg(t.raised)
         .cursor_pointer()
         .hover((s) => s.bg(t.hover))
-        .tooltip(i.report?.title || `${i.agent.space_name} · ${i.agent.tab_name}`)
+        .tooltip(i.name)
         .on_click(() => run("pane.focus", { pane: i.agent.pane }))
-        .child(div().size(9).rounded(5).bg(i.group === "needs" ? t.blocked : t.unknown ?? t.dim))))
+        .child(div().size(9).rounded(5).bg(t.blocked))))
       .child(div().w(20).border_t(1).border_color(t.border))
       .child(div().text_size(11).text_color(t.working).tooltip("Working").child(String(working)));
+  }
+
+  sortToggle(t) {
+    const mode = sortMode();
+    const choice = (id, label) => div()
+      .id(`chief-sort-${id}`)
+      .px(7)
+      .h(20)
+      .flex()
+      .items_center()
+      .rounded(5)
+      .cursor_pointer()
+      .text_color(mode === id ? t.foreground : t.dim)
+      .when(mode === id, (el) => el.bg(t.selected))
+      .hover((s) => s.text_color(t.foreground))
+      .on_click((_e, cx) => {
+        setShared("chief.sort", id);
+        cx.notify();
+      })
+      .child(label);
+    return h_flex()
+      .px(4)
+      .pt(4)
+      .pb(2)
+      .gap(2)
+      .flex_none()
+      .text_size(11)
+      .child(choice("recent", "Recent"))
+      .child(choice("space", "By space"));
   }
 
   render(_cx) {
@@ -271,16 +317,16 @@ export default class Chief extends View {
     const now = Date.now();
     const items = collect(agents(), terminals(), now);
     if (props()?.view === "overview") return overview(t, items, now, this.handle);
-    setAgentOrder(items.map((i) => i.agent.address));
+    const ordered = this.sections(items).flatMap((g) => g.members);
+    setAgentOrder(ordered.map((i) => i.agent.address));
     if (narrow()) return this.rail(t, items);
 
-    const needs = items.filter((i) => i.group === "needs").length;
+    const needs = items.filter((i) => i.agent.status === "blocked").length;
     const later = TABS.find((tab) => tab.id === this.tab)?.later;
-    const rows = GROUPS.flatMap((g) => {
-      const members = items.filter((i) => i.group === g.id);
-      if (!members.length) return [];
-      return [this.header(t, g, members.length), ...(this.folded.has(g.id) ? [] : members.map((i) => this.row(t, i, now)))];
-    });
+    const rows = [this.sortToggle(t), ...this.sections(items).flatMap((g) => [
+      this.header(t, g, g.members.length),
+      ...(this.folded.has(g.id) ? [] : g.members.map((i) => this.row(t, i, now))),
+    ])].filter(Boolean);
     return v_flex()
       .size_full()
       .min_h(0)
