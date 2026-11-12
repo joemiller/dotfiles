@@ -95,6 +95,8 @@ export default class Chief extends View {
     setShared("chief.card", null);
     this.tab = "agents";
     this.folded = new Set();
+    // Each agent's last state and when it changed (ms), kept across restarts.
+    this.changed = JSON.parse(localStorage.getItem("changed") ?? "{}");
     // Ages and the stale rule depend on the clock, not only on live data.
     cx.timer.every(30000, (cx) => cx.notify());
     // Only the docked copy polls, so one Herdr window makes one gh call per interval.
@@ -235,9 +237,14 @@ export default class Chief extends View {
           .on_click(() => run("pane.focus", { pane: a.pane }))
           .child(this.status(t, a.status))
           .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
-          .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
+          .child(h_flex()
+            .flex_1()
+            .min_w(0)
+            .gap(5)
+            .when(!item.name.startsWith(a.space_name || "?"), (el) => el.child(div().flex_none().max_w(110).truncate().text_color(t.dim).child(a.space_name || "?")))
+            .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name)))
           .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
-          .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–"))))
+          .child(this.times(t, a, item, now))))
       .when(open, (el) => el.child(v_flex()
         .pl(47)
         .pr(10)
@@ -259,6 +266,41 @@ export default class Chief extends View {
             openUrl(url);
           })
           .child(url.replace(/^https?:\/\/(www\.)?/, ""))))));
+  }
+
+  // Left: time since the agent's state changed, as in the native navbar. Right: Joe's last prompt.
+  times(t, a, item, now) {
+    const when = this.changed[a.address]?.at;
+    return h_flex()
+      .flex_none()
+      .gap(6)
+      .text_size(11)
+      .when(Boolean(when), (el) => el.child(div()
+        .id(`chief-state-${a.address}`)
+        .text_color(t.dim)
+        .tooltip(`${a.status === "working" ? "Working" : a.status === "blocked" ? "Waiting" : "Idle"} for ${age(now - when)}`)
+        .child(age(now - when))))
+      .child(div()
+        .id(`chief-you-${a.address}`)
+        .text_color(item.touched ? t.muted : t.dim)
+        .tooltip(item.touched ? `Your last prompt: ${age(now - item.touched)} ago` : "No prompt from you since tracking started")
+        .child(item.touched ? `you ${age(now - item.touched)}` : "you –"));
+  }
+
+  // Stamps agents whose state changed, with the native agents mod's rule, so both navbars show
+  // the same time. Done and idle count as one: looking at a finished agent turns done into idle.
+  track(list, now) {
+    let dirty = false;
+    for (const a of list) {
+      const s = a.status === "done" ? "idle" : a.status;
+      if (this.changed[a.address]?.s === s) continue;
+      this.changed[a.address] = { s, at: now };
+      dirty = true;
+    }
+    if (!dirty) return;
+    const listed = new Set(list.map((a) => a.address));
+    for (const [k, c] of Object.entries(this.changed)) if (!listed.has(k) && now - c.at > 30 * 86400000) delete this.changed[k];
+    localStorage.setItem("changed", JSON.stringify(this.changed));
   }
 
   // urgent: an agent blocked itself or through a sub-agent.
@@ -460,6 +502,7 @@ export default class Chief extends View {
     const urgent = (i) => i.agent.status === "blocked" || trees.get(i.agent.address).some((s) => kidStatus(s.t, byAddress.get(s.t.address)?.agent.status) === "blocked");
     const sections = this.sections(top, urgent);
     setAgentOrder(sections.flatMap((g) => g.members.flatMap((i) => [i.agent.address, ...trees.get(i.agent.address).map((s) => s.t.address).filter((a) => byAddress.has(a))])));
+    this.track(items.map((i) => i.agent), now);
     if (narrow()) return this.rail(t, items);
 
     const needs = items.filter((i) => i.agent.status === "blocked").length;
