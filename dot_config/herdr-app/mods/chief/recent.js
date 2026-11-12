@@ -1,10 +1,10 @@
 // Recent sessions: every interactive agent the VM recorder saw, open or closed, with search and reopen.
-// The list lives on each agent machine (agent-board/session-log.mjs). This file only reads it.
+// The list lives on each agent machine (agent-board/session-log.ts). This file only reads it.
 import { exec, spaces, terminals, run } from "herdr";
 
 // exec gets herdr-core's PATH, which has no node. An interactive zsh would find it but writes
 // terminal escape codes to stdout, so the usual node folders are added here instead.
-const LIST = 'PATH="/home/linuxbrew/.linuxbrew/bin:/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH" exec node "$HOME/.pi/agent/agent-board/session-log.mjs" list 500';
+const LIST = 'PATH="/home/linuxbrew/.linuxbrew/bin:/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH" exec node "$HOME/.pi/agent/agent-board/session-log.ts" list 500';
 
 export const recent = { at: 0, loading: false, error: "", rows: [] };
 
