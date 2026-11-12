@@ -5,7 +5,7 @@ import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
 import { collect, age } from "./model.js";
-import { overview, initOverview, openUrl } from "./overview.js";
+import { overview, agentCard, initOverview, openUrl } from "./overview.js";
 import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
 
 const RAIL = 44;
@@ -52,6 +52,16 @@ function toggleOverview() {
   setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", frame: "none", key: "chief-overview", width: 0.94, height: 0.88, props: { view: "overview" } }));
 }
 
+// One agent's card in its own window. The Overview and the card share detail state.
+function openCard(address) {
+  for (const key of ["chief.overview", "chief.card"]) {
+    const open = shared(key);
+    if (open) closeOverlay(open);
+    setShared(key, null);
+  }
+  setShared("chief.card", openOverlay({ mod: "chief", kind: "window", frame: "none", key: "chief-card", width: 780, height: 0.85, props: { view: "card", address } }));
+}
+
 // Opens the Overview on one tab. An open Overview is reopened so its tab loads.
 function showOverview(tab) {
   setShared("chief.ovtab", tab);
@@ -72,7 +82,7 @@ const sortMode = () => (shared("chief.sort") === "space" ? "space" : "recent");
 
 export default class Chief extends View {
   init(_props, cx) {
-    if (props()?.view === "overview") {
+    if (props()?.view === "overview" || props()?.view === "card") {
       // A window does not take the keyboard when it opens, so Esc and c need this.
       this.handle = cx.focus_handle();
       this.handle.focus();
@@ -82,6 +92,8 @@ export default class Chief extends View {
     }
     // The window is not kept, so after a restart a remembered id is stale.
     setShared("chief.overview", null);
+    setShared("chief.card", null);
+    this.hovered = null;
     this.tab = "agents";
     this.folded = new Set();
     // Ages and the stale rule depend on the clock, not only on live data.
@@ -170,33 +182,78 @@ export default class Chief extends View {
       .when(!open, (el) => el.child(String(subs.length)));
   }
 
+  // The focused agent's row also shows its last report, so a jump to an agent brings its context.
   row(t, item, now, subs = []) {
     const { agent: a, report: r } = item;
     const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
     const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
-    return h_flex()
+    const open = a.focused && Boolean(r);
+    const info = this.hovered === a.address || a.focused;
+    return v_flex()
       .id(`chief-${a.address}`)
-      .h(26)
-      .px(8)
-      .gap(7)
       .flex_none()
-      .items_center()
       .rounded(7)
       .when(a.status === "blocked", (el) => el.bg(t.blocked + "14"))
       .when(a.focused, (el) => el.bg(t.selected))
-      .cursor_pointer()
-      .hover((s) => s.bg(t.hover))
-      .tooltip(tip)
-      .on_click(() => run("pane.focus", { pane: a.pane }))
-      .child(this.status(t, a.status))
-      .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
-      .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
-      .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
-      .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–"));
+      .on_hover((hovered, cx) => {
+        if (hovered) this.hovered = a.address;
+        else if (this.hovered === a.address) this.hovered = null;
+        cx.notify();
+      })
+      .child(h_flex()
+        .id(`chief-head-${a.address}`)
+        .h(26)
+        .px(8)
+        .gap(7)
+        .items_center()
+        .rounded(7)
+        .cursor_pointer()
+        .hover((s) => s.bg(t.hover))
+        .when(!open, (el) => el.tooltip(tip))
+        .on_click(() => run("pane.focus", { pane: a.pane }))
+        .child(this.status(t, a.status))
+        .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
+        .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
+        .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
+        .when(info, (el) => el.child(div()
+          .id(`chief-info-${a.address}`)
+          .flex_none()
+          .px(4)
+          .rounded(4)
+          .text_size(12)
+          .text_color(t.dim)
+          .cursor_pointer()
+          .hover((s) => s.bg(t.hover).text_color(t.foreground))
+          .tooltip("Open the agent's card")
+          .on_click((_e, cx) => {
+            cx.stop_propagation();
+            openCard(a.address);
+          })
+          .child("ⓘ")))
+        .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–")))
+      .when(open, (el) => el.child(v_flex()
+        .pl(29)
+        .pr(10)
+        .pb(7)
+        .gap(4)
+        .text_size(11.5)
+        .line_height("16px")
+        .when(Boolean(r.next), (el) => el.child(div().text_color(t.foreground).child(`Next: ${r.next}`)))
+        .child(div().text_color(t.muted).child(r.update.length > 280 ? r.update.slice(0, 279) + "…" : r.update))
+        .children(r.links.slice(0, 3).map((url, i) => div()
+          .id(`chief-flink-${i}`)
+          .truncate()
+          .text_color(t.dim)
+          .cursor_pointer()
+          .hover((s) => s.text_color(t.foreground))
+          .tooltip(url)
+          .on_click((_e, cx) => {
+            cx.stop_propagation();
+            openUrl(url);
+          })
+          .child(url.replace(/^https?:\/\/(www\.)?/, ""))))));
   }
 
-  // Blocked agents first, then the ones Joe prompted most recently. Flat, or grouped by space
-  // with spaces in the order of their most recent agent.
   // urgent: an agent blocked itself or through a sub-agent.
   sections(all, urgent = (i) => i.agent.status === "blocked") {
     const items = all.slice().sort((x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq);
@@ -386,6 +443,7 @@ export default class Chief extends View {
     const now = Date.now();
     const items = collect(agents(), terminals(), now);
     if (props()?.view === "overview") return overview(t, items, now, this.handle);
+    if (props()?.view === "card") return agentCard(t, items, now, this.handle);
     // A sub-agent shows under its parent, not as a row of its own. From the native agents mod.
     const all = terminals();
     const byAddress = new Map(items.map((i) => [i.agent.address, i]));

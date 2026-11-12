@@ -55,6 +55,7 @@ export function initOverview(cx) {
     ui.typing = false;
     cx.notify();
   });
+  if (inCard()) return openDetail(props().address, cx);
   // A detail left open when the window closed is not shown again.
   if (shared("chief.detail")) openDetail(shared("chief.detail"), cx);
   if (shared("chief.ovtab") === "recent") openRecent(cx);
@@ -87,6 +88,7 @@ export function openDetail(address, cx) {
 }
 
 function closeDetail(cx) {
+  if (inCard()) return closeOverview();
   setShared("chief.detail", null);
   ui.confirmClose = false;
   cx.notify();
@@ -141,8 +143,12 @@ function sendDraft(cx) {
 
 export const isCompact = () => shared("chief.compact") === true;
 
+// The card window shows one agent's detail. It shares the detail state with the Overview,
+// so only one of them is open at a time.
+const inCard = () => props()?.view === "card";
+
 export function closeOverview() {
-  setShared("chief.overview", null);
+  setShared(inCard() ? "chief.card" : "chief.overview", null);
   setShared("chief.detail", null);
   closeOverlay(props().overlay);
 }
@@ -453,7 +459,7 @@ function detail(t, item, items, now) {
       .child(h_flex()
         .gap(8)
         .items_center()
-        .child(button("chief-back", "‹ Board (Esc)", (_e, cx) => closeDetail(cx)))
+        .child(button("chief-back", inCard() ? "Close (Esc)" : "‹ Board (Esc)", (_e, cx) => closeDetail(cx)))
         .child(div().flex_1())
         .child(button("chief-focus", "Focus agent (Enter)", () => focusAgent(a), true)))
       .child(h_flex()
@@ -764,6 +770,26 @@ function prBoard(items, now, prs) {
           .child(header(col, count))
           .children(list.map((pr) => prCard(pr, now, byUrl.get(prKey(pr.url)) ?? [])));
       })));
+}
+
+export function agentCard(t, items, now, handle) {
+  const item = items.find((i) => i.agent.address === shared("chief.detail"));
+  return v_flex()
+    .id("chief-card-root")
+    .track_focus(handle)
+    .on_key_down(overviewKey)
+    .size_full()
+    .rounded(12)
+    .overflow_hidden()
+    .border(1)
+    .border_color(C.edge)
+    .bg(C.column)
+    .text_size(13)
+    .child(item
+      ? detail(t, item, items, now)
+      : v_flex().p(20).gap(10).text_color(C.muted)
+        .child("This agent is gone.")
+        .child(h_flex().child(button("chief-card-close", "Close (Esc)", closeOverview))));
 }
 
 export function overview(t, items, now, handle) {
