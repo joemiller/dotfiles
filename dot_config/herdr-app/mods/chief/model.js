@@ -52,14 +52,15 @@ export function classify(agent, report, now) {
 
 // Every agent with its report and group, in display order.
 // The session's own name (/name, /rename), else a tab name someone chose, else the terminal
-// title without its program prefix. A tab name of only digits is herdr's automatic number.
+// title, else the space. A tab name of only digits is herdr's automatic number.
 export function displayName(agent, labels) {
   const tab = agent.tab_name ?? "";
   const raw = agent.title ?? "";
-  // Pi titles are "π - <name> - <folder>".
+  // Pi titles are "π - <name> - <folder>", or "π - <folder>" without a name. The folder is no name.
   const pi = raw.startsWith("π - ") ? raw.slice(4).split(" - ") : null;
-  const title = (pi ? (pi.length > 1 ? pi.slice(0, -1).join(" - ") : pi[0]) : raw.replace(/^[^\p{L}\p{N}]+/u, "")).trim();
-  return labels["chief.name"] || (tab && !/^\d+$/.test(tab) ? tab : "") || title || `${agent.space_name || "?"} · ${tab}`;
+  const title = (pi ? pi.slice(0, -1).join(" - ") : raw.replace(/^[^\p{L}\p{N}]+/u, "")).trim();
+  const space = agent.space_name || "?";
+  return labels["chief.name"] || (tab && !/^\d+$/.test(tab) ? tab : "") || title || (!tab || tab === "1" ? space : `${space} · ${tab}`);
 }
 
 export function collect(agentList, terminalList, now) {
