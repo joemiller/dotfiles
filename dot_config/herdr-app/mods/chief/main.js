@@ -93,7 +93,6 @@ export default class Chief extends View {
     // The window is not kept, so after a restart a remembered id is stale.
     setShared("chief.overview", null);
     setShared("chief.card", null);
-    this.hovered = null;
     this.tab = "agents";
     this.folded = new Set();
     // Ages and the stale rule depend on the clock, not only on live data.
@@ -188,39 +187,47 @@ export default class Chief extends View {
     const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
     const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
     const open = a.focused && Boolean(r);
-    const info = this.hovered === a.address || a.focused;
     return v_flex()
       .id(`chief-${a.address}`)
       .flex_none()
       .rounded(7)
       .when(a.status === "blocked", (el) => el.bg(t.blocked + "14"))
       .when(a.focused, (el) => el.bg(t.selected))
-      .on_hover((hovered, cx) => {
-        if (hovered) this.hovered = a.address;
-        else if (this.hovered === a.address) this.hovered = null;
-        cx.notify();
-      })
+      // Split row: the name part focuses the agent, the › part opens its card.
       .child(h_flex()
-        .id(`chief-head-${a.address}`)
         .h(26)
-        .px(8)
-        .gap(7)
         .items_center()
-        .rounded(7)
-        .cursor_pointer()
-        .hover((s) => s.bg(t.hover))
-        .when(!open, (el) => el.tooltip(tip))
-        .on_click(() => run("pane.focus", { pane: a.pane }))
-        .child(this.status(t, a.status))
-        .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
-        .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
-        .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
-        .when(info, (el) => el.child(div()
-          .id(`chief-info-${a.address}`)
+        .child(h_flex()
+          .id(`chief-head-${a.address}`)
+          .h_full()
+          .flex_1()
+          .min_w(0)
+          .pl(8)
+          .pr(6)
+          .gap(7)
+          .items_center()
+          .rounded_l(7)
+          .cursor_pointer()
+          .hover((s) => s.bg(t.hover))
+          .when(!open, (el) => el.tooltip(tip))
+          .on_click(() => run("pane.focus", { pane: a.pane }))
+          .child(this.status(t, a.status))
+          .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
+          .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
+          .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
+          .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–")))
+        .child(div()
+          .id(`chief-card-${a.address}`)
+          .h_full()
+          .w(28)
+          .flex()
           .flex_none()
-          .px(4)
-          .rounded(4)
-          .text_size(12)
+          .items_center()
+          .justify_center()
+          .rounded_r(7)
+          .border_l(1)
+          .border_color(t.border)
+          .text_size(15)
           .text_color(t.dim)
           .cursor_pointer()
           .hover((s) => s.bg(t.hover).text_color(t.foreground))
@@ -229,8 +236,7 @@ export default class Chief extends View {
             cx.stop_propagation();
             openCard(a.address);
           })
-          .child("ⓘ")))
-        .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–")))
+          .child("›")))
       .when(open, (el) => el.child(v_flex()
         .pl(29)
         .pr(10)
