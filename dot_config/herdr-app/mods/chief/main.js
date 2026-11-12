@@ -140,7 +140,7 @@ export default class Chief extends View {
     return h_flex()
       .id(`chief-sub-${k.address}`)
       .h(24)
-      .pl(12)
+      .pl(18)
       .pr(8)
       .flex_none()
       .items_center()
