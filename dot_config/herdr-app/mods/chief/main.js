@@ -61,6 +61,13 @@ function showOverview(tab) {
   toggleOverview();
 }
 
+// A sub-agent reports to its parent, so its done is not news: it shows as idle. Errors count
+// as blocked. From the native agents mod.
+const kidStatus = (k, listed) => {
+  const s = listed ?? k.status;
+  return s === "error" ? "blocked" : s === "done" ? "idle" : s;
+};
+
 const sortMode = () => (shared("chief.sort") === "space" ? "space" : "recent");
 
 export default class Chief extends View {
@@ -97,13 +104,73 @@ export default class Chief extends View {
     });
   }
 
+  // Drawn as the native agents mod draws them: idle a ring, done a dot, blocked a "!" here,
+  // because the Needs you header already says it.
   status(t, status) {
     if (status === "working") return svg("mods/workspace-chrome/spinner.svg").size(12).mx(1).flex_none().text_color(t.working).spin(900);
+    if (status === "blocked") return div().size(14).flex_none().rounded(4).bg(t.blocked + "26").text_size(10.5).font_bold().text_color(t.blocked).flex().items_center().justify_center().child("!");
     if (status === "idle") return div().size(7).mx(3).flex_none().rounded(4).border(1.5).border_color(t.idle ?? t.dim);
-    return div().size(7).mx(3).flex_none().rounded(4).bg(t[status] ?? t.dim);
+    return div().size(7).mx(3).flex_none().rounded(4).bg(status === "done" ? t.done ?? t.dim : t.dim + "00");
   }
 
-  row(t, item, now) {
+  // Live sub-agents of addr, depth first, with the tree lines in front of each. From the native agents mod.
+  tree(all, addr, lead = []) {
+    const kids = all.filter((k) => k.parent === addr && k.state === "live");
+    return kids.flatMap((k, i) => {
+      const last = i === kids.length - 1;
+      return [{ t: k, lines: [...lead, last ? "└" : "├"] }, ...this.tree(all, k.address, [...lead, last ? "" : "│"])];
+    });
+  }
+
+  subRow(t, s, byAddress, now) {
+    const k = s.t;
+    const item = byAddress.get(k.address);
+    const st = kidStatus(k, item?.agent.status);
+    return h_flex()
+      .id(`chief-sub-${k.address}`)
+      .h(24)
+      .pl(12)
+      .pr(8)
+      .flex_none()
+      .items_center()
+      .rounded(7)
+      .when(Boolean(item?.agent.focused), (el) => el.bg(t.selected))
+      .cursor_pointer()
+      .hover((s) => s.bg(t.hover))
+      .on_click(() => (item ? run("pane.focus", { pane: item.agent.pane }) : run("terminal.peek", { terminal: k.address })))
+      .children(s.lines.map((l) => div().self_start().mt(-4).w(9).h(16).mr(4).flex_none()
+        .when(Boolean(l), (el) => el.border_l(1.5).border_color(t.input))
+        .when(l === "└" || l === "├", (el) => el.border_b(1.5).rounded_bl(6))))
+      .child(div().flex_1().min_w(0).truncate().text_color(t.muted).child(item?.name || k.name || k.template || k.program?.name || k.address))
+      .when(Boolean(item?.touched), (el) => el.child(div().flex_none().mr(6).text_size(11).text_color(t.dim).child(age(now - item.touched))))
+      .child(this.status(t, st));
+  }
+
+  fold(t, address, subs) {
+    const open = !this.folded.has(address);
+    return div()
+      .id(`chief-fold-${address}`)
+      .h(18)
+      .px(3)
+      .gap(3)
+      .flex()
+      .flex_none()
+      .items_center()
+      .rounded(4)
+      .text_size(11)
+      .text_color(t.dim)
+      .cursor_pointer()
+      .hover((s) => s.bg(t.hover).text_color(t.foreground))
+      .on_click((_e, cx) => {
+        cx.stop_propagation();
+        open ? this.folded.add(address) : this.folded.delete(address);
+        cx.notify();
+      })
+      .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(11).flex_none())
+      .when(!open, (el) => el.child(String(subs.length)));
+  }
+
+  row(t, item, now, subs = []) {
     const { agent: a, report: r } = item;
     const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
     const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
@@ -124,15 +191,17 @@ export default class Chief extends View {
       .child(this.status(t, a.status))
       .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
       .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name))
+      .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
       .child(div().flex_none().text_size(11).text_color(t.dim).child(item.touched ? age(now - item.touched) : "–"));
   }
 
   // Blocked agents first, then the ones Joe prompted most recently. Flat, or grouped by space
   // with spaces in the order of their most recent agent.
-  sections(all) {
+  // urgent: an agent blocked itself or through a sub-agent.
+  sections(all, urgent = (i) => i.agent.status === "blocked") {
     const items = all.slice().sort((x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq);
-    const blocked = items.filter((i) => i.agent.status === "blocked");
-    const rest = items.filter((i) => i.agent.status !== "blocked");
+    const blocked = items.filter(urgent);
+    const rest = items.filter((i) => !urgent(i));
     const out = blocked.length ? [{ id: "blocked", label: "Needs you", color: "blocked", members: blocked }] : [];
     if (sortMode() === "recent") return [...out, { id: "recent", label: "", members: rest }];
     const bySpace = new Map();
@@ -317,15 +386,27 @@ export default class Chief extends View {
     const now = Date.now();
     const items = collect(agents(), terminals(), now);
     if (props()?.view === "overview") return overview(t, items, now, this.handle);
-    const ordered = this.sections(items).flatMap((g) => g.members);
-    setAgentOrder(ordered.map((i) => i.agent.address));
+    // A sub-agent shows under its parent, not as a row of its own. From the native agents mod.
+    const all = terminals();
+    const byAddress = new Map(items.map((i) => [i.agent.address, i]));
+    const trees = new Map(items.map((i) => [i.agent.address, this.tree(all, i.agent.address)]));
+    const nested = new Set([...trees.values()].flatMap((subs) => subs.map((s) => s.t.address)));
+    const top = items.filter((i) => !nested.has(i.agent.address));
+    const urgent = (i) => i.agent.status === "blocked" || trees.get(i.agent.address).some((s) => kidStatus(s.t, byAddress.get(s.t.address)?.agent.status) === "blocked");
+    const sections = this.sections(top, urgent);
+    setAgentOrder(sections.flatMap((g) => g.members.flatMap((i) => [i.agent.address, ...trees.get(i.agent.address).map((s) => s.t.address).filter((a) => byAddress.has(a))])));
     if (narrow()) return this.rail(t, items);
 
     const needs = items.filter((i) => i.agent.status === "blocked").length;
     const later = TABS.find((tab) => tab.id === this.tab)?.later;
-    const rows = [this.sortToggle(t), ...this.sections(items).flatMap((g) => [
+    const withKids = (i) => {
+      const subs = trees.get(i.agent.address);
+      const head = this.row(t, i, now, subs);
+      return this.folded.has(i.agent.address) ? [head] : [head, ...subs.map((s) => this.subRow(t, s, byAddress, now))];
+    };
+    const rows = [this.sortToggle(t), ...sections.flatMap((g) => [
       this.header(t, g, g.members.length),
-      ...(this.folded.has(g.id) ? [] : g.members.map((i) => this.row(t, i, now))),
+      ...(this.folded.has(g.id) ? [] : g.members.flatMap(withKids)),
     ])].filter(Boolean);
     return v_flex()
       .size_full()
