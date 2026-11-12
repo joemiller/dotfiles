@@ -14,7 +14,7 @@ const TABS = [
   { id: "agents", label: "Agents" },
   { id: "prs", label: "PRs" },
   { id: "slack", label: "Slack", later: "Slack is phase 2." },
-  { id: "closed", label: "Closed", later: "Closed sessions are phase 2." },
+  { id: "recent", label: "Recent" },
 ];
 
 function find(node, test) {
@@ -50,6 +50,15 @@ function toggleOverview() {
     return;
   }
   setShared("chief.overview", openOverlay({ mod: "chief", kind: "window", frame: "none", key: "chief-overview", width: 0.94, height: 0.88, props: { view: "overview" } }));
+}
+
+// Opens the Overview on one tab. An open Overview is reopened so its tab loads.
+function showOverview(tab) {
+  setShared("chief.ovtab", tab);
+  const open = shared("chief.overview");
+  if (open) closeOverlay(open);
+  setShared("chief.overview", null);
+  toggleOverview();
 }
 
 export default class Chief extends View {
@@ -165,6 +174,8 @@ export default class Chief extends View {
         .text_color(tab.later ? t.dim : t.foreground)
         .hover((s) => s.bg(t.hover))
         .on_click((_e, cx) => {
+          // Recent needs search and room, so it opens in the Overview.
+          if (tab.id === "recent") return showOverview("recent");
           this.tab = tab.id;
           cx.notify();
         })
