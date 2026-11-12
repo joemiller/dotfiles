@@ -269,8 +269,9 @@ export default class Chief extends View {
   }
 
   // Left: time since the agent's state changed, as in the native navbar. Right: Joe's last prompt.
+  // The core's status time survives restarts. The local stamp is only for an app without it.
   times(t, a, item, now) {
-    const when = this.changed[a.address]?.at;
+    const when = item.statusAt || this.changed[a.address]?.at;
     return h_flex()
       .flex_none()
       .gap(6)

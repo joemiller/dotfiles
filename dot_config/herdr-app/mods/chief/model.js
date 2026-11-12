@@ -66,6 +66,8 @@ export function displayName(agent, labels) {
 export function collect(agentList, terminalList, now) {
   const labels = new Map(terminalList.map((term) => [term.address, term.labels ?? {}]));
   const terminalParent = new Map(terminalList.map((term) => [term.address, term.parent ?? null]));
+  // herdr-core's time of the last status change. The native agents navbar shows the same.
+  const statusAt = new Map(terminalList.map((term) => [term.address, term.status_ms ?? 0]));
   const items = agentList.map((agent) => {
     const own = labels.get(agent.address) ?? {};
     const report = readReport(own);
@@ -74,6 +76,7 @@ export function collect(agentList, terminalList, now) {
       report,
       name: displayName(agent, own),
       touched: Date.parse(own["chief.touched"] ?? "") || 0,
+      statusAt: statusAt.get(agent.address) ?? 0,
       parent: terminalParent.get(agent.address) ?? null,
       prio: own["chief.prio"] === "high",
       group: classify(agent, report, now),
