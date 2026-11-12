@@ -55,16 +55,27 @@ export function resumeCommand(r) {
   return `exec pi --session ${quote(r.path || r.id)}`;
 }
 
-// The original space if it still exists on that machine, else the first space there.
+// herdr's `where` label is "space / tab".
+const placeNames = (r) => {
+  const [space = "", ...tab] = (r.where ?? "").split(" / ");
+  return { space, tab: tab.join(" / ") };
+};
+
+// The original space by ID, else a space on that machine with its old name.
 export function targetSpace(r) {
   const here = spaces().filter((s) => s.machine === r.machine);
-  return here.find((s) => s.id === r.space || s.id.endsWith("/" + r.space)) ?? here[0] ?? null;
+  const name = placeNames(r).space;
+  return here.find((s) => s.id === r.space || s.id.endsWith("/" + r.space))
+    ?? (name ? here.find((s) => s.name === name) : null)
+    ?? null;
 }
 
+// Without a matching space, the space is created again with its old name.
 export function reopen(r) {
+  const names = placeNames(r);
+  const tab = (names.tab || recordTitle(r)).slice(0, 40);
+  const argv = ["zsh", "-lic", resumeCommand(r)];
   const space = targetSpace(r);
-  if (!space) throw new Error(`no space on ${r.machine}`);
-  const tab = (r.where?.split(" / ").slice(1).join(" / ") || recordTitle(r)).slice(0, 40);
-  run("tab.new", { space: space.id, name: tab, folder: r.cwd, argv: ["zsh", "-lic", resumeCommand(r)] });
-  return space;
+  if (space) run("tab.new", { space: space.id, name: tab, folder: r.cwd, argv });
+  else run("space.new", { name: names.space || recordTitle(r).slice(0, 40), tab, folder: r.cwd, argv, machine: r.machine });
 }
