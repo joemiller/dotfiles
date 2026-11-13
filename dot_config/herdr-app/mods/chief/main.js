@@ -78,6 +78,7 @@ const kidStatus = (k, listed) => {
   return s === "error" ? "blocked" : s === "done" ? "idle" : s;
 };
 
+const summaries = () => shared("chief.summaries") === "on";
 const sortMode = () => (shared("chief.sort") === "space" ? "space" : "recent");
 
 export default class Chief extends View {
@@ -95,6 +96,7 @@ export default class Chief extends View {
     setShared("chief.card", null);
     this.tab = "agents";
     this.folded = new Set();
+    this.expanded = new Set();
     // Each agent's last state and when it changed (ms), kept across restarts.
     this.changed = JSON.parse(localStorage.getItem("changed") ?? "{}");
     // Ages and the stale rule depend on the clock, not only on live data.
@@ -183,12 +185,14 @@ export default class Chief extends View {
       .when(!open, (el) => el.child(String(subs.length)));
   }
 
-  // The focused agent's row also shows its last report, so a jump to an agent brings its context.
+  // The › opens the row to show the agent's last report. With Summaries on, closed rows show
+  // one line of it: the next trigger, else the report title.
   row(t, item, now, subs = []) {
     const { agent: a, report: r } = item;
     const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
     const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
-    const open = a.focused && Boolean(r);
+    const open = this.expanded.has(a.address);
+    const line = !open && summaries() && r ? (r.next ? `Next: ${r.next}` : r.title || r.update) : "";
     return v_flex()
       .id(`chief-${a.address}`)
       .flex_none()
@@ -211,16 +215,16 @@ export default class Chief extends View {
           .rounded_l(7)
           .border_r(1)
           .border_color(t.border)
-          .text_size(15)
-          .text_color(t.dim)
+          .text_color(open ? t.foreground : t.dim)
           .cursor_pointer()
           .hover((s) => s.bg(t.hover).text_color(t.foreground))
-          .tooltip("Open the agent's card")
+          .tooltip(open ? "Hide the last report" : "Show the last report")
           .on_click((_e, cx) => {
             cx.stop_propagation();
-            openCard(a.address);
+            open ? this.expanded.delete(a.address) : this.expanded.add(a.address);
+            cx.notify();
           })
-          .child("›"))
+          .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(12).flex_none()))
         .child(h_flex()
           .id(`chief-head-${a.address}`)
           .h_full()
@@ -245,6 +249,7 @@ export default class Chief extends View {
             .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name)))
           .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
           .child(this.times(t, a, item, now))))
+      .when(Boolean(line), (el) => el.child(div().pl(47).pr(10).pb(5).mt(-3).truncate().text_size(11).text_color(t.dim).child(line)))
       .when(open, (el) => el.child(v_flex()
         .pl(47)
         .pr(10)
@@ -252,10 +257,21 @@ export default class Chief extends View {
         .gap(4)
         .text_size(11.5)
         .line_height("16px")
-        .when(Boolean(r.next), (el) => el.child(div().text_color(t.foreground).child(`Next: ${r.next}`)))
-        .child(div().text_color(t.muted).child(r.update.length > 280 ? r.update.slice(0, 279) + "…" : r.update))
-        .children(r.links.slice(0, 3).map((url, i) => div()
-          .id(`chief-flink-${i}`)
+        .when(!r, (el) => el.child(div().text_color(t.dim).child("No report from this agent yet.")))
+        .when(Boolean(r?.next), (el) => el.child(div().text_color(t.foreground).child(`Next: ${r.next}`)))
+        .when(Boolean(r), (el) => el.child(div().text_color(t.muted).child(r.update.length > 280 ? r.update.slice(0, 279) + "…" : r.update)))
+        .child(div()
+          .id(`chief-opencard-${a.address}`)
+          .text_color(t.dim)
+          .cursor_pointer()
+          .hover((s) => s.text_color(t.foreground))
+          .on_click((_e, cx) => {
+            cx.stop_propagation();
+            openCard(a.address);
+          })
+          .child("Open card ↗"))
+        .children((r?.links ?? []).slice(0, 3).map((url, i) => div()
+          .id(`chief-flink-${a.address}-${i}`)
           .truncate()
           .text_color(t.dim)
           .cursor_pointer()
@@ -485,7 +501,25 @@ export default class Chief extends View {
       .flex_none()
       .text_size(11)
       .child(choice("recent", "Recent"))
-      .child(choice("space", "By space"));
+      .child(choice("space", "By space"))
+      .child(div().flex_1())
+      .child(div()
+        .id("chief-summaries")
+        .px(7)
+        .h(20)
+        .flex()
+        .items_center()
+        .rounded(5)
+        .cursor_pointer()
+        .text_color(summaries() ? t.foreground : t.dim)
+        .when(summaries(), (el) => el.bg(t.selected))
+        .hover((s) => s.text_color(t.foreground))
+        .tooltip("Show one line of each agent's last report")
+        .on_click((_e, cx) => {
+          setShared("chief.summaries", summaries() ? "off" : "on");
+          cx.notify();
+        })
+        .child("Summaries"));
   }
 
   render(_cx) {
