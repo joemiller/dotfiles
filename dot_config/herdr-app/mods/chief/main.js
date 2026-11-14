@@ -2,11 +2,13 @@
 // the report comes from chief.* labels that the agent-board reporters write on each terminal.
 
 import { View, div, svg } from "gpui-kit";
-import { v_flex, h_flex } from "gpui-base";
+import { v_flex, h_flex, HoverCard } from "gpui-base";
 import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
 import { collect, age } from "./model.js";
 import { overview, agentCard, initOverview, openUrl } from "./overview.js";
 import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
+import { trackFocus } from "./attention.js";
+import { strip, attentionCard, linkLabel } from "./heat.js";
 
 const RAIL = 44;
 const WIDE = 340;
@@ -79,7 +81,7 @@ const kidStatus = (k, listed) => {
 };
 
 const summaries = () => shared("chief.summaries") === "on";
-const sortMode = () => (shared("chief.sort") === "space" ? "space" : "recent");
+const sortMode = () => (["recent", "space"].includes(shared("chief.sort")) ? shared("chief.sort") : "hot");
 
 export default class Chief extends View {
   init(_props, cx) {
@@ -97,6 +99,8 @@ export default class Chief extends View {
     this.tab = "agents";
     this.folded = new Set();
     this.expanded = new Set();
+    this.hovered = null;
+    trackFocus(cx);
     // Each agent's last state and when it changed (ms), kept across restarts.
     this.changed = JSON.parse(localStorage.getItem("changed") ?? "{}");
     // Ages and the stale rule depend on the clock, not only on live data.
@@ -185,123 +189,139 @@ export default class Chief extends View {
       .when(!open, (el) => el.child(String(subs.length)));
   }
 
-  // The › opens the row to show the agent's last report. With Summaries on, closed rows show
-  // one line of it: the next trigger, else the report title.
+  // Variant A from the attention mockups: a 7-day heat strip on each row. Hovering the row
+  // shows the attention card; the › opens the same card in place.
   row(t, item, now, subs = []) {
-    const { agent: a, report: r } = item;
-    const where = `${a.space_name || "?"} · ${a.tab_name || a.tab}`;
-    const tip = [item.name === where ? null : where, r?.title, r?.update?.slice(0, 500)].filter(Boolean).join("\n");
+    const { agent: a } = item;
     const open = this.expanded.has(a.address);
-    const line = !open && summaries() && r ? (r.next ? `Next: ${r.next}` : r.title || r.update) : "";
+    const hovered = this.hovered === a.address;
+    const last = item.heat.prompts.at(-1)?.text;
+    const line = !open && summaries() ? last || (item.report?.next ? `Next: ${item.report.next}` : item.report?.title) : "";
+    const head = h_flex()
+      .id(`chief-head-${a.address}`)
+      .h_full()
+      .flex_1()
+      .min_w(0)
+      .pl(7)
+      .pr(8)
+      .gap(7)
+      .items_center()
+      .rounded_r(7)
+      .cursor_pointer()
+      .hover((s) => s.bg(t.hover))
+      .on_click(() => run("pane.focus", { pane: a.pane }))
+      .child(this.status(t, a.status))
+      .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
+      .child(h_flex()
+        .flex_1()
+        .min_w(0)
+        .gap(5)
+        .when(!item.name.startsWith(a.space_name || "?"), (el) => el.child(div().flex_none().max_w(100).truncate().text_color(t.dim).child(a.space_name || "?")))
+        .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name)))
+      .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
+      .child(strip(item.heat.days, t))
+      .child(hovered ? this.pin(t, a) : this.stateAge(t, a, item, now));
     return v_flex()
       .id(`chief-${a.address}`)
       .flex_none()
       .rounded(7)
       .when(a.status === "blocked", (el) => el.bg(t.blocked + "14"))
-      .when(a.focused, (el) => el.bg(t.selected))
-      // Split row: the › part on the left opens the card, the rest focuses the agent. The card
-      // target is on the left because the right screen edge can trigger the macOS Dock.
-      .child(h_flex()
-        .h(26)
-        .items_center()
-        .child(div()
-          .id(`chief-card-${a.address}`)
-          .h_full()
-          .w(26)
-          .flex()
-          .flex_none()
+      .when(a.focused || open, (el) => el.bg(t.selected))
+      .on_hover((on, cx) => {
+        if (on) this.hovered = a.address;
+        else if (this.hovered === a.address) this.hovered = null;
+        cx.notify();
+      })
+      .child(HoverCard.new(`chief-peek-${a.address}`)
+        .anchor("top_right")
+        .open_delay(450)
+        .close_delay(150)
+        .trigger(h_flex()
+          .w_full()
+          .h(26)
           .items_center()
-          .justify_center()
-          .rounded_l(7)
-          .border_r(1)
+          .child(div()
+            .id(`chief-open-${a.address}`)
+            .h_full()
+            .w(22)
+            .flex()
+            .flex_none()
+            .items_center()
+            .justify_center()
+            .rounded_l(7)
+            .text_color(open ? t.foreground : t.dim)
+            .cursor_pointer()
+            .hover((s) => s.bg(t.hover).text_color(t.foreground))
+            .tooltip(open ? "Close" : "Open")
+            .on_click((_e, cx) => {
+              cx.stop_propagation();
+              open ? this.expanded.delete(a.address) : this.expanded.add(a.address);
+              cx.notify();
+            })
+            .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(12).flex_none()))
+          .child(head))
+        .when(!open, (el) => el.content(v_flex()
+          .w(340)
+          .p(12)
+          .rounded(10)
+          .border(1)
           .border_color(t.border)
-          .text_color(open ? t.foreground : t.dim)
-          .cursor_pointer()
-          .hover((s) => s.bg(t.hover).text_color(t.foreground))
-          .tooltip(open ? "Hide the last report" : "Show the last report")
-          .on_click((_e, cx) => {
-            cx.stop_propagation();
-            open ? this.expanded.delete(a.address) : this.expanded.add(a.address);
-            cx.notify();
-          })
-          .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(12).flex_none()))
-        .child(h_flex()
-          .id(`chief-head-${a.address}`)
-          .h_full()
-          .flex_1()
-          .min_w(0)
-          .pl(7)
-          .pr(8)
-          .gap(7)
-          .items_center()
-          .rounded_r(7)
-          .cursor_pointer()
-          .hover((s) => s.bg(t.hover))
-          .when(!open, (el) => el.tooltip(tip))
-          .on_click(() => run("pane.focus", { pane: a.pane }))
-          .child(this.status(t, a.status))
-          .when(item.prio, (el) => el.child(div().flex_none().text_color(t.blocked).child("★")))
-          .child(h_flex()
-            .flex_1()
-            .min_w(0)
-            .gap(5)
-            .when(!item.name.startsWith(a.space_name || "?"), (el) => el.child(div().flex_none().max_w(110).truncate().text_color(t.dim).child(a.space_name || "?")))
-            .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name)))
-          .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
-          .child(this.times(t, a, item, now))))
-      .when(Boolean(line), (el) => el.child(div().pl(47).pr(10).pb(5).mt(-3).truncate().text_size(11).text_color(t.dim).child(line)))
-      .when(open, (el) => el.child(v_flex()
-        .pl(47)
-        .pr(10)
-        .pb(7)
-        .gap(4)
-        .text_size(11.5)
-        .line_height("16px")
-        .when(!r, (el) => el.child(div().text_color(t.dim).child("No report from this agent yet.")))
-        .when(Boolean(r?.next), (el) => el.child(div().text_color(t.foreground).child(`Next: ${r.next}`)))
-        .when(Boolean(r), (el) => el.child(div().text_color(t.muted).child(r.update.length > 280 ? r.update.slice(0, 279) + "…" : r.update)))
-        .child(div()
-          .id(`chief-opencard-${a.address}`)
-          .text_color(t.dim)
-          .cursor_pointer()
-          .hover((s) => s.text_color(t.foreground))
-          .on_click((_e, cx) => {
-            cx.stop_propagation();
-            openCard(a.address);
-          })
-          .child("Open card ↗"))
-        .children((r?.links ?? []).slice(0, 3).map((url, i) => div()
-          .id(`chief-flink-${a.address}-${i}`)
-          .truncate()
-          .text_color(t.dim)
-          .cursor_pointer()
-          .hover((s) => s.text_color(t.foreground))
-          .tooltip(url)
-          .on_click((_e, cx) => {
-            cx.stop_propagation();
-            openUrl(url);
-          })
-          .child(url.replace(/^https?:\/\/(www\.)?/, ""))))));
+          .bg(t.raised ?? t.chrome)
+          .shadow_lg()
+          .text_size(12)
+          .child(h_flex().gap(8).pb(8).items_center()
+            .child(this.status(t, a.status))
+            .child(div().flex_1().min_w(0).truncate().font_weight(600).text_color(t.foreground).child(item.name))
+            .child(strip(item.heat.days, t)))
+          .child(this.card(t, item, now, false)))))
+      .when(Boolean(line), (el) => el.child(div().pl(51).pr(10).pb(5).mt(-3).truncate().text_size(11).text_color(t.dim).child(line)))
+      .when(open, (el) => el.child(div().pl(51).pr(10).pb(8).child(this.card(t, item, now, true))));
   }
 
-  // Left: time since the agent's state changed, as in the native navbar. Right: Joe's last prompt.
-  // The core's status time survives restarts. The local stamp is only for an app without it.
-  times(t, a, item, now) {
-    const when = item.statusAt || this.changed[a.address]?.at;
-    return h_flex()
+  // Card D from the mockups, in the hover card and the open row.
+  card(t, item, now, inline) {
+    const a = item.agent;
+    return attentionCard(t, item, now, `chief-${inline ? "row" : "peek"}-${a.address}`, [
+      { id: "focus", label: "Focus", run: () => run("pane.focus", { pane: a.pane }) },
+      { id: "card", label: "Card ↗", run: () => openCard(a.address) },
+      ...(item.report?.links ?? []).slice(0, 2).map((url, i) => ({ id: `link${i}`, label: linkLabel(url), run: () => openUrl(url) })),
+    ]);
+  }
+
+  pin(t, a) {
+    return div()
+      .id(`chief-pin-${a.address}`)
       .flex_none()
-      .gap(6)
+      .p(2)
+      .rounded(4)
+      .text_color(t.dim)
+      .cursor_pointer()
+      .hover((s) => s.bg(t.hover).text_color(t.foreground))
+      .tooltip(a.pinned ? "Unpin" : "Pin to the top")
+      .on_click((_e, cx) => {
+        cx.stop_propagation();
+        run("terminal.pin", { terminal: a.address, pinned: !a.pinned });
+        // The row moves away from under the pointer, and no hover-out comes.
+        this.hovered = null;
+        cx.notify();
+      })
+      .child(svg(`mods/workspace-chrome/${a.pinned ? "pin-off" : "pin"}.svg`).size(13));
+  }
+
+  // Time since the agent's state changed, as in the native navbar. The core's status time
+  // survives restarts. The local stamp is only for an app that does not pass it.
+  stateAge(t, a, item, now) {
+    const when = item.statusAt || this.changed[a.address]?.at;
+    return div()
+      .id(`chief-state-${a.address}`)
+      .flex_none()
+      .min_w(24)
+      .text_right()
       .text_size(11)
-      .when(Boolean(when), (el) => el.child(div()
-        .id(`chief-state-${a.address}`)
-        .text_color(t.dim)
-        .tooltip(`${a.status === "working" ? "Working" : a.status === "blocked" ? "Waiting" : "Idle"} for ${age(now - when)}`)
-        .child(age(now - when))))
-      .child(div()
-        .id(`chief-you-${a.address}`)
-        .text_color(item.touched ? t.muted : t.dim)
-        .tooltip(item.touched ? `Your last prompt: ${age(now - item.touched)} ago` : "No prompt from you since tracking started")
-        .child(item.touched ? `you ${age(now - item.touched)}` : "you –"));
+      .text_color(t.dim)
+      .when(Boolean(when), (el) => el
+        .tooltip(`${a.status === "working" ? "Working" : a.status === "blocked" ? "Waiting" : "Idle"} for ${age(now - when)}${item.touched ? `\nYour last prompt: ${age(now - item.touched)} ago` : ""}`)
+        .child(age(now - when)));
   }
 
   // Stamps agents whose state changed, with the native agents mod's rule, so both navbars show
@@ -321,12 +341,21 @@ export default class Chief extends View {
   }
 
   // urgent: an agent blocked itself or through a sub-agent.
+  // Hot ranks by Joe's attention score. Its decay is the same for every agent, so the order
+  // changes only when Joe prompts or focuses an agent, not as time passes.
   sections(all, urgent = (i) => i.agent.status === "blocked") {
-    const items = all.slice().sort((x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq);
+    const mode = sortMode();
+    const items = all.slice().sort(mode === "recent"
+      ? (x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq
+      : (x, y) => y.heat.score - x.heat.score || y.touched - x.touched || y.agent.seq - x.agent.seq);
     const blocked = items.filter(urgent);
-    const rest = items.filter((i) => !urgent(i));
-    const out = blocked.length ? [{ id: "blocked", label: "Needs you", color: "blocked", members: blocked }] : [];
-    if (sortMode() === "recent") return [...out, { id: "recent", label: "", members: rest }];
+    const pinned = items.filter((i) => !urgent(i) && i.agent.pinned);
+    const rest = items.filter((i) => !urgent(i) && !i.agent.pinned);
+    const out = [
+      ...(blocked.length ? [{ id: "blocked", label: "Needs you", color: "blocked", members: blocked }] : []),
+      ...(pinned.length ? [{ id: "pinned", label: "Pinned", members: pinned }] : []),
+    ];
+    if (mode !== "space") return [...out, { id: mode, label: out.length ? (mode === "hot" ? "Hot" : "Recent") : "", members: rest }];
     const bySpace = new Map();
     for (const i of rest) {
       const id = i.agent.space;
@@ -500,6 +529,7 @@ export default class Chief extends View {
       .gap(2)
       .flex_none()
       .text_size(11)
+      .child(choice("hot", "Hot"))
       .child(choice("recent", "Recent"))
       .child(choice("space", "By space"))
       .child(div().flex_1())
@@ -514,7 +544,7 @@ export default class Chief extends View {
         .text_color(summaries() ? t.foreground : t.dim)
         .when(summaries(), (el) => el.bg(t.selected))
         .hover((s) => s.text_color(t.foreground))
-        .tooltip("Show one line of each agent's last report")
+        .tooltip("Show your last prompt under each row")
         .on_click((_e, cx) => {
           setShared("chief.summaries", summaries() ? "off" : "on");
           cx.notify();

@@ -7,6 +7,7 @@ import { age } from "./model.js";
 import { label, send, kill, readScreen, suggestReply } from "./actions.js";
 import { prData, prIndex, prKey, prStatus, refreshPrs } from "./prs.js";
 import { recent, loadRecent, liveSessions, recordTitle, matches, reopen } from "./recent.js";
+import { strip, attentionCard, minutes } from "./heat.js";
 
 // Colors from the old HTML board, so a group reads the same at a glance.
 const COLUMNS = [
@@ -796,7 +797,7 @@ export function overview(t, items, now, handle) {
   const compact = isCompact();
   const quiet = items.filter((i) => i.group === "silent");
   const hidden = items.filter((i) => i.group === "hidden").length;
-  const tab = ["prs", "recent"].includes(shared("chief.ovtab")) ? shared("chief.ovtab") : "agents";
+  const tab = ["prs", "recent", "attention"].includes(shared("chief.ovtab")) ? shared("chief.ovtab") : "agents";
   const detailItem = tab === "agents" ? items.find((i) => i.agent.address === shared("chief.detail")) : null;
   const prs = prData();
   const needs = items.filter((i) => i.group === "needs").length;
@@ -835,9 +836,11 @@ export function overview(t, items, now, handle) {
       .child(tabButton("agents", tab, needs ? `Agents · ${needs} need you` : "Agents"))
       .child(tabButton("prs", tab, prs.review.length ? `PRs · ${prs.review.length} to review` : "PRs"))
       .child(tabButton("recent", tab, "Recent"))
+      .child(tabButton("attention", tab, "Attention"))
       .child(div().text_size(12).text_color(C.muted).child(tab === "agents"
         ? `${items.length} agents${hidden ? ` · ${hidden} hidden` : ""}`
         : tab === "recent" ? (recent.loading ? "loading…" : recent.at ? `${recent.rows.length} sessions` : "")
+        : tab === "attention" ? ""
         : prs.at ? `updated ${age(now - prs.at)} ago` : "loading…"))
       .child(div().flex_1())
       .when(tab === "prs", (el) => el.child(button("chief-prs-refresh", "↻ Refresh", (_e, cx) => cx.spawn(async (cx) => {
@@ -872,6 +875,7 @@ export function overview(t, items, now, handle) {
         .child("✕")))
     .when(tab === "prs", (el) => el.child(prBoard(items, now, prs)))
     .when(tab === "recent", (el) => el.child(recentView(now)))
+    .when(tab === "attention", (el) => el.child(attentionView(t, items, now)))
     .when(Boolean(detailItem), (el) => el.child(detail(t, detailItem, items, now)))
     .when(tab === "agents" && !detailItem, (el) => el.child(v_flex()
       .id("chief-board")
@@ -897,4 +901,191 @@ export function overview(t, items, now, handle) {
           .gap(2)
           .child(header({ label: "Not reporting", hint: "No reports yet", color: C.muted }, quiet.length))
           .children(quiet.map((i) => quietRow(t, i)))))))));
+}
+
+// Attention tab: a treemap of Joe's attention, grouped by space. Area is attention in the range
+// (focus minutes, a prompt counts 6), color is how recently he last prompted the agent.
+const RANGES = [{ id: 24, label: "24h" }, { id: 168, label: "7d" }, { id: 720, label: "30d" }];
+const attention = { size: null };
+
+function squarify(values, x, y, w, h) {
+  const rects = [];
+  const rest = values.filter((v) => v.v > 0);
+  let row = [];
+  const worst = (r, side) => {
+    const sum = r.reduce((s, z) => s + z.v, 0);
+    const max = Math.max(...r.map((z) => z.v));
+    const min = Math.min(...r.map((z) => z.v));
+    return Math.max((side * side * max) / (sum * sum), (sum * sum) / (side * side * min));
+  };
+  const lay = () => {
+    const sum = row.reduce((s, z) => s + z.v, 0);
+    if (w >= h) {
+      const cw = sum / h;
+      let cy = y;
+      for (const z of row) {
+        rects.push({ ...z, x, y: cy, w: cw, h: z.v / cw });
+        cy += z.v / cw;
+      }
+      x += cw;
+      w -= cw;
+    } else {
+      const rh = sum / w;
+      let cx = x;
+      for (const z of row) {
+        rects.push({ ...z, x: cx, y, w: z.v / rh, h: rh });
+        cx += z.v / rh;
+      }
+      y += rh;
+      h -= rh;
+    }
+    row = [];
+  };
+  while (rest.length) {
+    const side = Math.min(w, h);
+    if (!row.length || worst([...row, rest[0]], side) <= worst(row, side)) row.push(rest.shift());
+    else lay();
+  }
+  if (row.length) lay();
+  return rects;
+}
+
+// Hot orange for a prompt just now, through brown, to cold blue after about five days.
+const STOPS = [[255, 179, 107], [240, 122, 42], [179, 86, 31], [75, 123, 181], [34, 50, 74]];
+function recency(hours) {
+  const p = Math.min(1, Math.log10(1 + hours) / Math.log10(120)) * (STOPS.length - 1);
+  const i = Math.floor(p);
+  const a = STOPS[i];
+  const b = STOPS[Math.min(i + 1, STOPS.length - 1)];
+  const rgb = a.map((c, k) => Math.round(c + (b[k] - c) * (p - i)));
+  const light = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 > 0.55;
+  return { bg: `#${rgb.map((c) => c.toString(16).padStart(2, "0")).join("")}`, fg: light ? "#1a1206" : "#ffffff", sub: light ? "#1a1206b0" : "#ffffffb0" };
+}
+
+const STATUS_DOT = { blocked: "#f0a04b", working: "#e7c35a", done: "#5aa2f0" };
+
+function attentionView(t, items, now) {
+  const span = RANGES.some((r) => r.id === shared("chief.attrange")) ? shared("chief.attrange") : 168;
+  const inRange = items.map((i) => ({ i, v: i.heat.within(span) })).filter((z) => z.v > 0);
+  const cold = items.length - inRange.length;
+  const selected = items.find((i) => i.agent.address === shared("chief.attsel")) ?? inRange.slice().sort((a, b) => b.v - a.v)[0]?.i;
+  const size = attention.size;
+  const tiles = [];
+  if (size && inRange.length) {
+    const spaces = new Map();
+    for (const z of inRange) {
+      const id = z.i.agent.space;
+      if (!spaces.has(id)) spaces.set(id, { name: z.i.agent.space_name || "?", members: [], v: 0 });
+      const g = spaces.get(id);
+      g.members.push(z);
+      g.v += z.v;
+    }
+    const groups = [...spaces.values()].sort((a, b) => b.v - a.v);
+    const total = groups.reduce((s, g) => s + g.v, 0);
+    for (const o of squarify(groups.map((g) => ({ g, v: (g.v / total) * size.width * size.height })), 0, 0, size.width, size.height)) {
+      const top = o.h > 60 && o.w > 90 ? 20 : 3;
+      tiles.push(div().absolute().left(o.x + 1).top(o.y + 1).w(Math.max(0, o.w - 2)).h(Math.max(0, o.h - 2)).rounded(9).border(1).border_color("#ffffff22"));
+      if (top > 3) tiles.push(div().absolute().left(o.x + 8).top(o.y + 3).max_w(Math.max(0, o.w - 16)).truncate().text_size(10.5).font_weight(650).text_color("#ffffffcc").child(o.g.name.toUpperCase()));
+      const members = o.g.members.sort((a, b) => b.v - a.v);
+      const inner = { w: o.w - 6, h: o.h - top - 3 };
+      for (const r of squarify(members.map((z) => ({ z, v: (z.v / o.g.v) * inner.w * inner.h })), o.x + 3, o.y + top, inner.w, inner.h)) {
+        const item = r.z.i;
+        const a = item.agent;
+        const c = recency(item.touched ? (now - item.touched) / 3600000 : 999);
+        const big = r.w > 160 && r.h > 92;
+        const mid = r.w > 70 && r.h > 36;
+        const last = item.heat.prompts.at(-1)?.text;
+        tiles.push(div()
+          .id(`chief-att-${a.address}`)
+          .absolute()
+          .left(r.x + 1)
+          .top(r.y + 1)
+          .w(Math.max(0, r.w - 2))
+          .h(Math.max(0, r.h - 2))
+          .rounded(7)
+          .overflow_hidden()
+          .px(8)
+          .py(6)
+          .bg(c.bg)
+          .when(selected?.agent.address === a.address, (el) => el.border(2).border_color("#ffffff"))
+          .cursor_pointer()
+          .hover((s) => s.opacity(0.88))
+          .tooltip(`${a.space_name} · ${item.name}\n${minutes(r.z.v)} in range`)
+          .on_click((_e, cx) => {
+            setShared("chief.attsel", a.address);
+            cx.notify();
+          })
+          .when(Boolean(STATUS_DOT[a.status]), (el) => el.child(div().absolute().top(8).right(8).size(7).rounded(4).bg(STATUS_DOT[a.status])))
+          .when(mid, (el) => el
+            .child(div().pr(12).truncate().text_size(12.5).font_weight(620).text_color(c.fg).child(item.name))
+            .child(div().truncate().text_size(11).text_color(c.sub).child(`${minutes(r.z.v)}${item.touched ? ` · ${age(now - item.touched)} ago` : ""}`)))
+          .when(big && Boolean(last), (el) => el.child(div().mt(5).max_h(46).overflow_hidden().text_size(11).line_height("15px").text_color(c.sub).child(`“${last}”`)))
+          .when(big, (el) => el.child(div().absolute().left(8).bottom(7).child(strip(item.heat.days, { border: "#00000033" })))));
+      }
+    }
+  }
+  const rangeButton = (r) => control(div()
+    .id(`chief-attrange-${r.id}`)
+    .px(8)
+    .py(2)
+    .rounded(5)
+    .text_size(11.5)
+    .text_color(r.id === span ? C.text : C.muted)
+    .when(r.id === span, (el) => el.bg("#ffffff14"))
+    .cursor_pointer()
+    .hover((s) => s.text_color(C.text))
+    .on_click((_e, cx) => {
+      setShared("chief.attrange", r.id);
+      cx.notify();
+    }))
+    .child(r.label);
+  return h_flex()
+    .flex_1()
+    .min_h(0)
+    .p(14)
+    .gap(14)
+    .items_start()
+    .child(v_flex()
+      .flex_1()
+      .min_w(0)
+      .h_full()
+      .gap(8)
+      .child(h_flex().gap(4).items_center()
+        .children(RANGES.map(rangeButton))
+        .child(div().flex_1())
+        .child(div().text_size(11.5).text_color(C.muted).child(`area: your attention in range · color: your last prompt, hot to cold${cold ? ` · ${cold} agents with none` : ""}`)))
+      .child(div()
+        .id("chief-att-map")
+        .relative()
+        .flex_1()
+        .w_full()
+        .min_h(0)
+        .on_size_change((s, cx) => {
+          if (attention.size?.width === s.width && attention.size?.height === s.height) return;
+          attention.size = s;
+          cx.notify();
+        })
+        .when(!inRange.length, (el) => el.child(div().p(20).text_color(C.muted).child("No attention recorded in this range yet. Prompts and focus minutes count from now on.")))
+        .children(tiles)))
+    .when(Boolean(selected), (el) => el.child(v_flex()
+      .w(320)
+      .flex_none()
+      .p(12)
+      .gap(10)
+      .rounded(10)
+      .border(1)
+      .border_color(C.edge)
+      .bg(C.card)
+      .child(h_flex().gap(8).items_center()
+        .child(div().flex_1().min_w(0).truncate().font_weight(600).text_color(C.text).child(selected.name))
+        .child(strip(selected.heat.days, t)))
+      .child(div().mt(-6).text_size(11.5).text_color(C.muted).child(`${selected.agent.space_name || "?"} · ${selected.agent.tab_name || selected.agent.tab}`))
+      .child(attentionCard(t, selected, now, `chief-att-card-${selected.agent.address}`, [
+        { id: "focus", label: "Focus ⏎", run: () => focusAgent(selected.agent) },
+        { id: "detail", label: "Details", run: (cx) => {
+          setShared("chief.ovtab", "agents");
+          setShared("chief.detail", selected.agent.address);
+          cx.notify();
+        } },
+      ]))));
 }

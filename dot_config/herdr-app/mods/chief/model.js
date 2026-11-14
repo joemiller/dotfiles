@@ -1,3 +1,5 @@
+import { attention } from "./attention.js";
+
 // Groups top to bottom. `folded` groups start closed.
 export const GROUPS = [
   { id: "needs", label: "Needs you", color: "blocked" },
@@ -71,11 +73,13 @@ export function collect(agentList, terminalList, now) {
   const items = agentList.map((agent) => {
     const own = labels.get(agent.address) ?? {};
     const report = readReport(own);
+    const touched = Date.parse(own["chief.touched"] ?? "") || 0;
     return {
       agent,
       report,
       name: displayName(agent, own),
-      touched: Date.parse(own["chief.touched"] ?? "") || 0,
+      touched,
+      heat: attention(own, touched, now),
       statusAt: statusAt.get(agent.address) ?? 0,
       parent: terminalParent.get(agent.address) ?? null,
       prio: own["chief.prio"] === "high",
