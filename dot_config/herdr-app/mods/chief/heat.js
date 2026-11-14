@@ -30,15 +30,17 @@ export const minutes = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ` ${m
 export function attentionCard(t, item, now, idPrefix, actions, showReport = false) {
   const { report: r, heat } = item;
   const agentLine = r?.next ? `Next: ${r.next}` : r?.title;
+  // Ages sit in a right-aligned column, so the prompt text starts just right of the agent name.
+  const prompt = (at, text, color) => h_flex().gap(6).items_start()
+    .child(div().w(31).flex_none().text_right().text_size(11.5).text_color(t.dim).child(at ? age(now - at) : ""))
+    .child(div().flex_1().min_w(0).text_size(12).line_height("17px").text_color(color).child(text));
   return v_flex()
-    .gap(6)
+    .gap(8)
     .text_size(11.5)
     .line_height("16px")
     .child(heat.prompts.length
-      ? v_flex().gap(3).children(heat.prompts.map((p, i) => h_flex().gap(6).items_start()
-        .child(div().w(28).flex_none().text_right().text_color(t.dim).child(age(now - p.at)))
-        .child(div().flex_1().min_w(0).text_color(i === heat.prompts.length - 1 ? t.foreground : t.muted).child(`“${p.text}”`))))
-      : div().text_color(t.dim).child(item.touched ? `Your last prompt: ${age(now - item.touched)} ago. Its text is kept from your next prompt.` : "No prompt from you yet."))
+      ? v_flex().gap(4).children(heat.prompts.map((p, i) => prompt(p.at, `“${p.text}”`, i === heat.prompts.length - 1 ? t.foreground : t.muted)))
+      : prompt(item.touched, item.touched ? "Prompt text not recorded." : "No prompt from you yet.", t.dim))
     .when(Boolean(agentLine), (el) => el.child(h_flex().gap(4).items_start()
       .child(div().flex_none().font_weight(600).text_color(t.muted).child("Agent:"))
       .child(div().flex_1().min_w(0).text_color(t.dim).child(agentLine))))

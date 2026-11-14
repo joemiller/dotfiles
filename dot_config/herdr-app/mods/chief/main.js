@@ -2,7 +2,7 @@
 // the report comes from chief.* labels that the agent-board reporters write on each terminal.
 
 import { View, div, svg } from "gpui-kit";
-import { v_flex, h_flex, HoverCard } from "gpui-base";
+import { v_flex, h_flex } from "gpui-base";
 import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder, nextCommand, openOverlay, closeOverlay, props } from "herdr";
 import { collect, age } from "./model.js";
 import { overview, agentCard, initOverview, openUrl } from "./overview.js";
@@ -233,56 +233,38 @@ export default class Chief extends View {
         else if (this.hovered === a.address) this.hovered = null;
         cx.notify();
       })
-      .child(HoverCard.new(`chief-peek-${a.address}`)
-        .anchor("top_right")
-        .open_delay(450)
-        .close_delay(150)
-        .trigger(h_flex()
-          .w_full()
-          .h(26)
+      .child(h_flex()
+        .w_full()
+        .h(26)
+        .items_center()
+        .child(div()
+          .id(`chief-open-${a.address}`)
+          .h_full()
+          .w(22)
+          .flex()
+          .flex_none()
           .items_center()
-          .child(div()
-            .id(`chief-open-${a.address}`)
-            .h_full()
-            .w(22)
-            .flex()
-            .flex_none()
-            .items_center()
-            .justify_center()
-            .rounded_l(7)
-            .text_color(open ? t.foreground : t.dim)
-            .cursor_pointer()
-            .hover((s) => s.bg(t.hover).text_color(t.foreground))
-            .tooltip(open ? "Close" : "Open")
-            .on_click((_e, cx) => {
-              cx.stop_propagation();
-              open ? this.expanded.delete(a.address) : this.expanded.add(a.address);
-              cx.notify();
-            })
-            .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(12).flex_none()))
-          .child(head))
-        .when(!open, (el) => el.content(v_flex()
-          .w(340)
-          .p(12)
-          .rounded(10)
-          .border(1)
-          .border_color(t.border)
-          .bg(t.raised ?? t.chrome)
-          .shadow_lg()
-          .text_size(12)
-          .child(h_flex().gap(8).pb(8).items_center()
-            .child(this.status(t, a.status))
-            .child(div().flex_1().min_w(0).truncate().font_weight(600).text_color(t.foreground).child(item.name))
-            .child(strip(item.heat.days, t)))
-          .child(this.card(t, item, now, false)))))
+          .justify_center()
+          .rounded_l(7)
+          .text_color(open ? t.foreground : t.dim)
+          .cursor_pointer()
+          .hover((s) => s.bg(t.hover).text_color(t.foreground))
+          .tooltip(open ? "Close" : "Open")
+          .on_click((_e, cx) => {
+            cx.stop_propagation();
+            open ? this.expanded.delete(a.address) : this.expanded.add(a.address);
+            cx.notify();
+          })
+          .child(svg(`mods/workspace-chrome/chevron-${open ? "down" : "right"}.svg`).size(12).flex_none()))
+        .child(head))
       .when(Boolean(line), (el) => el.child(div().pl(51).pr(10).pb(5).mt(-3).truncate().text_size(11).text_color(t.dim).child(line)))
-      .when(open, (el) => el.child(div().pl(51).pr(10).pb(8).child(this.card(t, item, now, true))));
+      .when(open, (el) => el.child(div().pl(29).pr(10).pt(2).pb(10).child(this.card(t, item, now))));
   }
 
-  // Card D from the mockups, in the hover card and the open row.
-  card(t, item, now, inline) {
+  // Card D from the mockups, in the open row.
+  card(t, item, now) {
     const a = item.agent;
-    return attentionCard(t, item, now, `chief-${inline ? "row" : "peek"}-${a.address}`, [
+    return attentionCard(t, item, now, `chief-row-${a.address}`, [
       { id: "focus", label: "Focus ⏎", run: () => run("pane.focus", { pane: a.pane }) },
       { id: "card", label: "Card ↗", run: () => openCard(a.address) },
       ...(item.report ? [{ id: "report", label: this.reports.has(a.address) ? "Hide report" : "Report", run: (cx) => {
