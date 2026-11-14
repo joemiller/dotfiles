@@ -8,7 +8,7 @@ import { collect, age } from "./model.js";
 import { overview, agentCard, initOverview, openUrl } from "./overview.js";
 import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
 import { trackFocus } from "./attention.js";
-import { strip, attentionCard, linkLabel } from "./heat.js";
+import { strip, attentionCard } from "./heat.js";
 
 const RAIL = 44;
 const WIDE = 340;
@@ -100,6 +100,7 @@ export default class Chief extends View {
     this.folded = new Set();
     this.expanded = new Set();
     this.hovered = null;
+    this.reports = new Set();
     trackFocus(cx);
     // Each agent's last state and when it changed (ms), kept across restarts.
     this.changed = JSON.parse(localStorage.getItem("changed") ?? "{}");
@@ -282,10 +283,13 @@ export default class Chief extends View {
   card(t, item, now, inline) {
     const a = item.agent;
     return attentionCard(t, item, now, `chief-${inline ? "row" : "peek"}-${a.address}`, [
-      { id: "focus", label: "Focus", run: () => run("pane.focus", { pane: a.pane }) },
+      { id: "focus", label: "Focus ⏎", run: () => run("pane.focus", { pane: a.pane }) },
       { id: "card", label: "Card ↗", run: () => openCard(a.address) },
-      ...(item.report?.links ?? []).slice(0, 2).map((url, i) => ({ id: `link${i}`, label: linkLabel(url), run: () => openUrl(url) })),
-    ]);
+      ...(item.report ? [{ id: "report", label: this.reports.has(a.address) ? "Hide report" : "Report", run: (cx) => {
+        this.reports.has(a.address) ? this.reports.delete(a.address) : this.reports.add(a.address);
+        cx.notify();
+      } }] : []),
+    ], this.reports.has(a.address));
   }
 
   pin(t, a) {

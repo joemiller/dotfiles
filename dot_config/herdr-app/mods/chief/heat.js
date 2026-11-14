@@ -26,8 +26,8 @@ export function scoreBar(score, t, width = 80) {
 
 export const minutes = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? ` ${m % 60}m` : ""}` : `${Math.round(m)}m`);
 
-// actions: [{ id, label, run }].
-export function attentionCard(t, item, now, idPrefix, actions) {
+// actions: [{ id, label, run }]. showReport adds the agent's full last report under its line.
+export function attentionCard(t, item, now, idPrefix, actions, showReport = false) {
   const { report: r, heat } = item;
   const agentLine = r?.next ? `Next: ${r.next}` : r?.title;
   return v_flex()
@@ -39,13 +39,16 @@ export function attentionCard(t, item, now, idPrefix, actions) {
         .child(div().w(28).flex_none().text_right().text_color(t.dim).child(age(now - p.at)))
         .child(div().flex_1().min_w(0).text_color(i === heat.prompts.length - 1 ? t.foreground : t.muted).child(`“${p.text}”`))))
       : div().text_color(t.dim).child(item.touched ? `Your last prompt: ${age(now - item.touched)} ago. Its text is kept from your next prompt.` : "No prompt from you yet."))
-    .when(Boolean(agentLine), (el) => el.child(div().text_color(t.dim).child(`Agent: ${agentLine}`)))
-    .child(h_flex().gap(8).items_center()
-      .child(scoreBar(heat.score, t))
-      .child(div().text_size(11).text_color(t.dim).child(`${minutes(heat.week.focus)} focus · ${heat.week.prompts} prompts · 7d`)))
-    .child(h_flex().gap(5).children(actions.map((a) => div()
+    .when(Boolean(agentLine), (el) => el.child(h_flex().gap(4).items_start()
+      .child(div().flex_none().font_weight(600).text_color(t.muted).child("Agent:"))
+      .child(div().flex_1().min_w(0).text_color(t.dim).child(agentLine))))
+    .when(showReport && Boolean(r?.update), (el) => el.child(div().text_color(t.muted).child(r.update.length > 1200 ? r.update.slice(0, 1199) + "…" : r.update)))
+    .child(h_flex().gap(10).items_center()
+      .child(scoreBar(heat.score, t, 90))
+      .child(div().flex_1().min_w(0).truncate().text_size(11).text_color(t.dim).child(`${minutes(heat.week.focus)} focus · ${heat.week.prompts} prompts this week`)))
+    .child(h_flex().gap(6).children(actions.map((a) => div()
       .id(`${idPrefix}-${a.id}`)
-      .px(7)
+      .px(8)
       .py(1)
       .rounded(5)
       .border(1)
@@ -61,4 +64,3 @@ export function attentionCard(t, item, now, idPrefix, actions) {
       .child(a.label))));
 }
 
-export const linkLabel = (url) => url.replace(/^https?:\/\/(www\.)?(github\.com\/)?/, "").slice(0, 28);
