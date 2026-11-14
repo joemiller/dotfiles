@@ -7,7 +7,7 @@ import { agents, terminals, theme, layout, run, shared, setShared, setAgentOrder
 import { collect, age } from "./model.js";
 import { overview, agentCard, initOverview, openUrl } from "./overview.js";
 import { POLL_MS, prData, prStatus, refreshPrs } from "./prs.js";
-import { trackFocus } from "./attention.js";
+import { trackFocus, lastSeen } from "./attention.js";
 import { strip, attentionCard } from "./heat.js";
 
 const RAIL = 44;
@@ -81,6 +81,10 @@ const kidStatus = (k, listed) => {
 };
 
 const summaries = () => shared("chief.summaries") === "on";
+// Joe's own last activity on an agent: his last prompt, or the last time he had it in front of him.
+const yours = (item) => Math.max(item.touched, lastSeen(item.agent.address));
+const ACTIVE_MS = 2 * 3600000;
+
 const sortMode = () => (["recent", "space"].includes(shared("chief.sort")) ? shared("chief.sort") : "hot");
 
 export default class Chief extends View {
@@ -222,7 +226,7 @@ export default class Chief extends View {
       .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
       .child(strip(item.heat.days, t, `chief-heat-${a.address}`))
       .when(hovered, (el) => el.child(this.pin(t, a)))
-      .child(this.stateAge(t, a, item, now));
+      .child(this.activityAge(t, a, item, now));
     return v_flex()
       .id(`chief-${a.address}`)
       .flex_none()
@@ -295,10 +299,18 @@ export default class Chief extends View {
       .child(svg(`mods/workspace-chrome/${a.pinned ? "pin-off" : "pin"}.svg`).size(13));
   }
 
-  // Time since the agent's state changed, as in the native navbar. The core's status time
-  // survives restarts. The local stamp is only for an app that does not pass it.
-  stateAge(t, a, item, now) {
-    const when = item.statusAt || this.changed[a.address]?.at;
+  // Time since the last activity on the agent, by Joe or by the agent: his last prompt, the last
+  // time he had it in front of him, or its last state change. The state time comes from the core;
+  // the local stamp is only for an app that does not pass it.
+  activityAge(t, a, item, now) {
+    const state = item.statusAt || this.changed[a.address]?.at || 0;
+    const seen = lastSeen(a.address);
+    const when = Math.max(item.touched, seen, state);
+    const lines = [
+      item.touched && `You prompted: ${age(now - item.touched)} ago`,
+      seen && `You looked: ${age(now - seen)} ago`,
+      state && `${a.status === "working" ? "Started working" : a.status === "blocked" ? "Started waiting" : "Went idle"}: ${age(now - state)} ago`,
+    ].filter(Boolean);
     return div()
       .id(`chief-state-${a.address}`)
       .flex_none()
@@ -306,9 +318,7 @@ export default class Chief extends View {
       .text_right()
       .text_size(11)
       .text_color(t.dim)
-      .when(Boolean(when), (el) => el
-        .tooltip(`${a.status === "working" ? "Working" : a.status === "blocked" ? "Waiting" : "Idle"} for ${age(now - when)}${item.touched ? `\nYour last prompt: ${age(now - item.touched)} ago` : ""}`)
-        .child(age(now - when)));
+      .when(when > 0, (el) => el.tooltip(lines.join("\n")).child(age(now - when)));
   }
 
   // Stamps agents whose state changed, with the native agents mod's rule, so both navbars show
@@ -330,10 +340,12 @@ export default class Chief extends View {
   // urgent: an agent blocked itself or through a sub-agent.
   // Hot ranks by Joe's attention score. Its decay is the same for every agent, so the order
   // changes only when Joe prompts or focuses an agent, not as time passes.
+  // In Hot, the rest falls into bands by Joe's last activity: Active (last 2 hours), Today, and
+  // Earlier. Inside each band the score keeps the multi-day view.
   sections(all, urgent = (i) => i.agent.status === "blocked") {
     const mode = sortMode();
     const items = all.slice().sort(mode === "recent"
-      ? (x, y) => y.touched - x.touched || y.agent.seq - x.agent.seq
+      ? (x, y) => yours(y) - yours(x) || y.agent.seq - x.agent.seq
       : (x, y) => y.heat.score - x.heat.score || y.touched - x.touched || y.agent.seq - x.agent.seq);
     const blocked = items.filter(urgent);
     const pinned = items.filter((i) => !urgent(i) && i.agent.pinned);
@@ -342,7 +354,16 @@ export default class Chief extends View {
       ...(blocked.length ? [{ id: "blocked", label: "Needs you", color: "blocked", members: blocked }] : []),
       ...(pinned.length ? [{ id: "pinned", label: "Pinned", members: pinned }] : []),
     ];
-    if (mode !== "space") return [...out, { id: mode, label: out.length ? (mode === "hot" ? "Hot" : "Recent") : "", members: rest }];
+    if (mode === "recent") return [...out, { id: mode, label: out.length ? "Recent" : "", members: rest }];
+    if (mode === "hot") {
+      const now = Date.now();
+      const midnight = new Date(now).setHours(0, 0, 0, 0);
+      const band = (i) => (now - yours(i) < ACTIVE_MS ? "active" : yours(i) >= midnight ? "today" : "earlier");
+      const bands = [["active", "Active"], ["today", "Today"], ["earlier", "Earlier"]]
+        .map(([id, label]) => ({ id: `hot-${id}`, label, members: rest.filter((i) => band(i) === id) }))
+        .filter((b) => b.members.length);
+      return [...out, ...bands];
+    }
     const bySpace = new Map();
     for (const i of rest) {
       const id = i.agent.space;

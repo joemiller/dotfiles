@@ -55,6 +55,10 @@ export function attention(labels, touched, now) {
   return { days, score, week, prompts: recent, within };
 }
 
+// When Joe last had each agent in front of him on this computer (ms), kept across restarts.
+const seen = JSON.parse(localStorage.getItem("seen") ?? "{}");
+export const lastSeen = (address) => seen[address] ?? 0;
+
 // Counts a minute of focus for the agent shown while this window is active and Joe is at the
 // keyboard. An agent counts from the second tick it stays focused, so passing through it does not.
 export function trackFocus(cx) {
@@ -74,9 +78,13 @@ export function trackFocus(cx) {
       const address = shown?.terminal ?? shown?.agent ?? null;
       const isAgent = Boolean(address) && agents().some((a) => a.address === address);
       const here = isAgent && appWindow().active && (await atKeyboard());
+      if (here) seen[address] = Date.now();
       if (here && address === last) seconds.set(address, (seconds.get(address) ?? 0) + TICK_MS / 1000);
       last = here ? address : null;
-      if (++ticks % 4 === 0) await flush(key, seconds).catch(() => {});
+      if (++ticks % 4 === 0) {
+        localStorage.setItem("seen", JSON.stringify(seen));
+        await flush(key, seconds).catch(() => {});
+      }
     }
   });
 }
