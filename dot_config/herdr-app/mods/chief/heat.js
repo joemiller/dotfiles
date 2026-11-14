@@ -13,9 +13,20 @@ export function heatColor(minutes, empty) {
   return HEAT[x < 0.12 ? 0 : x < 0.3 ? 1 : x < 0.55 ? 2 : x < 0.85 ? 3 : 4];
 }
 
-// Joe's attention per day for the last 7 days, today on the right.
-export function strip(days, t) {
-  return h_flex().gap(2).flex_none().children(days.map((m) => div().w(5).h(11).rounded(2).bg(heatColor(m, t.border))));
+// Joe's attention per calendar day for the last 7 days, today on the right. With an id, each
+// cell has a tooltip with that day's focus and prompts.
+export function strip(days, t, id = null) {
+  return h_flex().gap(2).flex_none().children(days.map((d, i) => {
+    const cell = div().w(5).h(11).rounded(2).bg(heatColor(d.total, t.border));
+    return id ? cell.id(`${id}-${i}`).tooltip(dayTip(d, i)) : cell;
+  }));
+}
+
+function dayTip(d, i) {
+  const date = new Date(d.start);
+  const name = i === 6 ? "Today" : i === 5 ? "Yesterday" : date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  if (!d.total) return `${name}: nothing`;
+  return `${name}: ${minutes(Math.round(d.focus))} focus · ${d.prompts} prompt${d.prompts === 1 ? "" : "s"}`;
 }
 
 // Relative: a score of 200 minute-equivalents fills the bar.

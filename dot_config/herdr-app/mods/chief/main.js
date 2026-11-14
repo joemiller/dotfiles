@@ -220,8 +220,9 @@ export default class Chief extends View {
         .when(!item.name.startsWith(a.space_name || "?"), (el) => el.child(div().flex_none().max_w(100).truncate().text_color(t.dim).child(a.space_name || "?")))
         .child(div().flex_1().min_w(0).truncate().text_color(item.touched ? t.foreground : t.muted).child(item.name)))
       .when(subs.length > 0, (el) => el.child(this.fold(t, a.address, subs)))
-      .child(strip(item.heat.days, t))
-      .child(hovered ? this.pin(t, a) : this.stateAge(t, a, item, now));
+      .child(strip(item.heat.days, t, `chief-heat-${a.address}`))
+      .when(hovered, (el) => el.child(this.pin(t, a)))
+      .child(this.stateAge(t, a, item, now));
     return v_flex()
       .id(`chief-${a.address}`)
       .flex_none()

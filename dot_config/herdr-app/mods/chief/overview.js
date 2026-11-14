@@ -1078,7 +1078,7 @@ function attentionView(t, items, now) {
       .bg(C.card)
       .child(h_flex().gap(8).items_center()
         .child(div().flex_1().min_w(0).truncate().font_weight(600).text_color(C.text).child(selected.name))
-        .child(strip(selected.heat.days, t)))
+        .child(strip(selected.heat.days, t, `chief-att-heat-${selected.agent.address}`)))
       .child(div().mt(-6).text_size(11.5).text_color(C.muted).child(`${selected.agent.space_name || "?"} · ${selected.agent.tab_name || selected.agent.tab}`))
       .child(attentionCard(t, selected, now, `chief-att-card-${selected.agent.address}`, [
         { id: "focus", label: "Focus ⏎", run: () => focusAgent(selected.agent) },

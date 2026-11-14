@@ -32,12 +32,17 @@ export function attention(labels, touched, now) {
   for (const [h, n] of Object.entries(prompts)) hours[h] = (hours[h] ?? 0) + (Number(n) || 0) * PROMPT_MINUTES;
   const hourNow = Math.floor(now / HOUR);
   const midnight = new Date(now).setHours(0, 0, 0, 0);
-  const days = [0, 0, 0, 0, 0, 0, 0];
+  // One entry per local calendar day, oldest first, today last.
+  const days = Array.from({ length: 7 }, (_, i) => ({ start: midnight - (6 - i) * DAY, focus: 0, prompts: 0, total: 0 }));
   let score = touched ? 30 * 0.5 ** ((now - touched) / HOUR / HALF_LIFE_HOURS) : 0;
   for (const [h, m] of Object.entries(hours)) {
     score += m * 0.5 ** ((hourNow - Number(h)) / HALF_LIFE_HOURS);
     const index = 6 - Math.max(0, Math.ceil((midnight - Number(h) * HOUR) / DAY));
-    if (index >= 0) days[index] += m;
+    if (index >= 0) {
+      days[index].total += m;
+      days[index].focus += focus[h] ?? 0;
+      days[index].prompts += Number(prompts[h]) || 0;
+    }
   }
   const since = (h) => Number(h) > hourNow - 7 * 24;
   const week = {
